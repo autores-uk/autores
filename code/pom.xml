@@ -4,6 +4,20 @@
   <groupId>uk.autores</groupId>
   <artifactId>autores</artifactId>
   <version>0.0-alpha-SNAPSHOT</version>
-  <name>Archetype - autores</name>
-  <url>http://maven.apache.org</url>
+  <packaging>jar</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.9.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
