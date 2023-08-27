@@ -1,0 +1,31 @@
+# The name of the workflow. GitHub displays the names of your workflows under your repository's "Actions" tab. If you omit `name`, GitHub displays the workflow file path relative to the root of the repository.
+name: Java CI
+
+#
+on: [push]
+#
+jobs:
+  build:
+
+    # <!-- This is a YAML comment for use in annotated code examples. -->
+# You can run this workflow using a different operating systems.
+#
+# The starter workflow configures jobs to run on Linux, using the GitHub-hosted `ubuntu-latest` runners. You can change the `runs-on` key to run your jobs on a different operating system.
+#
+# For example, you can use the GitHub-hosted Windows runners by specifying `runs-on: windows-latest`. Or, you can run on the GitHub-hosted macOS runners using `runs-on: macos-latest`.
+#
+# You can also run jobs in Docker containers, or you can provide a self-hosted runner that runs on your own infrastructure. For more information, see "[AUTOTITLE](/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on)."
+    runs-on: ubuntu-latest
+#
+    steps:
+      # This step uses the `actions/checkout` action to download a copy of your repository on the runner.
+      - uses: actions/checkout@v3
+      # This step uses the `actions/setup-java` action to configure the Eclipse Temurin (Java) 17 JDK by Eclipse Adoptium.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      # The "Build with Maven" step runs the Maven `package` target in non-interactive mode to ensure that your code builds, tests pass, and a package can be created.
+      - name: Build with Maven
+        run: mvn -f code/pom.xml --batch-mode --update-snapshots package
