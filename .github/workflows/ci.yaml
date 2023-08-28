@@ -34,7 +34,6 @@ jobs:
 
   # https://github.com/marketplace/actions/github-pages-action
   document:
-    deploy:
       runs-on: ubuntu-latest
       permissions:
         contents: write
