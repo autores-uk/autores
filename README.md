@@ -1,3 +1,5 @@
 # Autores
 
-![maven.yaml](https://github.com/autores-uk/autores/actions/workflows/maven.yaml/badge.svg)
+Skeleton project; no code yet.
+
+![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg)

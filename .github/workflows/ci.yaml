@@ -31,3 +31,30 @@ jobs:
       # The "Build with Maven" step runs the Maven `package` target in non-interactive mode to ensure that your code builds, tests pass, and a package can be created.
       - name: Build with Maven
         run: mvn --file code/pom.xml --batch-mode --update-snapshots package
+
+  # https://github.com/marketplace/actions/github-pages-action
+  document:
+    deploy:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: write
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build Javadoc with Maven
+        run: mvn --file code/pom.xml --batch-mode javadoc:javadoc
+      - name: Add the base index
+        run: cp ./docs/* ./code/target/site
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        # If you're changing the branch from main,
+        # also change the `main` in `refs/heads/main`
+        # below accordingly.
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./code/target/site
