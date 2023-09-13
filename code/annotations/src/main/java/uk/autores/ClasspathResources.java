@@ -8,9 +8,15 @@ import java.lang.annotation.Target;
 /**
  * Allows {@link ClasspathResource} to be used multiple times on a package or class.
  * API consumers do not need to reference this type.
+ *
+ * @see java.lang.annotation.Repeatable
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface ClasspathResources {
+
+    /**
+     * @return the individual resource annotations
+     */
     ClasspathResource[] value();
 }
