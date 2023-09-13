@@ -15,14 +15,14 @@ public final class ConfigDefs {
 
     private ConfigDefs() {}
 
-    /** <h4>"visibility"</h4> Set to "public" to generated public instead of package visible types. Optional. */
+    /** "visibility": set to "public" to generated public instead of package visible types. Optional. */
     public static final ConfigDef VISIBILITY = new ConfigDef("visibility",
             false,
             false,
             "public"::equals,
             "Generated class visibility. Valid value: \"public\"");
 
-    /** <h4>"encoding"</h4> Encoding of consumed text files. Optional. */
+    /** "encoding": Encoding of consumed text files. Optional. */
     public static final ConfigDef ENCODING = new ConfigDef("encoding",
             false,
             false,
@@ -30,7 +30,7 @@ public final class ConfigDefs {
             "The canonical name of a supported encoding: " + Charset.availableCharsets().keySet());
 
     /**
-     * <h4>"localize"</h4> Whether to search for localized resources. "true" (default) or "false". Optional.
+     * "localize": whether to search for localized resources. "true" (default) or "false". Optional.
      */
     public static final ConfigDef LOCALIZE = new ConfigDef("localize",
             false,
@@ -39,7 +39,7 @@ public final class ConfigDefs {
             "Enables searching for localized resources. Valid values: \"true\"; \"false\". Default: \"true\".");
 
     /**
-     * <h4>"missing-key"</h4> How to report missing keys in localized {@link Properties} resources.
+     * "missing-key": how to report missing keys in localized {@link Properties} resources.
      * "error" (default), "warn", or "ignore".
      * Optional.
      */
@@ -50,8 +50,7 @@ public final class ConfigDefs {
             "Action when a base key is missing from localized file. Valid values: \"error\"; \"warn\"; \"ignore\". Default: \"error\".");
 
     /**
-     * <h4>"format"</h4>
-     * Whether to generate format methods. "true" (default) or "false". Optional.
+     * "format": whether to generate format methods. "true" (default) or "false". Optional.
      * @see java.text.MessageFormat
      */
     public static final ConfigDef FORMAT = new ConfigDef("format",
