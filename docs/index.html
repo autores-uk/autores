@@ -1,13 +1,45 @@
 <html>
   <head>
-    <title>Autores</title>
+    <title>Autores.uk resource library for Java</title>
   </head>
   <body>
+
     <h1>Autores</h1>
+
+    <p>
+      Convenience library for working with embedded <a href="https://dev.java/">Java&trade;</a> resources.
+      Use annotations for verification and code generation.
+    </p>
+
+    <ul>
+      <li>Validate resource paths with the compiler</li>
+      <li>Mitigate against <a href="https://www.hanselman.com/blog/stringly-typed-vs-strongly-typed">stringly typed</a> things</li>
+      <li>Remove resource file I/O handling</li>
+      <li>Embed files as byte arrays or strings</li>
+      <li>Replace localization <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/PropertyResourceBundle.html">resource bundle messages</a> with typed method signatures</li>
+    </ul>
+
+    <p>This library can affect compile time, class sizes, and constant pools. Use judiciously.</p>
+
+    <h2>Sample</h2>
+
+    <pre><code>
+      @ClasspathResource(
+        value = {
+                "Poule.txt",
+                "Roses.txt",
+        },
+        handler = GenerateStringsFromText.class
+      )
+      public class PrintRhymes {
+    </code></pre>
+
     <h2>Links</h2>
+
     <ul>
       <li><a href="https://github.com/autores-uk/autores">Source Control</a></li>
-      <li><a href="apidocs/index.html">API</a></li>
+      <li><a href="apidocs/uk/autores/package-summary.html">API</a></li>
     </ul>
+
   </body>
 </html>
