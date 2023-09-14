@@ -74,13 +74,13 @@ public @interface ClasspathResource {
     @interface Cfg {
         /**
          * @return name of config option
-         * @see ConfigDef#name
+         * @see ConfigDef#name()
          */
         String key();
 
         /**
          * @return config option value
-         * @see ConfigDef#validator
+         * @see ConfigDef#isValid(String)
          */
         String value();
     }

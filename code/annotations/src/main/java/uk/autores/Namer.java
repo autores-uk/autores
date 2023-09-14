@@ -19,6 +19,13 @@ import static java.util.Arrays.asList;
  *     <li>Have a public no-args constructor</li>
  *     <li>Be available as compiled types on the compiler classpath</li>
  *  </ul>
+ *
+ *      Sample usage:
+ *      <pre>
+ *          Namer namer = new Namer();
+ *          String simple = namer.simplifyResourceName("META-INF/foo/bar.baz.txt"); // "foo.bar"
+ *          String className = namer.nameClass(simple);                             // "bar_baz"
+ *      </pre>
  */
 public class Namer {
 
@@ -70,7 +77,7 @@ public class Namer {
 
     /**
      * @param src source string
-     * @return source string as a class name if possible
+     * @return source string as a class name
      */
     public String nameClass(String src) {
         return replace(src);
@@ -86,12 +93,17 @@ public class Namer {
 
     /**
      * @param src source string
-     * @return source string as a method name if possible
+     * @return source string as a method name
      */
     public String nameMethod(String src) {
         return replace(src);
     }
 
+    /**
+     * @param resource resource name
+     * @return name stripped of path and extension
+     * @see ClasspathResource#value()
+     */
     public String simplifyResourceName(String resource) {
         int begin = resource.lastIndexOf('/');
         if (begin < 0) {
