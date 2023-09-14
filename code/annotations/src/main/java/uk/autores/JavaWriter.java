@@ -20,7 +20,7 @@ final class JavaWriter extends Writer {
 
         visibility = ctxt.option(ConfigDefs.VISIBILITY.name()).isPresent() ? "public " : "";
 
-        if (!ctxt.pkg.isDefault()) {
+        if (!ctxt.pkg.isUnnamed()) {
             w.append("package ").append(ctxt.pkg.name).append(";").append(NL).append(NL);
         }
 

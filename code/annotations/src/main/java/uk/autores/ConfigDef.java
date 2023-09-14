@@ -25,6 +25,13 @@ public final class ConfigDef {
     /** Informational usage text. */
     private final String description;
 
+    /**
+     * @param name the config key
+     * @param required if true validation fails if not present
+     * @param repeatable if true duplicate keys do not fail validation
+     * @param validator must return true if the value is valid or false otherwise
+     * @param description brief description of the config option
+     */
     public ConfigDef(String name,
                      boolean required,
                      boolean repeatable,
@@ -37,22 +44,42 @@ public final class ConfigDef {
         this.description = requireNonNull(description, "description");
     }
 
+    /**
+     * @return config key name
+     * @see ClasspathResource.Cfg#key()
+     * @see Config#key()
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * @return true if this config must be present
+     */
     public boolean isRequired() {
         return required;
     }
 
+    /**
+     * @return true if this config can be used multiple times
+     */
     public boolean isRepeatable() {
         return repeatable;
     }
 
+    /**
+     * @param value the value to test
+     * @return true if the value is valid or false otherwise
+     * @see ClasspathResource.Cfg#value()
+     * @see Config#value()
+     */
     public boolean isValid(String value) {
         return validator.test(value);
     }
 
+    /**
+     * @return brief one line description
+     */
     public String description() {
         return description;
     }
