@@ -13,10 +13,10 @@ import java.util.Set;
 
 /**
  * <p>
- * For each resource, generates a class with a name derived from the resource name
+ * {@link Handler} that, for each resource, generates a class with a name derived from the resource name
  * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
  * The class will have a static method called <code>bytes</code> that returns the resource
- * as a byte array.
+ * as a new byte array.
  * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {

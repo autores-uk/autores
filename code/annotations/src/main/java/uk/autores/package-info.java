@@ -11,7 +11,7 @@
  * <h3>Resource Handlers</h3>
  *
  * <table border="1">
- *     <caption>Library functionality</caption>
+ *     <caption>provided handlers</caption>
  *     <thead>
  *         <tr>
  *             <th>{@link uk.autores.processing.Handler}</th>

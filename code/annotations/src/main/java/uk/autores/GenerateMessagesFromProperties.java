@@ -15,8 +15,8 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 /**
- * Generates message classes from {@link Properties} files using {@link Locale}s to match localized strings
- * and {@link java.text.MessageFormat} to create typed method signatures.
+ * {@link Handler} that generates message classes from {@link Properties} files using {@link Locale}s to match localized
+ * strings and {@link java.text.MessageFormat} to create typed method signatures.
  *
  * <h2>Example</h2>
  *

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * For each resource, generates a class with a name derived from the resource name
+ * {@link Handler} that, for each resource, generates a class with a name derived from the resource name
  * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
  * The class will have a static method called <code>text</code> that returns the resource
  * as a {@link String}.
