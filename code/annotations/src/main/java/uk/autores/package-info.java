@@ -1,14 +1,14 @@
 /**
- * <h1>Autores</h1>
+ * <h2>AUTORES</h2>
  *
  * An annotation driven library for working with classpath resource files.
  *
- * <h2>Usage</h2>
+ * <h3>Usage</h3>
  *
  * To process a resource annotate a class or package with {@link uk.autores.ClasspathResource}
  * and set fields as appropriate for the specified {@link uk.autores.Handler}.
  *
- * <h2>Resource Handlers</h2>
+ * <h3>Resource Handlers</h3>
  *
  * <table border="1">
  *     <caption>Library functionality</caption>
@@ -54,7 +54,7 @@
  *     </tbody>
  * </table>
  *
- * <h2>Links</h2>
+ * <h3>Links</h3>
  *
  * <ul>
  *     <li><a href="https://github.com/autores-uk/autores">Source code</a></li>
