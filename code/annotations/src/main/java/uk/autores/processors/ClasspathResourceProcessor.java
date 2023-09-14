@@ -121,8 +121,8 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
       handler.handle(context);
     } catch (Exception e) {
       String msg = "ERROR:";
-      msg += " Location: " + context.location;
-      msg += " Package:" + context.pkg.name;
+      msg += " Location: " + context.location();
+      msg += " Package:" + context.pkg().name();
       msg += " Exception: " + e;
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
@@ -158,7 +158,7 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
       return Collections.emptySortedMap();
     }
 
-    return unmodifiableSortedMap(map);
+    return map;
   }
 
   private Context ctxt(ClasspathResource cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -178,7 +178,7 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
             pkg(cpr.relative(), annotated),
             annotated,
             resources,
-            unmodifiableList(options),
+            options,
             namer
     );
   }

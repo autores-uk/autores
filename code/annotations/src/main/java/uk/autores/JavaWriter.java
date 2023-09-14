@@ -1,6 +1,7 @@
 package uk.autores;
 
 import uk.autores.processing.Context;
+import uk.autores.processing.Pkg;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -22,8 +23,9 @@ final class JavaWriter extends Writer {
 
         visibility = ctxt.option(ConfigDefs.VISIBILITY.name()).isPresent() ? "public " : "";
 
-        if (!ctxt.pkg.isUnnamed()) {
-            w.append("package ").append(ctxt.pkg.name).append(";").append(NL).append(NL);
+        Pkg pkg = ctxt.pkg();
+        if (!pkg.isUnnamed()) {
+            w.append("package ").append(pkg.name()).append(";").append(NL).append(NL);
         }
 
         if (!comment.isEmpty()) {

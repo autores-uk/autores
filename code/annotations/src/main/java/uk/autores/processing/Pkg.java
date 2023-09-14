@@ -8,7 +8,7 @@ import static java.util.Objects.requireNonNull;
 public final class Pkg {
 
     /** The fully qualified package name of the annotated element. */
-    public final String name;
+    private final String name;
 
     private final boolean relative;
 
@@ -49,5 +49,12 @@ public final class Pkg {
      */
     public boolean isUnnamed() {
         return name.isEmpty();
+    }
+
+    /**
+     * @return the package name
+     */
+    public String name() {
+        return name;
     }
 }
