@@ -1,5 +1,7 @@
 package uk.autores;
 
+import uk.autores.processing.Context;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;

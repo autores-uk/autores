@@ -3,6 +3,9 @@ package demo.custom.handler;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import uk.autores.*;
+import uk.autores.processing.Context;
+import uk.autores.processing.Handler;
+import uk.autores.processing.Namer;
 
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;

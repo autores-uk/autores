@@ -1,5 +1,10 @@
 package uk.autores;
 
+import uk.autores.processing.ConfigDef;
+import uk.autores.processing.Context;
+import uk.autores.processing.Handler;
+import uk.autores.processing.Namer;
+
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.*;

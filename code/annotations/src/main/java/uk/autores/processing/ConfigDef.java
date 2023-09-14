@@ -1,4 +1,4 @@
-package uk.autores;
+package uk.autores.processing;
 
 import java.util.function.Predicate;
 
@@ -13,13 +13,13 @@ public final class ConfigDef {
 
     /**
      * Key name.
-     * @see ClasspathResource.Cfg#key()
+     * @see uk.autores.ClasspathResource.Cfg#key()
      */
     private final String name;
     private final boolean required;
     private final boolean repeatable;
     /**
-     * When {@link ClasspathResource.Cfg#value()} passed to {@link Predicate#test(Object)} the value is considered correct.
+     * When {@link uk.autores.ClasspathResource.Cfg#value()} passed to {@link Predicate#test(Object)} the value is considered correct.
      */
     private final Predicate<String> validator;
     /** Informational usage text. */
@@ -46,7 +46,7 @@ public final class ConfigDef {
 
     /**
      * @return config key name
-     * @see ClasspathResource.Cfg#key()
+     * @see uk.autores.ClasspathResource.Cfg#key()
      * @see Config#key()
      */
     public String name() {
@@ -70,7 +70,7 @@ public final class ConfigDef {
     /**
      * @param value the value to test
      * @return true if the value is valid or false otherwise
-     * @see ClasspathResource.Cfg#value()
+     * @see uk.autores.ClasspathResource.Cfg#value()
      * @see Config#value()
      */
     public boolean isValid(String value) {
