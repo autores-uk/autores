@@ -4,6 +4,7 @@ import uk.autores.processing.ConfigDef;
 import uk.autores.processing.Context;
 
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import java.util.function.Consumer;
 
@@ -16,10 +17,11 @@ final class Reporting {
         if ("ignore".equals(action)) {
             return (m) -> {};
         }
-        Messager messager = context.env.getMessager();
+        Messager messager = context.env().getMessager();
+        Element annotated = context.annotated();
         if ("warn".equals(action)) {
-            return m -> messager.printMessage(Diagnostic.Kind.WARNING, m, context.annotated);
+            return m -> messager.printMessage(Diagnostic.Kind.WARNING, m, annotated);
         }
-        return m -> messager.printMessage(Diagnostic.Kind.ERROR, m, context.annotated);
+        return m -> messager.printMessage(Diagnostic.Kind.ERROR, m, annotated);
     }
 }

@@ -1,12 +1,11 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.processing.*;
 
+import javax.annotation.processing.Filer;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,17 +49,17 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
+        Map<String, FileObject> resources = context.resources();
 
         boolean localize = !context.option(ConfigDefs.LOCALIZE.name())
                 .filter("false"::equals)
                 .isPresent();
 
-        for (Map.Entry<String, FileObject> entry : context.resources.entrySet()) {
+        for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
             String resource = entry.getKey();
             if (!resource.endsWith(EXTENSION)) {
                 String msg = "Resource names must end in " + EXTENSION + " - got " + resource;
-                context.env.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR, msg, context.annotated);
+                context.printError(msg);
             } else {
                 Properties base = PropLoader.load(entry.getValue());
                 List<Localized> localizations = localize
@@ -73,6 +72,10 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private List<Localized> loadLocalizations(Context context, String name) throws IOException {
+        Filer filer = context.env().getFiler();
+        JavaFileManager.Location location = context.location();
+        String resourcePackage = context.pkg().resourcePackage();
+
         List<Localized> localized = new ArrayList<>();
 
         int end = name.length() - EXTENSION.length();
@@ -88,8 +91,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
             final FileObject file;
             try {
-                 file = context.env.getFiler()
-                        .getResource(context.location, context.pkg.resourcePackage(), props);
+                 file = filer.getResource(location, resourcePackage, props);
                 try (InputStream in = file.openInputStream()) {
                     Objects.requireNonNull(in);
                 }
@@ -110,21 +112,24 @@ public final class GenerateMessagesFromProperties implements Handler {
                                  String resource,
                                  Properties base,
                                  List<Localized> localizations) throws IOException {
+        Namer namer = ctxt.namer();
+        Pkg pkg = ctxt.pkg();
+        Filer filer = ctxt.env().getFiler();
+
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
-        String simple = ctxt.namer.simplifyResourceName(resource);
-        String name = ctxt.namer.nameClass(simple);
+        String simple = namer.simplifyResourceName(resource);
+        String name = namer.nameClass(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);
             return;
         }
-        String qualified = ctxt.pkg.qualifiedClassName(name);
+        String qualified = pkg.qualifiedClassName(name);
 
         String lookupName = String.format("pattern$%s$%x", name, name.hashCode());
 
-        JavaFileObject jfo = ctxt.env.getFiler()
-                .createSourceFile(qualified, ctxt.annotated);
+        JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
             Writer escaper = new UnicodeEscapeWriter(out);
             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
@@ -206,7 +211,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                                String key,
                                String baseValue) throws IOException {
         String resource = msgs.resource;
-        String method = ctxt.namer.nameMethod(key);
+        String method = ctxt.namer().nameMethod(key);
         if (!Namer.isJavaIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
             ctxt.printError(msg);

@@ -21,13 +21,13 @@ final class OptionValidation {
         String err = "";
 
         for (ConfigDef def : handler.config()) {
-            if (def.isRequired() && context.config.stream().noneMatch(o -> def.name().equals(o.key()))) {
+            if (def.isRequired() && context.config().stream().noneMatch(o -> def.name().equals(o.key()))) {
                 err = format("%sMissing configuration %s%n", err, def.name());
             }
         }
 
-        for (Config option : context.config) {
-            long c = context.config.stream().filter(o -> option.key().equals(o.key())).count();
+        for (Config option : context.config()) {
+            long c = context.config().stream().filter(o -> option.key().equals(o.key())).count();
             Optional<ConfigDef> def = handler.config().stream().filter(o -> o.name().equals(option.key())).findFirst();
             if (def.isPresent()) {
                 ConfigDef od = def.get();

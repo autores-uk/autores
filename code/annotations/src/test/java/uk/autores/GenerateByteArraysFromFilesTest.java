@@ -102,8 +102,8 @@ class GenerateByteArraysFromFilesTest {
         Map<String, String> results = new HashMap<>();
 
         for (String res : files.keySet()) {
-            String simple = context.namer.simplifyResourceName(res);
-            String className = context.namer.nameClass(simple);
+            String simple = context.namer().simplifyResourceName(res);
+            String className = context.namer().nameClass(simple);
 
             String qname = TestPkgs.P.qualifiedClassName(className);
             TestFileObject file = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT).get(qname);

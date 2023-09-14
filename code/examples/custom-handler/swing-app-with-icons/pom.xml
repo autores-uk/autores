@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>uk.autores</groupId>
-            <artifactId>file-to-image-handler</artifactId>
+            <artifactId>file-to-icon-handler</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

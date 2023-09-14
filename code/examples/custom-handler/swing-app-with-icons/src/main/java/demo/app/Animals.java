@@ -1,6 +1,6 @@
 package demo.app;
 
-import demo.custom.handler.GenerateImagesFromFiles;
+import demo.custom.handler.GenerateIconsFromFiles;
 import uk.autores.ClasspathResource;
 
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
             "Meow.png",
             "Woof.png",
         },
-        handler = GenerateImagesFromFiles.class
+        handler = GenerateIconsFromFiles.class
 )
 public class Animals {
 

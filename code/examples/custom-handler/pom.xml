@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>file-to-image-handler</module>
+        <module>file-to-icon-handler</module>
         <module>swing-app-with-icons</module>
     </modules>
 </project>

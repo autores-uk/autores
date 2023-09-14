@@ -1,10 +1,8 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.processing.*;
 
+import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
@@ -14,10 +12,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * <p>
  * For each resource, generates a class with a name derived from the resource name
  * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
  * The class will have a static method called <code>bytes</code> that returns the resource
  * as a byte array.
+ * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {
 
@@ -52,12 +52,16 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
+        Map<String, FileObject> resources = context.resources();
+        Namer namer = context.namer();
+        Pkg pkg = context.pkg();
+        Filer filer = context.env().getFiler();
 
-        for (Map.Entry<String, FileObject> entry : context.resources.entrySet()) {
+        for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
             String resource = entry.getKey();
-            String simple = context.namer.simplifyResourceName(resource);
-            String className = context.namer.nameClass(simple);
-            String qualifiedName = context.pkg.qualifiedClassName(className);
+            String simple = namer.simplifyResourceName(resource);
+            String className = namer.nameClass(simple);
+            String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isJavaIdentifier(className)) {
                 String msg = "Cannot transform resource name '" + entry.getKey() + "' to class name";
@@ -65,7 +69,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 continue;
             }
 
-            JavaFileObject javaFile = context.env.getFiler().createSourceFile(qualifiedName, context.annotated);
+            JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
 
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
@@ -73,12 +77,12 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
                 //writeFiles(entry, writer);
 
-                writeMethods(writer, entry.getValue());
+                writeInlineMethods(writer, entry.getValue());
             }
         }
     }
 
-    private void writeMethods(JavaWriter writer, FileObject file) throws IOException {
+    private void writeInlineMethods(JavaWriter writer, FileObject file) throws IOException {
         int methodCount = 0;
         byte[] buf = new byte[MAX_BYTES_PER_METHOD];
 
@@ -90,7 +94,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 if (r < 0) {
                     break;
                 }
-                writeFillMethod(buf, r, writer, methodCount);
+                writeInlineFillMethod(buf, r, writer, methodCount);
 
                 // TODO: strict math
                 size += r;
@@ -98,10 +102,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
             }
         }
 
-        writeBytesMethod(writer, methodCount, size);
+        writeInlineBytesMethod(writer, methodCount, size);
     }
 
-    private void writeFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
+    private void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
         writer.nl();
         writer.indent()
                 .append("private static int fill")
@@ -113,18 +117,20 @@ public final class GenerateByteArraysFromFiles implements Handler {
             byte b = buf[i];
             if (b == 0) {
                 // array values already initialized to zero so just increment
-                int skip = skipZeroes(buf, i + 1, limit);
-                writer.indent().append("i += ").append(Ints.toString(skip + 1)).append(";").nl();
+                int skip = inlineSkipZeroes(buf, i + 1, limit);
+                String skipStr = Ints.toString(skip + 1);
+                writer.indent().append("i += ").append(skipStr).append(";").nl();
                 i += skip;
             } else {
-                writer.indent().append("b[i++] = ").append(Ints.toString(b)).append(";").nl();
+                String byteStr = Ints.toString(b);
+                writer.indent().append("b[i++] = ").append(byteStr).append(";").nl();
             }
         }
         writer.indent().append("return i;").nl();
         writer.closeBrace().nl();
     }
 
-    private int skipZeroes(byte[] buf, int offset, int limit) {
+    private int inlineSkipZeroes(byte[] buf, int offset, int limit) {
         for (int i = offset; i < limit; i++) {
             if (buf[i] != 0) {
                 return i - offset;
@@ -133,48 +139,16 @@ public final class GenerateByteArraysFromFiles implements Handler {
         return limit - offset;
     }
 
-    private void writeBytesMethod(JavaWriter writer, int methodCount, int size) throws IOException {
+    private void writeInlineBytesMethod(JavaWriter writer, int methodCount, int size) throws IOException {
         writer.nl();
         writer.indent().staticMember("byte[]", "bytes").append("() ").openBrace().nl();
         writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
         writer.indent().append("int idx = 0;").nl();
         for (int i = 0; i < methodCount; i++) {
-            writer.indent().append("idx = fill").append(Ints.toString(i)).append("(barr, idx);").nl();
+            String n = Ints.toString(i);
+            writer.indent().append("idx = fill").append(n).append("(barr, idx);").nl();
         }
         writer.indent().append("return barr;").nl();
         writer.closeBrace().nl();
     }
-
-//    private void writeFiles(Map.Entry<String, FileObject> entry,
-//                            JavaWriter writer) throws IOException {
-//
-//            writer.nl();
-//            writer.indent().staticMember("byte[]", "bytes").append("() ").openBrace().nl();
-//            writer.indent().append("byte[] barr = {");
-//
-//            writeFileAsIntArray(writer, entry.getValue());
-//
-//            writer.append("};").nl();
-//            writer.append("return barr;").nl();
-//            writer.closeBrace().nl();
-//    }
-//
-//    private void writeFileAsIntArray(Writer writer, FileObject file) throws IOException {
-//        byte[] buf = new byte[64 * 1024];
-//
-//        try (InputStream in = file.openInputStream()) {
-//            int r;
-//            while(true) {
-//                r = in.read(buf);
-//                if (r < 0) {
-//                    break;
-//                }
-//
-//                for (int i = 0; i < r; i++) {
-//                    writer.append(Ints.asString(buf[i])).append(",");
-//                }
-//            }
-//        }
-//    }
-
 }

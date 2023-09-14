@@ -5,10 +5,13 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
 
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSortedMap;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -16,43 +19,13 @@ import static java.util.Objects.requireNonNull;
  */
 public final class Context {
 
-    /**
-     * Annotation processing environment.
-     */
-    public final ProcessingEnvironment env;
-    /**
-     * Where resources are to be loaded from.
-     * @see uk.autores.ClasspathResource#location()
-     * @see ProcessingEnvironment#getFiler()
-     * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
-     */
-    public final JavaFileManager.Location location;
-    /**
-     * Package of the annotated type.
-     */
-    public final Pkg pkg;
-    /**
-     * The annotated element - class or package.
-     *
-     * @see javax.lang.model.element.TypeElement
-     * @see javax.lang.model.element.PackageElement
-     */
-    public final Element annotated;
-    /**
-     * The resources.
-     * @see uk.autores.ClasspathResource#value()
-     */
-    public final SortedMap<String, FileObject> resources;
-    /**
-     * The configuration.
-     * @see uk.autores.ClasspathResource#config()
-     */
-    public final List<Config> config;
-    /**
-     * The name resolver.
-     * @see uk.autores.ClasspathResource#namer()
-     */
-    public final Namer namer;
+    private final ProcessingEnvironment env;
+    private final JavaFileManager.Location location;
+    private final Pkg pkg;
+    private final Element annotated;
+    private final SortedMap<String, FileObject> resources;
+    private final List<Config> config;
+    private final Namer namer;
 
     /**
      * @param env annotation processing environment
@@ -74,8 +47,8 @@ public final class Context {
         this.location = requireNonNull(location, "location");
         this.pkg = pkg;
         this.annotated = requireNonNull(annotated, "annotatedElement");
-        this.resources = requireNonNull(resources, "resources");
-        this.config = requireNonNull(config, "config");
+        this.resources = unmodifiableSortedMap(requireNonNull(resources, "resources"));
+        this.config = unmodifiableList(requireNonNull(config, "config"));
         this.namer = requireNonNull(namer, "namer");
     }
 
@@ -100,5 +73,66 @@ public final class Context {
     public void printError(String msg) {
         env.getMessager()
                 .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
+    }
+
+    /**
+     * @return annotation processing environment
+     */
+    public ProcessingEnvironment env() {
+        return env;
+    }
+
+    /**
+     * @return where resources are to be loaded from
+     * @see uk.autores.ClasspathResource#location()
+     * @see ProcessingEnvironment#getFiler()
+     * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
+     */
+    public JavaFileManager.Location location() {
+        return location;
+    }
+
+    /**
+     * The package of the annotated type.
+     *
+     * @return package information
+     */
+    public Pkg pkg() {
+        return pkg;
+    }
+
+    /**
+     * @return the annotated element - class or package
+     * @see javax.lang.model.element.TypeElement
+     * @see javax.lang.model.element.PackageElement
+     */
+    public Element annotated() {
+        return annotated;
+    }
+
+    /**
+     * Keys are the resources as defined in the {@link uk.autores.ClasspathResource}.
+     *
+     * @return unmodifiable resources map
+     * @see uk.autores.ClasspathResource#value()
+     */
+    public SortedMap<String, FileObject> resources() {
+        return resources;
+    }
+
+    /**
+     * @return unmodifiable configuration
+     * @see uk.autores.ClasspathResource#config()
+     */
+    public List<Config> config() {
+        return config;
+    }
+
+    /**
+     * @return  name resolver
+     * @see uk.autores.ClasspathResource#namer()
+     */
+    public Namer namer() {
+        return namer;
     }
 }
