@@ -10,9 +10,15 @@ import javax.tools.StandardLocation;
 import java.lang.annotation.*;
 
 /**
- * Indicates resources that are to be processed at compile time.
- * At a bare minimum this annotation can be used to verify a resource exists without the need for unit tests.
- * Specify a {@link #handler()} for other behaviour.
+ * <p>
+ *     Indicates resources that are to be processed at compile time.
+ *     At a bare minimum this annotation can be used to verify a resource exists without the need for unit tests.
+ *     Specify a {@link #handler()} for other behaviour.
+ * </p>
+ * <p>
+ *     The compiler must be able to load and instantiate any value set in {@link #handler()} or {@link #namer()}.
+ *     This typically means compiling the code in a separate project to the one where they are used.
+ * </p>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -51,7 +57,7 @@ public @interface ClasspathResource {
     Class<? extends Handler> handler() default AssertResourceExists.class;
 
     /**
-     * Enables non-default naming.
+     * Set this value to provide alternative class/member naming strategy.
      *
      * @return name generator type
      * @see Namer for provided implementations

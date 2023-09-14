@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Allows {@link ClasspathResource} to be used multiple times on a package or class.
- * API consumers do not need to reference this type.
+ * API consumers do not need to reference this type - it is only used by the compiler and annotation processor.
  *
  * @see java.lang.annotation.Repeatable
  */
