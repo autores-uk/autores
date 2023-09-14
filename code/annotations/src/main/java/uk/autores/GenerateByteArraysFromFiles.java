@@ -100,7 +100,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.nl();
         writer.indent()
                 .append("private static int fill")
-                .append(String.valueOf(index))
+                .append(Ints.toString(index))
                 .append("(byte[] b, int i) ")
                 .openBrace()
                 .nl();
@@ -109,10 +109,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
             if (b == 0) {
                 // array values already initialized to zero so just increment
                 int skip = skipZeroes(buf, i + 1, limit);
-                writer.indent().append("i += ").append(String.valueOf(skip + 1)).append(";").nl();
+                writer.indent().append("i += ").append(Ints.toString(skip + 1)).append(";").nl();
                 i += skip;
             } else {
-                writer.indent().append("b[i++] = ").append(String.valueOf(buf[i])).append(";").nl();
+                writer.indent().append("b[i++] = ").append(Ints.toString(b)).append(";").nl();
             }
         }
         writer.indent().append("return i;").nl();
@@ -131,10 +131,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private void writeBytesMethod(JavaWriter writer, int methodCount, int size) throws IOException {
         writer.nl();
         writer.indent().staticMember("byte[]", "bytes").append("() ").openBrace().nl();
-        writer.indent().append("byte[] barr = new byte[").append(String.valueOf(size)).append("];").nl();
+        writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
         writer.indent().append("int idx = 0;").nl();
         for (int i = 0; i < methodCount; i++) {
-            writer.indent().append("idx = fill").append(String.valueOf(i)).append("(barr, idx);").nl();
+            writer.indent().append("idx = fill").append(Ints.toString(i)).append("(barr, idx);").nl();
         }
         writer.indent().append("return barr;").nl();
         writer.closeBrace().nl();
@@ -166,9 +166,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
 //                }
 //
 //                for (int i = 0; i < r; i++) {
-//                    writer.append(String.valueOf(buf[i])).append(",");
+//                    writer.append(Ints.asString(buf[i])).append(",");
 //                }
 //            }
 //        }
 //    }
+
 }
