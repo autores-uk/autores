@@ -1,5 +1,7 @@
 package uk.autores;
 
+import uk.autores.processing.Context;
+import uk.autores.processing.Handler;
 import uk.autores.processors.ClasspathResourceProcessor;
 
 /**

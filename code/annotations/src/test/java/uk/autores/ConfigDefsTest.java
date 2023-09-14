@@ -1,6 +1,7 @@
 package uk.autores;
 
 import org.junit.jupiter.api.Test;
+import uk.autores.processing.ConfigDef;
 
 import java.util.Set;
 

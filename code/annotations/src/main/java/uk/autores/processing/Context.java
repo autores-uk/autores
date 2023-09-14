@@ -1,4 +1,4 @@
-package uk.autores;
+package uk.autores.processing;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -22,7 +22,7 @@ public final class Context {
     public final ProcessingEnvironment env;
     /**
      * Where resources are to be loaded from.
-     * @see ClasspathResource#location()
+     * @see uk.autores.ClasspathResource#location()
      * @see ProcessingEnvironment#getFiler()
      * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
      */
@@ -40,17 +40,17 @@ public final class Context {
     public final Element annotated;
     /**
      * The resources.
-     * @see ClasspathResource#value()
+     * @see uk.autores.ClasspathResource#value()
      */
     public final SortedMap<String, FileObject> resources;
     /**
      * The configuration.
-     * @see ClasspathResource#config()
+     * @see uk.autores.ClasspathResource#config()
      */
     public final List<Config> config;
     /**
      * The name resolver.
-     * @see ClasspathResource#namer()
+     * @see uk.autores.ClasspathResource#namer()
      */
     public final Namer namer;
 
@@ -82,8 +82,7 @@ public final class Context {
     /**
      * @param key key name
      * @return the value if present
-     * @see ClasspathResource.Cfg
-     * @see ConfigDefs
+     * @see uk.autores.ClasspathResource.Cfg
      */
     public Optional<String> option(String key) {
         return config.stream()

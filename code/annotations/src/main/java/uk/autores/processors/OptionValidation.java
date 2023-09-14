@@ -1,9 +1,9 @@
 package uk.autores.processors;
 
-import uk.autores.Config;
-import uk.autores.ConfigDef;
-import uk.autores.Context;
-import uk.autores.Handler;
+import uk.autores.processing.Config;
+import uk.autores.processing.ConfigDef;
+import uk.autores.processing.Context;
+import uk.autores.processing.Handler;
 
 import java.util.Optional;
 

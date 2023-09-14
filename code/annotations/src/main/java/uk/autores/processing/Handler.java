@@ -1,4 +1,4 @@
-package uk.autores;
+package uk.autores.processing;
 
 import java.util.Collections;
 import java.util.Set;
@@ -20,7 +20,7 @@ import java.util.Set;
  *     <li>Processing an input does not rely on the presence of the output of other annotation processors (independence)</li>
  * </ol>
  *
- * @see ClasspathResource#handler()
+ * @see uk.autores.ClasspathResource#handler()
  */
 public interface Handler {
 
@@ -43,7 +43,7 @@ public interface Handler {
     }
 
     /**
-     * If true the annotation processor will validate {@link ClasspathResource#config()} against {@link #config()}.
+     * If true the annotation processor will validate {@link uk.autores.ClasspathResource#config()} against {@link #config()}.
      *
      * @return true by default
      */

@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
 import uk.autores.env.TestProcessingEnvironment;
+import uk.autores.processing.ConfigDef;
+import uk.autores.processing.Context;
+import uk.autores.processing.Handler;
+import uk.autores.processing.Namer;
 
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;

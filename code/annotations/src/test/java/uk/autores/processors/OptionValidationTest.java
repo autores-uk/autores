@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import uk.autores.*;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestProcessingEnvironment;
+import uk.autores.processing.*;
 
 import javax.tools.StandardLocation;
 import java.util.HashSet;

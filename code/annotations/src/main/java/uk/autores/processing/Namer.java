@@ -1,4 +1,4 @@
-package uk.autores;
+package uk.autores.processing;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +9,7 @@ import static java.util.Arrays.asList;
  * <p>
  * Utilized in naming classes, methods and fields.
  * Does the bare minimum to create viable identifiers by replacing invalid codepoints with underscores.
- * Extend this type to provide alternative behaviour and specify using {@link ClasspathResource#namer()}.
+ * Extend this type to provide alternative behaviour and specify using {@link uk.autores.ClasspathResource#namer()}.
  * </p>
  * <p>
  * Implementations MUST:
@@ -102,7 +102,6 @@ public class Namer {
     /**
      * @param resource resource name
      * @return name stripped of path and extension
-     * @see ClasspathResource#value()
      */
     public String simplifyResourceName(String resource) {
         int begin = resource.lastIndexOf('/');

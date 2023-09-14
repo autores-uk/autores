@@ -1,5 +1,8 @@
 package uk.autores;
 
+import uk.autores.processing.ConfigDef;
+import uk.autores.processing.Context;
+
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
 import java.util.function.Consumer;

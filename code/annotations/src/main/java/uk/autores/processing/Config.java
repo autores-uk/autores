@@ -1,9 +1,11 @@
-package uk.autores;
+package uk.autores.processing;
+
+import uk.autores.ConfigDefs;
 
 import java.util.Objects;
 
 /**
- * Config derived from {@link ClasspathResource#config()}.
+ * Config derived from {@link uk.autores.ClasspathResource#config()}.
  * @see ConfigDefs
  */
 public final class Config {
@@ -22,7 +24,7 @@ public final class Config {
 
     /**
      * @return configuration key name
-     * @see ClasspathResource.Cfg#key()
+     * @see uk.autores.ClasspathResource.Cfg#key()
      */
     public String key() {
         return key;
@@ -30,7 +32,7 @@ public final class Config {
 
     /**
      * @return configuration value
-     * @see ClasspathResource.Cfg#value()
+     * @see uk.autores.ClasspathResource.Cfg#value()
      */
     public String value() {
         return value;

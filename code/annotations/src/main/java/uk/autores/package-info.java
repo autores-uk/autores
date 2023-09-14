@@ -6,7 +6,7 @@
  * <h3>Usage</h3>
  *
  * To process a resource annotate a class or package with {@link uk.autores.ClasspathResource}
- * and set fields as appropriate for the specified {@link uk.autores.Handler}.
+ * and set fields as appropriate for the specified {@link uk.autores.processing.Handler}.
  *
  * <h3>Resource Handlers</h3>
  *
@@ -14,7 +14,7 @@
  *     <caption>Library functionality</caption>
  *     <thead>
  *         <tr>
- *             <th>{@link uk.autores.Handler}</th>
+ *             <th>{@link uk.autores.processing.Handler}</th>
  *             <th>Resources</th>
  *             <th>Configuration</th>
  *             <th>Description</th>
@@ -25,7 +25,7 @@
  *             <td>{@link uk.autores.AssertResourceExists}</td>
  *             <td>any files</td>
  *             <td><em>(none)</em></td>
- *             <td>Default {@link uk.autores.Handler} that validates resources exist.</td>
+ *             <td>Default {@link uk.autores.processing.Handler} that validates resources exist.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateByteArraysFromFiles}</td>
@@ -49,7 +49,7 @@
  *             <td>{@link uk.autores.GenerateStringsFromText}</td>
  *             <td>text files</td>
  *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#ENCODING}</td>
- *             <td>Default {@link uk.autores.Handler} that validates resources exist.</td>
+ *             <td>Default {@link uk.autores.processing.Handler} that validates resources exist.</td>
  *         </tr>
  *     </tbody>
  * </table>
