@@ -10,9 +10,10 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * {@link ConfigDef} instances used by the provided {@link Handler} implementations.
+ * Defines and documents the configuration uses by the provided {@link Handler}s.
  * Each {@link Handler} supports a different set of config.
  * This type is public as documentation aide.
+ * @see ConfigDef
  */
 public final class ConfigDefs {
 
