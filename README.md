@@ -19,4 +19,4 @@ No restrictions are placed on library consumers on licensing of code generated b
 
 ## CONTRIBUTIONS
 
-Pull requests are not be accepted.
+Pull requests will not be accepted.
