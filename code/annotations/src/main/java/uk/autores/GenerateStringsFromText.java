@@ -14,7 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@link Handler} that, for each resource, generates a class with a name derived from the resource name
+ * <p>{@link Handler} that generates classes that returns file contents as strings.</p>
+ *
+ * For each resource, generates a class with a name derived from the resource name
  * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
  * The class will have a static method called <code>text</code> that returns the resource
  * as a {@link String}.
@@ -22,6 +24,8 @@ import java.util.Set;
 public final class GenerateStringsFromText implements Handler {
 
     /**
+     * UTF-8 is assumed if "encoding" is not set.
+     *
      * @return visibility; encoding
      * @see ConfigDefs#VISIBILITY
      * @see ConfigDefs#ENCODING
