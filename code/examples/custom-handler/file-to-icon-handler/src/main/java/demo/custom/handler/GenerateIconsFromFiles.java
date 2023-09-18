@@ -3,10 +3,7 @@ package demo.custom.handler;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import uk.autores.*;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
-import uk.autores.processing.Pkg;
+import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
@@ -14,11 +11,23 @@ import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Set;
 
+/**
+ * This trivial example of a {@link Handler} generates a class from a
+ * <a href="https://mustache.github.io/mustache.5.html">Mustache</a> template.
+ * It decorates {@link GenerateByteArraysFromFiles} to reuse its byte handling functionality
+ * and uses {@link GenerateStringsFromText} to load the template.
+ */
 @ClasspathResource(value = "ImageTemplate.txt", handler = GenerateStringsFromText.class)
 public class GenerateIconsFromFiles implements Handler {
 
     private final Handler decorated = new GenerateByteArraysFromFiles();
+
+    @Override
+    public Set<ConfigDef> config() {
+        return decorated.config();
+    }
 
     @Override
     public void handle(Context context) throws Exception {
