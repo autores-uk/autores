@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * Defines and documents the configuration uses by the provided {@link Handler}s.
+ * Defines and documents the configuration used by the provided {@link Handler}s.
  * Each {@link Handler} supports a different set of config.
  * This type is public as documentation aide.
  * @see ConfigDef
@@ -62,6 +62,23 @@ public final class ConfigDefs {
             false,
             s -> s.matches("true|false"),
             "Enables formatting. Valid values: \"true\"; \"false\". Default: \"true\".");
+
+    /**
+     * "strategy": how to consume resources.
+     * <ul>
+     *     <li>"inline": embed in class files</li>
+     *     <li>"strict": traditional resource loading but verify somehow;
+     *     use compile time resource sizes for efficient loading</li>
+     *     <li>"lax": traditional resource loading</li>
+     *     <li>"auto": use some heuristic to decide loading strategy</li>
+     * </ul>
+     * "auto" is the default strategy. Optional.
+     */
+    public static final ConfigDef STRATEGY = new ConfigDef("strategy",
+            false,
+            false,
+            s -> s.matches("auto|inline|strict|lax"),
+            "Code generation strategy. Valid values: \"auto\"; \"inline\"; \"strict\"; \"lax\". Default: \"auto\"");
 
     static Set<ConfigDef> set(ConfigDef...defs) {
         Set<ConfigDef> set = new LinkedHashSet<>();

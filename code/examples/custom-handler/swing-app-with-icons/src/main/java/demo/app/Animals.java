@@ -12,7 +12,8 @@ import java.awt.event.ActionListener;
             "Meow.png",
             "Woof.png",
         },
-        handler = GenerateIconsFromFiles.class
+        handler = GenerateIconsFromFiles.class,
+        config = @ClasspathResource.Cfg(key = "strategy", value = "lax")
 )
 public class Animals {
 
@@ -26,15 +27,15 @@ public class Animals {
         Container panel = frame.getContentPane();
         panel.setLayout(new FlowLayout());
         panel.add(new JLabel("Click a button:"));
-        panel.add(button(MeowIcon.load(), "Cat", e -> JOptionPane.showMessageDialog(frame, "Meow!")));
-        panel.add(button(WoofIcon.load(), "Dog", e -> JOptionPane.showMessageDialog(frame, "Woof!")));
+        panel.add(button(MeowIcon.load(), "Cat", "Meow!"));
+        panel.add(button(WoofIcon.load(), "Dog", "Woof!"));
         frame.pack();
         return frame;
     }
 
-    private static JButton button(ImageIcon icon, String text, ActionListener listener) {
+    private static JButton button(ImageIcon icon, String text, String msg) {
         JButton button = new JButton(text, icon);
-        button.addActionListener(listener);
+        button.addActionListener(e -> JOptionPane.showMessageDialog(button, msg));
         return button;
     }
 }

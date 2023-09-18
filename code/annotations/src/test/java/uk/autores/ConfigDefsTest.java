@@ -55,4 +55,14 @@ class ConfigDefsTest {
         assertTrue(cd.isValid("false"));
         assertFalse(cd.isValid("foo"));
     }
+
+    @Test
+    void allStrategiesValidated() {
+        ConfigDef cd = ConfigDefs.STRATEGY;
+        assertTrue(cd.isValid("auto"));
+        assertTrue(cd.isValid("inline"));
+        assertTrue(cd.isValid("strict"));
+        assertTrue(cd.isValid("lax"));
+        assertFalse(cd.isValid("foo"));
+    }
 }

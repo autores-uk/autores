@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
 import uk.autores.env.TestProcessingEnvironment;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.processing.*;
 
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
@@ -18,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GenerateByteArraysFromFilesTest {
@@ -41,9 +39,11 @@ class GenerateByteArraysFromFilesTest {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
 
-        Map<String, String> generated = generate(env, file(filename, text));
-
-        assertFalse(generated.isEmpty());
+        for (String strat : Arrays.asList("auto", "inline", "strict", "lax")) {
+            List<Config> cfg = singletonList(new Config(ConfigDefs.STRATEGY.name(), strat));
+            Map<String, String> generated = generate(env, file(filename, text), cfg);
+            assertFalse(generated.isEmpty());
+        }
     }
 
     @Test
@@ -59,7 +59,7 @@ class GenerateByteArraysFromFilesTest {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
 
-        Map<String, String> generated = generate(env, file(filename, text));
+        Map<String, String> generated = generate(env, file(filename, text), emptyList());
 
         assertFalse(generated.isEmpty());
         assertTrue(generated.get(filename).contains("i += 3;"));
@@ -79,13 +79,13 @@ class GenerateByteArraysFromFilesTest {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
 
-        Map<String, String> generated = generate(env, file(filename, text));
+        Map<String, String> generated = generate(env, file(filename, text), emptyList());
 
         assertTrue(generated.isEmpty());
         assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, SortedMap<String, FileObject> files) throws Exception {
+    private Map<String, String> generate(TestProcessingEnvironment env, SortedMap<String, FileObject> files, List<Config> cfg) throws Exception {
         Handler handler = new GenerateByteArraysFromFiles();
         Context context = new Context(
                 env,
@@ -93,7 +93,7 @@ class GenerateByteArraysFromFilesTest {
                 TestPkgs.P,
                 TestElement.INSTANCE,
                 files,
-                emptyList(),
+                cfg,
                 new Namer()
         );
 

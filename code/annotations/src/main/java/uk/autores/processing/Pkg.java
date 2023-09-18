@@ -57,4 +57,11 @@ public final class Pkg {
     public String name() {
         return name;
     }
+
+    /**
+     * @return true if the resources are relative to the package
+     */
+    public boolean isRelative() {
+        return relative;
+    }
 }
