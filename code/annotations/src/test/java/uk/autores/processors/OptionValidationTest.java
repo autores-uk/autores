@@ -1,7 +1,7 @@
 package uk.autores.processors;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.*;
+import uk.autores.AssertResourceExists;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.*;

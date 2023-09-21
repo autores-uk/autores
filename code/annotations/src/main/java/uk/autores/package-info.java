@@ -1,9 +1,9 @@
 /**
- * <h2>AUTORES</h2>
- *
  * An annotation driven library for working with classpath resource files.
+ * This package contains the core library functionality;
+ * other packages are for annotation processing/extensibility.
  *
- * <h3>Usage</h3>
+ * <h2>AUTORES</h2>
  *
  * To process a resource annotate a class or package with {@link uk.autores.ClasspathResource}
  * and set fields as appropriate for the specified {@link uk.autores.processing.Handler}.
@@ -30,7 +30,7 @@
  *         <tr>
  *             <td>{@link uk.autores.GenerateByteArraysFromFiles}</td>
  *             <td>any files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY}</td>
+ *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#STRATEGY}</td>
  *             <td>Generates a class with methods that return resources as byte arrays.</td>
  *         </tr>
  *         <tr>

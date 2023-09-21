@@ -26,7 +26,10 @@ public final class ConfigDefs {
             "public"::equals,
             "Generated class visibility. Valid value: \"public\"");
 
-    /** "encoding": Encoding of consumed text files. Optional. */
+    /**
+     * "encoding": encoding of consumed text files. Optional.
+     * @see Charset#availableCharsets()
+     */
     public static final ConfigDef ENCODING = new ConfigDef("encoding",
             false,
             false,
@@ -40,7 +43,7 @@ public final class ConfigDefs {
             false,
             false,
             s -> s.matches("true|false"),
-            "Enables searching for localized resources. Valid values: \"true\"; \"false\". Default: \"true\".");
+            "Enables searching for localized resources. Valid values: \"true\"; \"false\".");
 
     /**
      * "missing-key": how to report missing keys in localized {@link Properties} resources.
@@ -51,7 +54,7 @@ public final class ConfigDefs {
             false,
             false,
             s -> s.matches("error|warn|ignore"),
-            "Action when a base key is missing from localized file. Valid values: \"error\"; \"warn\"; \"ignore\". Default: \"error\".");
+            "Action when a base key is missing from localized file. Valid values: \"error\"; \"warn\"; \"ignore\".");
 
     /**
      * "format": whether to generate format methods. "true" (default) or "false". Optional.
@@ -61,7 +64,7 @@ public final class ConfigDefs {
             false,
             false,
             s -> s.matches("true|false"),
-            "Enables formatting. Valid values: \"true\"; \"false\". Default: \"true\".");
+            "Enables formatting. Valid values: \"true\"; \"false\"..");
 
     /**
      * "strategy": how to consume resources.
@@ -77,8 +80,8 @@ public final class ConfigDefs {
     public static final ConfigDef STRATEGY = new ConfigDef("strategy",
             false,
             false,
-            s -> s.matches("auto|inline|strict|lax"),
-            "Code generation strategy. Valid values: \"auto\"; \"inline\"; \"strict\"; \"lax\". Default: \"auto\"");
+            s -> s.matches("auto|inline|lazy"),
+            "Code generation strategy. Valid values: \"auto\"; \"inline\"; \"lazy\".");
 
     static Set<ConfigDef> set(ConfigDef...defs) {
         Set<ConfigDef> set = new LinkedHashSet<>();

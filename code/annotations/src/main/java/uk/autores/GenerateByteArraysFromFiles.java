@@ -19,7 +19,7 @@ import java.util.Set;
  * as a new byte array.
  * </p>
  * <p>
- *     Files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
+ *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
  * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {
@@ -49,12 +49,11 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * <ul>
      *     <li>"auto": "inline" for files up to 1kB; "strict" otherwise</li>
      *     <li>"inline": files become bytecode instructions;
-     *     limits are untested but back-of-napkin calculations limit this mechanism to ~500MB</li>
-     *     <li>"strict": files are loaded using traditional resource loading;
+     *     limits are untested but back-of-napkin calculations limit this mechanism to ~500MB files</li>
+     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)} or
+     *     {@link ClassLoader#getResourceAsStream(String)};
      *     an {@link AssertionError} is thrown at runtime if the file does not match compile time heuristics</li>
-     *     <li>"lax": files are loaded using traditional resource loading</li>
      * </ul>
-     * Traditional resource loading means using {@link Class#getResourceAsStream(String)} or {@link ClassLoader#getResourceAsStream(String)}.
      *
      * @return visibility strategy
      * @see ConfigDefs#VISIBILITY
@@ -99,7 +98,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, resource)) {
-                generator.generate(context, writer, buf, className, stats);
+                generator.generate(writer, buf, stats);
             }
         }
     }
@@ -108,21 +107,20 @@ public final class GenerateByteArraysFromFiles implements Handler {
         String strategy = context.option(ConfigDefs.STRATEGY.name()).orElse("auto");
         switch (strategy) {
             case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
-            case "strict": return GenerateByteArraysFromFiles::writeStrictLazyLoad;
-            case "lax": return GenerateByteArraysFromFiles::writeLaxLazyLoad;
+            case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;
             default: return GenerateByteArraysFromFiles::writeAuto;
         }
     }
 
-    private static void writeAuto(Context ctxt, JavaWriter writer, byte[] buf, String className, FileStats stats) throws IOException {
+    private static void writeAuto(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         if (stats.size > 1024) {
-            writeStrictLazyLoad(ctxt, writer, buf, className, stats);
+            writeLazyLoad(writer, buf, stats);
         } else {
-            writeInlineMethods(ctxt, writer, buf, className, stats);
+            writeInlineMethods(writer, buf, stats);
         }
     }
 
-    private static void writeInlineMethods(Context ctxt, JavaWriter writer, byte[] buf, String className, FileStats stats) throws IOException {
+    private static void writeInlineMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         int methodCount = 0;
 
         try (InputStream in = stats.file.openInputStream()) {
@@ -186,66 +184,24 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    private static void writeStrictLazyLoad(Context ctxt, JavaWriter writer, byte[] buf, String className, FileStats stats) throws IOException {
+    private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         writeSignature(writer);
 
         writer.indent().append("byte[] barr = new byte[").append(Ints.toString((int) stats.size)).append("];").nl();
-        writer.indent().append("long hash = 0L;").nl();
-        writeTryFileOpen(ctxt, writer, className, stats).openBrace().nl();
+        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource).append(") ").openBrace().nl();
         writer.indent().append("int offset = 0;").nl();
         writer.indent().append("while(true) ").openBrace().nl();
         writer.indent().append("int r = in.read(barr, offset, barr.length - offset);").nl();
         writer.indent().append("if (r < 0) { break; }").nl();
-        writer.indent().append("for (int i = 0; i < offset + r; i++) ").openBrace().nl();
-        writer.indent().append("hash = (hash * 31) + barr[i];").nl();
-        writer.closeBrace().nl();
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == barr.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.indent().append("long expectedHash = ").append(Long.toString(stats.hash)).append("L;").nl();
-        writer.indent().append("if ((offset != barr.length) || (hash != expectedHash) || (in.read() >= 0)) ").openBrace().nl();
-        String err = "Resource modified after compilation: ";
-        writer.indent().append("throw new AssertionError(").string(err).append("+").string(stats.resource).append(");").nl();
-        writer.closeBrace().nl();
+        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource);
         writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
         writer.indent().append("throw new AssertionError(").string(stats.resource).append(", e);").nl();
         writer.closeBrace().nl();
 
         writeReturn(writer);
-    }
-
-    private static void writeLaxLazyLoad(Context ctxt, JavaWriter writer, byte[] buf, String className, FileStats stats) throws IOException {
-        writeSignature(writer);
-
-        writer.indent()
-                .append("java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream(")
-                .append(Ints.toString((int) stats.size))
-                .append(");")
-                .nl();
-        writer.indent().append("byte[] buf = new byte[1024];").nl();
-        writeTryFileOpen(ctxt, writer, className, stats).openBrace().nl();
-        writer.indent().append("while(true) ").openBrace().nl();
-        writer.indent().append("int r = in.read(buf);").nl();
-        writer.indent().append("if (r < 0) { break; }").nl();
-        writer.indent().append("baos.write(buf, 0, r);").nl();
-        writer.closeBrace().nl();
-        writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource).append(", e);").nl();
-        writer.closeBrace().nl();
-        writer.indent().append("byte[] barr = baos.toByteArray();").nl();
-
-        writeReturn(writer);
-    }
-
-    private static JavaWriter writeTryFileOpen(Context context, JavaWriter writer, String className, FileStats stats) throws IOException {
-        writer.indent().append("try (java.io.InputStream in = ").append(className);
-        if (context.pkg().isRelative()) {
-            writer.append(".class");
-        } else {
-            writer.append(".class.getClassLoader()");
-        }
-        writer.append(".getResourceAsStream(").string(stats.resource).append(")) ");
-        return writer;
     }
 
     private static void writeSignature(JavaWriter writer) throws IOException {
@@ -260,15 +216,11 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     private static FileStats stats(byte[] buf, String resource, FileObject file) throws IOException {
         long size = 0;
-        long hash = 0;
         try (InputStream in = file.openInputStream()) {
             while(true) {
                 int r = in.read(buf);
                 if (r < 0) {
                     break;
-                }
-                for (int i = 0; i < r; i++) {
-                    hash = (hash * 31) + buf[i];
                 }
                 size += r;
                 if (size > Integer.MAX_VALUE) {
@@ -277,25 +229,22 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 }
             }
         }
-        return new FileStats(resource, file, size, hash);
+        return new FileStats(resource, file, size);
     }
 
     private static final class FileStats {
         private final String resource;
         private final FileObject file;
         private final long size;
-        private final long hash;
-
-        private FileStats(String resource, FileObject file, long size, long hash) {
+        private FileStats(String resource, FileObject file, long size) {
             this.resource = resource;
             this.file = file;
             this.size = size;
-            this.hash = hash;
         }
     }
 
     @FunctionalInterface
     private interface ClassGenerator {
-        void generate(Context ctxt, JavaWriter writer, byte[] buf, String className, FileStats stats) throws IOException;
+        void generate(JavaWriter writer, byte[] buf, FileStats stats) throws IOException;
     }
 }

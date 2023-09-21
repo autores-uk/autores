@@ -1,6 +1,7 @@
 package uk.autores.processors;
 
-import uk.autores.*;
+import uk.autores.ClasspathResource;
+import uk.autores.ClasspathResources;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -20,8 +21,6 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSortedMap;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -74,10 +73,10 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
         consumed = true;
 
         Name name = annotation.getQualifiedName();
-        if (sameSeq(ClasspathResource.class.getName(), name)) {
+        if (CharSeq.equivalent(ClasspathResource.class.getName(), name)) {
           ClasspathResource cpr = annotated.getAnnotation(ClasspathResource.class);
           process(cpr, annotated);
-        } else if (sameSeq(ClasspathResources.class.getName(), name)) {
+        } else if (CharSeq.equivalent(ClasspathResources.class.getName(), name)) {
           ClasspathResources cprs = annotated.getAnnotation(ClasspathResources.class);
           for (ClasspathResource cpr : cprs.value()) {
             process(cpr, annotated);
@@ -87,18 +86,6 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     }
 
     return consumed;
-  }
-
-  private boolean sameSeq(CharSequence cs1, CharSequence cs2) {
-    if (cs1.length() != cs2.length()) {
-      return false;
-    }
-    for (int i = cs1.length() - 1; i >= 0; i--) {
-      if (cs1.charAt(i) != cs2.charAt(i)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   private void process(ClasspathResource cpr, Element annotated) {
