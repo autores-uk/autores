@@ -12,7 +12,6 @@ import java.util.Set;
 /**
  * Defines and documents the configuration used by the provided {@link Handler}s.
  * Each {@link Handler} supports a different set of config.
- * This type is public as documentation aide.
  * @see ConfigDef
  */
 public final class ConfigDefs {

@@ -13,13 +13,22 @@ import java.util.Set;
 
 /**
  * <p>
- * {@link Handler} that, for each resource, generates a class with a name derived from the resource name
- * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
- * The class will have a static method called <code>bytes</code> that returns the resource
- * as a new byte array.
+ *     {@link Handler} that, for each resource, generates a class with a name derived from the resource name
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
+ *     The class will have a static method called <code>bytes</code> that returns the resource
+ *     as a new byte array.
  * </p>
  * <p>
  *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
+ * </p>
+ * <p>
+ *     Inline files will be stored as bytecode instructions.
+ *     The size of inline files is limited by the class file format to ~500MB.
+ * </p>
+ * <p>
+ *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)} if
+ *     {@link ClasspathResource#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
+ *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
  * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {
@@ -48,11 +57,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * Strategy:
      * <ul>
      *     <li>"auto": "inline" for files up to 1kB; "strict" otherwise</li>
-     *     <li>"inline": files become bytecode instructions;
-     *     limits are untested but back-of-napkin calculations limit this mechanism to ~500MB files</li>
-     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)} or
-     *     {@link ClassLoader#getResourceAsStream(String)};
-     *     an {@link AssertionError} is thrown at runtime if the file does not match compile time heuristics</li>
+     *     <li>"inline": files become bytecode instructions</li>
+     *     <li>"lazy": files are loaded using using the {@link ClassLoader}</li>
      * </ul>
      *
      * @return visibility strategy
