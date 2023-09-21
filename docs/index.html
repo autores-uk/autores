@@ -1,13 +1,13 @@
 <html>
   <head>
-    <title>Autores resource library for Java</title>
+    <title>Automated Resource Handling Library for Java</title>
   </head>
   <body>
 
     <h1>Autores</h1>
 
     <p>
-      Convenience library for working with embedded <a href="https://dev.java/">Java&trade;</a> resources.
+      Small library for automating <a href="https://dev.java/">Java&trade;</a> resource handling.
       Use annotations for verification and code generation.
     </p>
 
@@ -17,13 +17,27 @@
       <li>Reduce resource file I/O handling</li>
       <li>Embed files as byte arrays or strings</li>
       <li>Replace localization <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/PropertyResourceBundle.html">resource bundle messages</a> with typed method signatures</li>
+      <li>Extend with additional use cases</li>
     </ul>
 
     <p>This library can affect compile time, class sizes, and constant pools. Use judiciously.</p>
 
+    <h2>Links</h2>
+
+    <ul>
+      <li><a href="https://github.com/autores-uk/autores">Source Code</a></li>
+      <li><a href="apidocs/index.html?uk/autores/package-summary.html">API</a></li>
+    </ul>
+
+    <h2>Usage</h2>
+
+    TODO
+
     <h2>Sample</h2>
 
     <pre><code>
+      import uk.autores;
+
       @ClasspathResource(value = {"Poule.txt", "Roses.txt"}, handler = GenerateStringsFromText.class)
       public class PrintRhymes {
 
@@ -33,21 +47,6 @@
         }
       }
     </code></pre>
-
-    <h2>Links</h2>
-
-    <ul>
-      <li><a href="https://github.com/autores-uk/autores">Sources</a></li>
-      <li><a href="apidocs/index.html?uk/autores/package-summary.html">API</a></li>
-    </ul>
-
-    <h2>Priorities</h2>
-
-    <ol>
-      <li>Correctness</li>
-      <li>Convenience</li>
-      <li>Performance</li>
-    </ol>
 
   </body>
 </html>
