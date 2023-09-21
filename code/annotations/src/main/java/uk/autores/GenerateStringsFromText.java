@@ -14,12 +14,31 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>{@link Handler} that generates classes that returns file contents as strings.</p>
+ * <p>{@link Handler} that generates classes that returns file contents as {@link String}s.</p>
  * <p>
- * For each resource, generates a class with a name derived from the resource name
- * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
- * The class will have a static method called <code>text</code> that returns the resource
- * as a {@link String}.
+ *     For each resource, generates a class with a name derived from the resource name
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
+ *     The class will have a static method called <code>text</code> that returns the resource
+ *     as a {@link String}.
+ * </p>
+ * <p>
+ *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
+ * </p>
+ * <p>
+ *     The {@link CharsetDecoder} is configured with {@link CodingErrorAction#REPORT}
+ *     on malformed input or unmappable characters which will result in build failures.
+ * </p>
+ * <p>
+ *     Inline files will be stored in the class constant pool.
+ *     The class file format restricts constants to 65535 bytes.
+ *     Strings over this limit will be split across multiple constants and concatenated at runtime.
+ *     The size of inline files is limited by the class file format to ~500MB.
+ * </p>
+ * <p>
+ *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)} if
+ *     {@link ClasspathResource#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
+ *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
+ * </p>
  */
 public final class GenerateStringsFromText implements Handler {
 
@@ -34,16 +53,12 @@ public final class GenerateStringsFromText implements Handler {
      * <ul>
      *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
      *     "strict" otherwise</li>
-     *     <li>"inline": files become bytecode instructions;
-     *     limits are untested but back-of-napkin calculations limit this mechanism to ~500MB files</li>
-     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)} or
-     *     {@link ClassLoader#getResourceAsStream(String)};
-     *     an {@link AssertionError} is thrown at runtime if the file does not match compile time length</li>
+     *     <li>"inline": files become {@link String} literals</li>
+     *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
      * </ul>
      * <p>
-     * UTF-8 is assumed if "encoding" is not set and this is the recommended encoding.
-     * The {@link CharsetDecoder} is strict.
-     * An exception will be raised if an error is detected in the resource encoding.
+     *     "UTF-8" is assumed if "encoding" is not set and this is the recommended encoding.
+     * </p>
      *
      * @return visibility; encoding; strategy
      * @see ConfigDefs#VISIBILITY

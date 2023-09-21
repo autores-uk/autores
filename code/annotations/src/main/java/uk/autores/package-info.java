@@ -1,7 +1,7 @@
 /**
  * An annotation driven library for working with classpath resource files.
- * This package contains the core library functionality;
- * other packages are for annotation processing/extensibility.
+ * This package contains the core library functionality.
+ * See other packages are for annotation processing and extensibility.
  *
  * <h2>AUTORES</h2>
  *
@@ -48,7 +48,7 @@
  *         <tr>
  *             <td>{@link uk.autores.GenerateStringsFromText}</td>
  *             <td>text files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#ENCODING}</td>
+ *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#ENCODING} {@link uk.autores.ConfigDefs#STRATEGY}</td>
  *             <td>Default {@link uk.autores.processing.Handler} that validates resources exist.</td>
  *         </tr>
  *     </tbody>

@@ -13,7 +13,7 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * The intent of this code generation {@link Handler} is to validate keys used with {@link java.util.ResourceBundle}.
+ * Use this code generation {@link Handler} to prevent misspelled keys with {@link java.util.ResourceBundle}.
  * For every {@link Properties} file defined as a resource:
  * <ul>
  *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}</li>

@@ -18,16 +18,16 @@ import static java.util.Arrays.asList;
  * strings and {@link java.text.MessageFormat} to create typed method signatures.
  *
  * <h2>Example</h2>
- *
+ * <p>
  * Example file <code>Cosmic.properties</code>:
  * <pre>planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</pre>
- *
+ * <p>
  * This will generate a class <code>Cosmic</code> with the method signature:
  * <pre>static String planet_event(Locale l, TimeZone tz, Number v0, Instant v1, String v2)</pre>
- *
+ * <p>
  * Usage:
  * <pre>Cosmic.planet_event(Locale.ENGLISH, TimeZone.getTimeZone("GMT") 4, Instant.EPOCH, "an attack")</pre>
- *
+ * <p>
  * This will return the string <code>"At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4."</code>.
  */
 public final class GenerateMessagesFromProperties implements Handler {
@@ -63,14 +63,15 @@ public final class GenerateMessagesFromProperties implements Handler {
             if (!resource.endsWith(EXTENSION)) {
                 String msg = "Resource names must end in " + EXTENSION + " - got " + resource;
                 context.printError(msg);
-            } else {
-                Properties base = PropLoader.load(entry.getValue());
-                List<Localized> localizations = localize
-                        ? loadLocalizations(context, resource)
-                        : Collections.emptyList();
-
-                writeProperties(context, resource, base, localizations);
+                continue;
             }
+
+            Properties base = PropLoader.load(entry.getValue());
+            List<Localized> localizations = localize
+                    ? loadLocalizations(context, resource)
+                    : Collections.emptyList();
+
+            writeProperties(context, resource, base, localizations);
         }
     }
 
@@ -94,7 +95,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
             final FileObject file;
             try {
-                 file = filer.getResource(location, resourcePackage, props);
+                file = filer.getResource(location, resourcePackage, props);
                 try (InputStream in = file.openInputStream()) {
                     Objects.requireNonNull(in);
                 }
@@ -134,8 +135,8 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
-            Writer escaper = new UnicodeEscapeWriter(out);
-            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+             Writer escaper = new UnicodeEscapeWriter(out);
+             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
 
             Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
 
