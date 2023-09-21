@@ -56,7 +56,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     /**
      * Strategy:
      * <ul>
-     *     <li>"auto": "inline" for files up to 1kB; "strict" otherwise</li>
+     *     <li>"auto": "inline" for files up to 1kB; "lazy" otherwise</li>
      *     <li>"inline": files become bytecode instructions</li>
      *     <li>"lazy": files are loaded using using the {@link ClassLoader}</li>
      * </ul>

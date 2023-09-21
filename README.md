@@ -4,12 +4,12 @@ Annotation driven Java code generation library for working with embedded resourc
 
 ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg)
 
-## SEE ALSO
+## SEE
 
- - [autores.uk](https://autores.uk) for additional documentation
- - [Examples](code/examples/README.md) for how to use
- - Build and test the [code](code/README.md)
- - Browse the [library code](code/annotations/README.md)
+ - [Documentation](https://autores.uk)
+ - [Examples](code/examples/README.md)
+ - [Build](code/README.md) with Maven
+ - [Core source code](code/annotations/README.md)
 
 ## LICENSE
 

@@ -52,7 +52,7 @@ public final class GenerateStringsFromText implements Handler {
      * Strategy:
      * <ul>
      *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
-     *     "strict" otherwise</li>
+     *     "lazy" otherwise</li>
      *     <li>"inline": files become {@link String} literals</li>
      *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
      * </ul>
