@@ -61,8 +61,7 @@ class ConfigDefsTest {
         ConfigDef cd = ConfigDefs.STRATEGY;
         assertTrue(cd.isValid("auto"));
         assertTrue(cd.isValid("inline"));
-        assertTrue(cd.isValid("strict"));
-        assertTrue(cd.isValid("lax"));
+        assertTrue(cd.isValid("lazy"));
         assertFalse(cd.isValid("foo"));
     }
 }

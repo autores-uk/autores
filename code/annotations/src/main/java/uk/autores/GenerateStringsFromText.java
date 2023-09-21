@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * <p>{@link Handler} that generates classes that returns file contents as strings.</p>
- *
+ * <p>
  * For each resource, generates a class with a name derived from the resource name
  * using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
  * The class will have a static method called <code>text</code> that returns the resource
@@ -24,15 +24,35 @@ import java.util.Set;
 public final class GenerateStringsFromText implements Handler {
 
     /**
-     * UTF-8 is assumed if "encoding" is not set.
+     * String literals must fit into the constant pool encoded as UTF-8.
+     * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">u4 code_length</a>.
+     */
+    private static final int CONST_BYTE_LIMIT = 65535;
+
+    /**
+     * Strategy:
+     * <ul>
+     *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
+     *     "strict" otherwise</li>
+     *     <li>"inline": files become bytecode instructions;
+     *     limits are untested but back-of-napkin calculations limit this mechanism to ~500MB files</li>
+     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)} or
+     *     {@link ClassLoader#getResourceAsStream(String)};
+     *     an {@link AssertionError} is thrown at runtime if the file does not match compile time length</li>
+     * </ul>
+     * <p>
+     * UTF-8 is assumed if "encoding" is not set and this is the recommended encoding.
+     * The {@link CharsetDecoder} is strict.
+     * An exception will be raised if an error is detected in the resource encoding.
      *
-     * @return visibility; encoding
+     * @return visibility; encoding; strategy
      * @see ConfigDefs#VISIBILITY
      * @see ConfigDefs#ENCODING
+     * @see ConfigDefs#STRATEGY
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.ENCODING);
+        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.ENCODING, ConfigDefs.STRATEGY);
     }
 
     @Override
@@ -46,8 +66,22 @@ public final class GenerateStringsFromText implements Handler {
         String encoding = context.option(ConfigDefs.ENCODING.name()).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
+        Utf8Buffer buf = Utf8Buffer.size(CONST_BYTE_LIMIT);
+
+        Assistants assistants = new Assistants(decoder, buf);
+
+        ClassGenerator generator = strategy(context);
+
         for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
-            String simple = namer.simplifyResourceName(entry.getKey());
+            String resource = entry.getKey();
+            Stats stats = stats(entry, buf, decoder);
+            if (stats.utf16Size > Integer.MAX_VALUE) {
+                String msg = "Resource " + resource + " to large for String type";
+                context.printError(msg);
+                continue;
+            }
+
+            String simple = namer.simplifyResourceName(resource);
             String className = namer.nameClass(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
@@ -63,24 +97,127 @@ public final class GenerateStringsFromText implements Handler {
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, entry.getKey())) {
 
-                writeFile(entry, decoder, writer);
+                generator.generate(assistants, stats, writer);
             }
         }
     }
 
-    private void writeFile(Map.Entry<String, FileObject> entry,
-                           CharsetDecoder decoder,
-                           JavaWriter writer) throws IOException {
+    private ClassGenerator strategy(Context context) {
+        String strategy = context.option(ConfigDefs.STRATEGY.name()).orElse("auto");
+        switch (strategy) {
+            case "lazy":
+                return GenerateStringsFromText::writeLazyLoad;
+            case "inline":
+                return GenerateStringsFromText::writeInLine;
+            default:
+                return GenerateStringsFromText::writeAuto;
+        }
+    }
 
-            writer.nl();
-            writer.indent().staticMember("java.lang.String", "text").append("() ").openBrace().nl();
+    private static void writeAuto(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
+        if (stats.utf8Size > CONST_BYTE_LIMIT) {
+            writeLazyLoad(assistants, stats, writer);
+        } else {
+            writeInLine(assistants, stats, writer);
+        }
+    }
 
-            try (InputStream in = entry.getValue().openInputStream();
-                 Reader reader = new InputStreamReader(in, decoder)) {
-                writer.append("    return ").string(reader).append(";").nl();
+    private static void writeInLine(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
+        if (stats.utf8Size < CONST_BYTE_LIMIT) {
+            writeSimpleInline(assistants, stats, writer);
+            return;
+        }
+
+        String len = Ints.toString((int) stats.utf16Size);
+        Utf8Buffer buf = assistants.buffer;
+
+        writeMethodDeclaration(writer);
+
+        try (InputStream in = stats.file.openInputStream();
+             Reader reader = new InputStreamReader(in, assistants.decoder);
+             Reader bufReader = new BufferedReader(reader)) {
+
+            writer.indent().append("char[] arr = new char[").append(len).append("];").nl();
+            writer.indent().append("int offset = 0;").nl();
+            while (buf.receive(bufReader)) {
+                writer.indent().append("offset = copy(").string(buf).append(", arr, offset);").nl();
             }
+            writer.indent().append("return new java.lang.String(arr);").nl();
+        }
 
-            writer.closeBrace().nl();
+        writeMethodClose(writer);
+        writeCopyMethod(writer);
+    }
+
+    private static void writeSimpleInline(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
+        writeMethodDeclaration(writer);
+
+        try (InputStream in = stats.file.openInputStream();
+             Reader reader = new InputStreamReader(in, assistants.decoder);
+             Reader bufReader = new BufferedReader(reader)) {
+
+            assistants.buffer.receive(bufReader);
+            writer.indent().append("return ").string(assistants.buffer).append(";").nl();
+        }
+
+        writeMethodClose(writer);
+    }
+
+    private static void writeLazyLoad(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
+        String encoding = assistants.decoder.charset().name();
+        int size = (int) stats.utf16Size;
+
+        writeMethodDeclaration(writer);
+
+        writer.indent()
+                .append("java.nio.charset.Charset enc = java.nio.charset.Charset.forName(")
+                .string(encoding)
+                .append(");")
+                .nl();
+        writer.indent().append("char[] buf = new char[").append(Ints.toString(size)).append("];").nl();
+        writer.indent()
+                .append("try (")
+                .append("java.io.InputStream in = ")
+                .openResource(stats.resource)
+                .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
+                .openBrace()
+                .nl();
+
+        writer.indent().append("int offset = 0;").nl();
+        writer.indent().append("while(true) ").openBrace().nl();
+        writer.indent().append("int r = reader.read(buf, offset, buf.length - offset);").nl();
+        writer.indent().append("if (r < 0) { break; }").nl();
+        writer.indent().append("offset += r;").nl();
+        writer.indent().append("if (offset == buf.length) { break; }").nl();
+        writer.closeBrace().nl();
+        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource);
+        writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(").string(stats.resource).append(");").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return new java.lang.String(buf);").nl();
+
+        writeMethodClose(writer);
+    }
+
+    private static void writeCopyMethod(JavaWriter writer) throws IOException {
+        String decl = "private static int copy(java.lang.CharSequence src, char[] dest, int off) ";
+
+        writer.nl();
+        writer.indent().append(decl).openBrace().nl();
+        writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
+        writer.indent().append("dest[off++] = src.charAt(i);").nl();
+        writer.closeBrace();
+        writer.indent().append("return off;").nl();
+        writer.close();
+    }
+
+    private static void writeMethodDeclaration(JavaWriter writer) throws IOException {
+        writer.nl();
+        writer.indent().staticMember("java.lang.String", "text").append("() ").openBrace().nl();
+    }
+
+    private static void writeMethodClose(JavaWriter writer) throws IOException {
+        writer.closeBrace().nl();
     }
 
     private CharsetDecoder decoder(String encoding) {
@@ -88,5 +225,54 @@ public final class GenerateStringsFromText implements Handler {
         return c.newDecoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
+    }
+
+    private Stats stats(Map.Entry<String, FileObject> entry, Utf8Buffer buf, CharsetDecoder decoder) throws IOException {
+        long utf16Size = 0L;
+        long utf8Size = 0L;
+        try (InputStream in = entry.getValue().openInputStream();
+             Reader reader = new InputStreamReader(in, decoder);
+             Reader bufReader = new BufferedReader(reader)) {
+            while (buf.receive(bufReader)) {
+                utf16Size += buf.length();
+                utf8Size += buf.utf8Length();
+
+                if (utf16Size > Integer.MAX_VALUE) {
+                    // no point continuing
+                    break;
+                }
+            }
+        }
+
+        return new Stats(entry.getKey(), entry.getValue(), utf16Size, utf8Size);
+    }
+
+    private static final class Stats {
+        private final String resource;
+        private final FileObject file;
+        private final long utf16Size;
+        private final long utf8Size;
+
+        private Stats(String resource, FileObject file, long utf16Size, long utf8Size) {
+            this.resource = resource;
+            this.file = file;
+            this.utf16Size = utf16Size;
+            this.utf8Size = utf8Size;
+        }
+    }
+
+    private static final class Assistants {
+        private final CharsetDecoder decoder;
+        private final Utf8Buffer buffer;
+
+        private Assistants(CharsetDecoder decoder, Utf8Buffer buffer) {
+            this.decoder = decoder;
+            this.buffer = buffer;
+        }
+    }
+
+    @FunctionalInterface
+    private interface ClassGenerator {
+        void generate(Assistants assistants, Stats stats, JavaWriter writer) throws IOException;
     }
 }

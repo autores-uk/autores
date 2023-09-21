@@ -13,6 +13,8 @@ import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -28,23 +30,44 @@ class GenerateByteArraysFromFilesTest {
 
     @Test
     void handle() throws Exception {
-        String data = "abc";
-        String filename = "foo.txt";
+        TestProcessingEnvironment env = new TestProcessingEnvironment();
+        SortedMap<String, FileObject> files = new TreeMap<>();
 
-        TestFileObject text = new TestFileObject(true);
-        try(OutputStream out = text.openOutputStream()) {
-            out.write(data.getBytes(StandardCharsets.UTF_8));
+        {
+            String data = "abc";
+            String filename = "foo.txt";
+
+            TestFileObject text = new TestFileObject(true);
+            try (OutputStream out = text.openOutputStream()) {
+                out.write(data.getBytes(StandardCharsets.UTF_8));
+            }
+
+            env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
+
+            files.put(filename, text);
+        }
+        {
+            String data = IntStream.range(0, 1024).mapToObj(i -> "abc").collect(Collectors.joining());
+            String filename = "big.txt";
+
+            TestFileObject text = new TestFileObject(true);
+            try (OutputStream out = text.openOutputStream()) {
+                out.write(data.getBytes(StandardCharsets.UTF_8));
+            }
+
+            env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
+
+            files.put(filename, text);
         }
 
-        TestProcessingEnvironment env = new TestProcessingEnvironment();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
-
-        for (String strat : Arrays.asList("auto", "inline", "strict", "lax")) {
+        for (String strat : Arrays.asList("auto", "inline", "lazy")) {
             List<Config> cfg = singletonList(new Config(ConfigDefs.STRATEGY.name(), strat));
-            Map<String, String> generated = generate(env, file(filename, text), cfg);
+            Map<String, String> generated = generate(env, files, cfg);
             assertFalse(generated.isEmpty());
         }
     }
+
+
 
     @Test
     void handlesZeroSkipping() throws Exception {

@@ -15,4 +15,4 @@ CODE="$(pwd)"
 # https://hub.docker.com/_/maven/
 IMAGE="docker.io/library/maven:3.9.4-eclipse-temurin-8"
 
-podman run -v "${CODE}:/code" -w "/code" "${IMAGE}" mvn clean install
+podman run -v "${CODE}:/code" -w "/code" "${IMAGE}" mvn clean install javadoc:javadoc

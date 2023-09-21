@@ -5,11 +5,11 @@ package {{pkg}};
 
 import javax.swing.ImageIcon;
 
-final class {{className}} {
+public final class {{className}} {
 
   private {{className}}() {}
 
-  static ImageIcon load() {
+  public static ImageIcon load() {
     return new ImageIcon({{dataClassName}}.bytes());
   }
 }

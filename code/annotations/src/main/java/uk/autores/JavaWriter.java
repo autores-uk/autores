@@ -4,7 +4,6 @@ import uk.autores.processing.Context;
 import uk.autores.processing.Pkg;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -15,11 +14,15 @@ final class JavaWriter extends Writer {
     private static final String NL = System.lineSeparator();
     private final Writer w;
     private final String visibility;
+    private final String className;
+    private final boolean relative;
     private boolean closed = false;
     private int indentation = 2;
 
     JavaWriter(Object generator, Context ctxt, Writer w, String className, String comment) throws IOException {
         this.w = w;
+        this.className = className;
+        this.relative = ctxt.pkg().isRelative();
 
         visibility = ctxt.option(ConfigDefs.VISIBILITY.name()).isPresent() ? "public " : "";
 
@@ -88,16 +91,9 @@ final class JavaWriter extends Writer {
         return this;
     }
 
-    public JavaWriter string(String value) throws IOException {
+    public JavaWriter string(CharSequence value) throws IOException {
         w.append('"');
         StringLiterals.write(value, w);
-        w.append('"');
-        return this;
-    }
-
-    public JavaWriter string(Reader reader) throws IOException {
-        w.append('"');
-        StringLiterals.write(reader, w);
         w.append('"');
         return this;
     }
@@ -121,6 +117,25 @@ final class JavaWriter extends Writer {
         for (int i = 0; i < indentation; i++) {
             w.append(' ');
         }
+        return this;
+    }
+
+    public JavaWriter openResource(String resource) throws IOException {
+        String loader = relative ? "" : ".getClassLoader()";
+        return this.append(className)
+                .append(".class")
+                .append(loader)
+                .append(".getResourceAsStream(")
+                .string(resource)
+                .append(")");
+    }
+
+    public JavaWriter throwOnModification(String predicate, String resource) throws IOException {
+        String err = "Resource modified after compilation: ";
+
+        this.indent().append("if (").append(predicate).append(") ").openBrace().nl();
+        this.indent().append("throw new AssertionError(").string(err).append("+").string(resource).append(");").nl();
+        this.closeBrace().nl();
         return this;
     }
 }

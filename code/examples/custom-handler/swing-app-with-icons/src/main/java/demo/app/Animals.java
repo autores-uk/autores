@@ -1,20 +1,11 @@
 package demo.app;
 
-import demo.custom.handler.GenerateIconsFromFiles;
-import uk.autores.ClasspathResource;
+import demo.app.icons.MeowIcon;
+import demo.app.icons.WoofIcon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
-@ClasspathResource(
-        value = {
-            "Meow.png",
-            "Woof.png",
-        },
-        handler = GenerateIconsFromFiles.class,
-        config = @ClasspathResource.Cfg(key = "strategy", value = "lax")
-)
 public class Animals {
 
     public static void main(String...args) {

@@ -24,13 +24,7 @@
     <h2>Sample</h2>
 
     <pre><code>
-      @ClasspathResource(
-        value = {
-                "Poule.txt",
-                "Roses.txt",
-        },
-        handler = GenerateStringsFromText.class
-      )
+      @ClasspathResource(value = {"Poule.txt", "Roses.txt"}, handler = GenerateStringsFromText.class)
       public class PrintRhymes {
 
         public static void main(String...args)  {
@@ -46,6 +40,14 @@
       <li><a href="https://github.com/autores-uk/autores">Sources</a></li>
       <li><a href="apidocs/index.html?uk/autores/package-summary.html">API</a></li>
     </ul>
+
+    <h2>Priorities</h2>
+
+    <ol>
+      <li>Correctness</li>
+      <li>Convenience</li>
+      <li>Performance</li>
+    </ol>
 
   </body>
 </html>

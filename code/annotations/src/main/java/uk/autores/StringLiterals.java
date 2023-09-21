@@ -1,7 +1,6 @@
 package uk.autores;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 
 /** Methods for escaping special String characters. */
@@ -39,16 +38,6 @@ final class StringLiterals {
     public static void write(CharSequence cs, Writer w) throws IOException {
         for (int i = 0, len = cs.length(); i < len; i++) {
             write(w, cs.charAt(i));
-        }
-    }
-
-    public static void write(Reader r, Writer w) throws IOException {
-        while (true) {
-            int ch = r.read();
-            if (ch < 0) {
-                break;
-            }
-            write(w, (char) ch);
         }
     }
 }

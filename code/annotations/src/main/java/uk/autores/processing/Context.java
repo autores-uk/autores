@@ -5,7 +5,6 @@ import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;

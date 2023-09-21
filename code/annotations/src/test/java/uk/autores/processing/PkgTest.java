@@ -1,7 +1,6 @@
 package uk.autores.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Pkg;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

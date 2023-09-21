@@ -3,7 +3,6 @@ package uk.autores;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
-import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -36,6 +35,10 @@ public final class GenerateMessagesFromProperties implements Handler {
     private static final String EXTENSION = ".properties";
 
     /**
+     * <p>"localize" is "true" by default.</p>
+     * <p>"missing-key" is "error" by default.</p>
+     * <p>"format" is "true" by default.</p>
+     *
      * @return visibility, localize, missing-key
      * @see ConfigDefs#VISIBILITY
      * @see ConfigDefs#LOCALIZE

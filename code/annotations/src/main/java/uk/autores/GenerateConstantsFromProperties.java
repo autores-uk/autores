@@ -6,7 +6,6 @@ import uk.autores.processing.Handler;
 import uk.autores.processing.Namer;
 
 import javax.annotation.processing.Filer;
-import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
