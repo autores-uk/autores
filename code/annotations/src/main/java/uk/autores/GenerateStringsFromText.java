@@ -49,6 +49,7 @@ public final class GenerateStringsFromText implements Handler {
     private static final int CONST_BYTE_LIMIT = 65535;
 
     /**
+     * <p>All configuration is optional.</p>
      * Strategy:
      * <ul>
      *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
@@ -78,7 +79,7 @@ public final class GenerateStringsFromText implements Handler {
         Filer filer = context.env().getFiler();
         Element annotated = context.annotated();
 
-        String encoding = context.option(ConfigDefs.ENCODING.name()).orElse("UTF-8");
+        String encoding = context.option(ConfigDefs.ENCODING).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
         Utf8Buffer buf = Utf8Buffer.size(CONST_BYTE_LIMIT);
@@ -118,7 +119,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private ClassGenerator strategy(Context context) {
-        String strategy = context.option(ConfigDefs.STRATEGY.name()).orElse("auto");
+        String strategy = context.option(ConfigDefs.STRATEGY).orElse("auto");
         switch (strategy) {
             case "lazy":
                 return GenerateStringsFromText::writeLazyLoad;

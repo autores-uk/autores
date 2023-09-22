@@ -29,7 +29,7 @@ public interface Handler {
      *
      * @param context processing context
      * @throws Exception any exception
-     * @see Context#resources
+     * @see Context#resources()
      */
     void handle(Context context) throws Exception;
 

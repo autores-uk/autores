@@ -1,5 +1,6 @@
 package uk.autores.processors;
 
+/** Utility type for working with {@link java.lang.CharSequence} instances */
 final class CharSeq {
 
     private CharSeq() {}

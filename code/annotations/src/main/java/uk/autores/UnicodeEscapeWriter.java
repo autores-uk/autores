@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
+/** Writes non-ASCII chars as Unicode escape sequences. */
 final class UnicodeEscapeWriter extends Writer {
 
     private final Writer w;
