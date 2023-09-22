@@ -56,10 +56,16 @@ class Utf8BufferTest {
     @Test
     void throwsOnMalformed() {
         String highSurrogate = SURROGATE_PAIR.substring(0, 1);
-        Reader src = new StringReader(highSurrogate);
+        String lowSurrogate = SURROGATE_PAIR.substring(1, 2);
+        Reader high = new StringReader(highSurrogate);
+        Reader low = new StringReader(lowSurrogate);
+        Reader badPair = new StringReader(lowSurrogate + highSurrogate);
+
         Utf8Buffer buf = Utf8Buffer.size(4);
 
-        assertThrowsExactly(IOException.class, () -> buf.receive(src));
+        assertThrowsExactly(IOException.class, () -> buf.receive(high));
+        assertThrowsExactly(IOException.class, () -> buf.receive(low));
+        assertThrowsExactly(IOException.class, () -> buf.receive(badPair));
     }
 
     @Test

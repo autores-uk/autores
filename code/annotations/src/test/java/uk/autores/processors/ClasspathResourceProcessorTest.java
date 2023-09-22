@@ -101,4 +101,19 @@ class ClasspathResourceProcessorTest {
       assertTrue(processor.invoked);
     }
   }
+
+  @Test
+  void throwingHandlerFailsCompilation() throws IOException {
+    TestSources.Source src = TestSources.load(this, "ThrowingHandlerTest.java");
+    try {
+      Reflect.compile(
+              src.className,
+              src.sourceCode,
+              new CompileOptions().processors(processor)
+      ).create().get();
+      fail();
+    } catch (ReflectException e) {
+      assertTrue(processor.invoked);
+    }
+  }
 }
