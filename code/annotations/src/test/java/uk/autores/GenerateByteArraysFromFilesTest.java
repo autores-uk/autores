@@ -4,6 +4,7 @@ import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
+import uk.autores.env.TestMassiveFileObject;
 import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.*;
 
@@ -98,6 +99,21 @@ class GenerateByteArraysFromFilesTest {
         try(OutputStream out = text.openOutputStream()) {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
+
+        TestProcessingEnvironment env = new TestProcessingEnvironment();
+        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
+
+        Map<String, String> generated = generate(env, file(filename, text), emptyList());
+
+        assertTrue(generated.isEmpty());
+        assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
+    }
+
+    @Test
+    void reportsFileTooBig() throws Exception {
+        String filename = "massive.txt";
+
+        TestMassiveFileObject text = new TestMassiveFileObject();
 
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);

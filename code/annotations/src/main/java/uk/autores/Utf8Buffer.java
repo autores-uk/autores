@@ -9,9 +9,18 @@ final class Utf8Buffer implements CharSequence {
     private final char[] cbuf;
     private int length = 0;
     private int utf8Length = 0;
+    private final int maxUtf8Length;
 
     private Utf8Buffer(int size) {
-        cbuf = new char[size];
+        // Code units for every code point
+        // https://www.unicode.org/Public/15.1.0/ucd/UnicodeData.txt
+        // utf16=1 utf8=1 =134
+        // utf16=1 utf8=2 =1863
+        // utf16=2 utf8=4 =18034
+        // utf16=1 utf8=3 =14900
+
+        cbuf = new char[size * 2];
+        maxUtf8Length = size;
     }
 
     /**
@@ -27,43 +36,60 @@ final class Utf8Buffer implements CharSequence {
         length = 0;
         utf8Length = 0;
 
-        for (; length < cbuf.length; length++) {
-            reader.mark(2);
-            int n = reader.read();
-            if (n < 0) {
-                reader.reset();
-                break;
-            }
-            cbuf[length] = (char) n;
-            int codePoint;
-            boolean pair = false;
-            if (Character.isHighSurrogate(cbuf[length])) {
-                if (length == cbuf.length - 1) {
-                    reader.reset();
-                    break;
-                }
-                n = reader.read();
-                if (n < 0) {
-                    throw new IOException("EOF - broken surrogate pair");
-                }
-                cbuf[length + 1] = (char) n;
-                codePoint = Character.toCodePoint(cbuf[length], cbuf[length + 1]);
-                pair = true;
-            } else {
-                codePoint = cbuf[length];
-            }
-            int numbytes = utf8Bytes(codePoint);
-            if (utf8Length + numbytes > cbuf.length) {
-                reader.reset();
-                break;
-            }
-            if (pair) {
-                length++;
-            }
-            utf8Length += numbytes;
+        reader.mark(cbuf.length);
+        int r = reader.read(cbuf);
+        if (r < 0) {
+            return false;
+        }
+        if (r == 0) {
+            return true;
         }
 
-        return length != 0;
+        for (int i = 0; i < r; i++) {
+            char ch = cbuf[i];
+            int codePoint;
+            int utf6Len;
+            if (Character.isSurrogate(ch)) {
+                throwMalformed(r == 1);
+                if (i == r - 1) {
+                    // don't split surrogates
+                    break;
+                }
+                char low = cbuf[++i];
+                throwMalformed(!Character.isSurrogatePair(ch, low));
+                codePoint = Character.toCodePoint(ch, low);
+                utf6Len = 2;
+            } else {
+                codePoint = ch;
+                utf6Len = 1;
+            }
+            int bytes = utf8Bytes(codePoint);
+            if (bytes + utf8Length > maxUtf8Length) {
+                break;
+            }
+            utf8Length += bytes;
+            length += utf6Len;
+        }
+
+        reader.reset();
+        r = reader.read(cbuf, 0, length);
+        assert r == length;
+
+        return true;
+    }
+
+    private static int utf8Bytes(int codePoint) {
+        // https://datatracker.ietf.org/doc/html/rfc3629
+        return codePoint <= 0x7F ? 1
+                : codePoint <= 0x7FF ? 2
+                : codePoint <= 0xFFFF ? 3
+                : 4;
+    }
+
+    private void throwMalformed(boolean predicate) throws IOException {
+        if (predicate) {
+            throw new IOException("Malformed surrogates");
+        }
     }
 
     @Override
@@ -99,14 +125,10 @@ final class Utf8Buffer implements CharSequence {
         }
     }
 
-    private static int utf8Bytes(int codePoint) {
-        // https://datatracker.ietf.org/doc/html/rfc3629
-        return codePoint <= 0x7F ? 1
-                : codePoint <= 0x7FF ? 2
-                : codePoint <= 0xFFFF ? 3
-                : 4;
-    }
-
+    /**
+     * @param maxUtf8Length must be at least four bytes
+     * @return the buffer
+     */
     static Utf8Buffer size(int maxUtf8Length) {
         assert maxUtf8Length >= 4;
 

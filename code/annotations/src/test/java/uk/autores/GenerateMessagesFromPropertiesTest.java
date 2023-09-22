@@ -113,6 +113,15 @@ class GenerateMessagesFromPropertiesTest {
     }
 
     @Test
+    void failsOnMismatchedFormats() throws Exception {
+        makeFrDifferentFormat();
+
+        testMessages(env, emptyList(), file(filename, file));
+
+        assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
+    }
+
+    @Test
     void reportsBadFilename() throws Exception {
         SortedMap<String, FileObject> resources = new TreeMap<>();
         resources.put(filename, file);
@@ -144,6 +153,15 @@ class GenerateMessagesFromPropertiesTest {
         file_fr = new TestFileObject(true);
         try(OutputStream out = file_fr.openOutputStream()) {
             out.write(new byte[0]);
+        }
+
+        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename_fr, file_fr);
+    }
+
+    private void makeFrDifferentFormat() throws Exception {
+        file_fr = new TestFileObject(true);
+        try(OutputStream out = file_fr.openOutputStream()) {
+            out.write("today={0,number}\nfoo=baz\n".getBytes(StandardCharsets.UTF_8));
         }
 
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename_fr, file_fr);
