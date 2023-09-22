@@ -35,6 +35,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private static final String EXTENSION = ".properties";
 
     /**
+     * <p>All configuration is optional.</p>
      * <p>"localize" is "true" by default.</p>
      * <p>"missing-key" is "error" by default.</p>
      * <p>"format" is "true" by default.</p>
@@ -54,7 +55,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     public void handle(Context context) throws Exception {
         Map<String, FileObject> resources = context.resources();
 
-        boolean localize = !context.option(ConfigDefs.LOCALIZE.name())
+        boolean localize = !context.option(ConfigDefs.LOCALIZE)
                 .filter("false"::equals)
                 .isPresent();
 
@@ -262,7 +263,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              String key,
                              String baseValue,
                              String method) throws IOException {
-        if (ctxt.option(ConfigDefs.FORMAT.name()).filter("false"::equals).isPresent()) {
+        if (ctxt.option(ConfigDefs.FORMAT).filter("false"::equals).isPresent()) {
             return;
         }
 

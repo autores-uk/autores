@@ -24,7 +24,7 @@ final class JavaWriter extends Writer {
         this.className = className;
         this.relative = ctxt.pkg().isRelative();
 
-        visibility = ctxt.option(ConfigDefs.VISIBILITY.name()).isPresent() ? "public " : "";
+        visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
 
         Pkg pkg = ctxt.pkg();
         if (!pkg.isUnnamed()) {

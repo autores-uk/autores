@@ -20,18 +20,12 @@ final class OptionValidation {
 
         String err = "";
 
-        for (ConfigDef def : handler.config()) {
-            if (def.isRequired() && context.config().stream().noneMatch(o -> def.name().equals(o.key()))) {
-                err = format("%sMissing configuration %s%n", err, def.name());
-            }
-        }
-
         for (Config option : context.config()) {
             long c = context.config().stream().filter(o -> option.key().equals(o.key())).count();
             Optional<ConfigDef> def = handler.config().stream().filter(o -> o.name().equals(option.key())).findFirst();
             if (def.isPresent()) {
                 ConfigDef od = def.get();
-                if (c > 1 && !od.isRepeatable()) {
+                if (c > 1) {
                     err = format("%sDuplicate configuration option %s%n", err, option.key());
                 }
                 if (!od.isValid(option.value())) {
@@ -48,9 +42,7 @@ final class OptionValidation {
 
         err = format("%s%nUsage:%n", err);
         for (ConfigDef def : handler.config()) {
-            String required = def.isRequired() ? " (required)" : " (optional)";
-            String repeatable = def.isRepeatable() ? " (repeatable)" : "";
-            err = format("%s %s\t%s%s%s%n", err, def.name(), def.description(), required, repeatable);
+            err = format("%s %s\t%s%n", err, def.name(), def.description());
         }
 
         context.printError(err);

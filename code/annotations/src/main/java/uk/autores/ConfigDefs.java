@@ -18,67 +18,52 @@ public final class ConfigDefs {
 
     private ConfigDefs() {}
 
-    /** "visibility": set to "public" to generated public instead of package visible types. Optional. */
+    /** "visibility": set to "public" to generated public instead of package visible types. */
     public static final ConfigDef VISIBILITY = new ConfigDef("visibility",
-            false,
-            false,
             "public"::equals,
             "Generated class visibility. Valid value: \"public\"");
 
     /**
-     * "encoding": encoding of consumed text files. Optional.
+     * "encoding": encoding of consumed text files.
      * @see Charset#availableCharsets()
      */
     public static final ConfigDef ENCODING = new ConfigDef("encoding",
-            false,
-            false,
             Charset.availableCharsets()::containsKey,
             "The canonical name of a supported encoding: " + Charset.availableCharsets().keySet());
 
     /**
-     * "localize": whether to search for localized resources. "true" (default) or "false". Optional.
+     * "localize": whether to search for localized resources. "true" or "false".
      */
     public static final ConfigDef LOCALIZE = new ConfigDef("localize",
-            false,
-            false,
             s -> s.matches("true|false"),
             "Enables searching for localized resources. Valid values: \"true\"; \"false\".");
 
     /**
      * "missing-key": how to report missing keys in localized {@link Properties} resources.
-     * "error" (default), "warn", or "ignore".
-     * Optional.
+     * "error", "warn", or "ignore".
      */
     public static final ConfigDef MISSING_KEY = new ConfigDef("missing-key",
-            false,
-            false,
             s -> s.matches("error|warn|ignore"),
             "Action when a base key is missing from localized file. Valid values: \"error\"; \"warn\"; \"ignore\".");
 
     /**
-     * "format": whether to generate format methods. "true" (default) or "false". Optional.
+     * "format": whether to generate format methods. "true" (default) or "false".
      * @see java.text.MessageFormat
      */
     public static final ConfigDef FORMAT = new ConfigDef("format",
-            false,
-            false,
             s -> s.matches("true|false"),
-            "Enables formatting. Valid values: \"true\"; \"false\"..");
+            "Enables formatting. Valid values: \"true\"; \"false\".");
 
     /**
      * "strategy": how to consume resources.
      * <ul>
      *     <li>"inline": embed in class files</li>
-     *     <li>"strict": traditional resource loading but verify somehow;
-     *     use compile time resource sizes for efficient loading</li>
-     *     <li>"lax": traditional resource loading</li>
+     *     <li>"lazy": load resources using {@link ClassLoader}</li>
      *     <li>"auto": use some heuristic to decide loading strategy</li>
      * </ul>
-     * "auto" is the default strategy. Optional.
+     * "auto" is the default strategy.
      */
     public static final ConfigDef STRATEGY = new ConfigDef("strategy",
-            false,
-            false,
             s -> s.matches("auto|inline|lazy"),
             "Code generation strategy. Valid values: \"auto\"; \"inline\"; \"lazy\".");
 

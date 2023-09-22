@@ -3,7 +3,7 @@ package uk.autores;
 import java.io.IOException;
 import java.io.Writer;
 
-/** Methods for escaping special String characters. */
+/** Methods for escaping special characters in string literals. */
 final class StringLiterals {
 
     private static final String[] ESCS = generateEscapes();

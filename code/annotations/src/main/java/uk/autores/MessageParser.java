@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Utility type for analysing {@link MessageFormat} strings */
 final class MessageParser {
 
     private MessageParser() {}

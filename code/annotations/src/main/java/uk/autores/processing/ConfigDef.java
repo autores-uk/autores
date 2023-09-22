@@ -16,8 +16,6 @@ public final class ConfigDef {
      * @see uk.autores.ClasspathResource.Cfg#key()
      */
     private final String name;
-    private final boolean required;
-    private final boolean repeatable;
     /**
      * When {@link uk.autores.ClasspathResource.Cfg#value()} passed to {@link Predicate#test(Object)} the value is considered correct.
      */
@@ -27,19 +25,13 @@ public final class ConfigDef {
 
     /**
      * @param name the config key
-     * @param required if true validation fails if not present
-     * @param repeatable if true duplicate keys do not fail validation
      * @param validator must return true if the value is valid or false otherwise
      * @param description brief description of the config option
      */
     public ConfigDef(String name,
-                     boolean required,
-                     boolean repeatable,
                      Predicate<String> validator,
                      String description) {
         this.name = requireNonNull(name, "name");
-        this.required = required;
-        this.repeatable = repeatable;
         this.validator = requireNonNull(validator, "validator");
         this.description = requireNonNull(description, "description");
     }
@@ -51,20 +43,6 @@ public final class ConfigDef {
      */
     public String name() {
         return name;
-    }
-
-    /**
-     * @return true if this config must be present
-     */
-    public boolean isRequired() {
-        return required;
-    }
-
-    /**
-     * @return true if this config can be used multiple times
-     */
-    public boolean isRepeatable() {
-        return repeatable;
     }
 
     /**

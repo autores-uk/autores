@@ -25,6 +25,8 @@ public final class GenerateConstantsFromProperties implements Handler {
     private static final String EXTENSION = ".properties";
 
     /**
+     * <p>All configuration is optional.</p>
+     *
      * @return visibility
      * @see ConfigDefs#VISIBILITY
      */

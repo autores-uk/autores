@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/** Utility type for loading {@link Properties} files. */
 final class PropLoader {
 
     private PropLoader() {}

@@ -4,8 +4,7 @@
                 "Meow.png",
                 "Woof.png",
         },
-        handler = GenerateIconsFromFiles.class,
-        config = @ClasspathResource.Cfg(key = "strategy", value = "inline")
+        handler = GenerateIconsFromFiles.class
 )
 package demo.app.icons;
 

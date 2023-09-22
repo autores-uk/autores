@@ -2,6 +2,7 @@ package uk.autores;
 
 import java.util.stream.IntStream;
 
+/** Utility type for interning certain ints as strings */
 final class Ints {
 
     private static final String[] BYTES = IntStream.rangeClosed(Byte.MIN_VALUE, Byte.MAX_VALUE)

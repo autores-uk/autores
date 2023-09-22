@@ -3,7 +3,7 @@ package uk.autores.processing;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Package information.
+ * Resource package information.
  */
 public final class Pkg {
 

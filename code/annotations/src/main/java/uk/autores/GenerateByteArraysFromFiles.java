@@ -54,6 +54,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private static final int MAX_BYTES_PER_METHOD = 65535 / 8;
 
     /**
+     * <p>All configuration is optional.</p>
+     *
      * Strategy:
      * <ul>
      *     <li>"auto": "inline" for files up to 1kB; "lazy" otherwise</li>
@@ -110,7 +112,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private ClassGenerator generatorStrategy(Context context) {
-        String strategy = context.option(ConfigDefs.STRATEGY.name()).orElse("auto");
+        String strategy = context.option(ConfigDefs.STRATEGY).orElse("auto");
         switch (strategy) {
             case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
             case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;

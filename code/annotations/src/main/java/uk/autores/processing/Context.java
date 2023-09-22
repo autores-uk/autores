@@ -56,9 +56,9 @@ public final class Context {
      * @return the value if present
      * @see uk.autores.ClasspathResource.Cfg
      */
-    public Optional<String> option(String key) {
+    public Optional<String> option(ConfigDef key) {
         return config.stream()
-                .filter(o -> key.equals(o.key()))
+                .filter(o -> key.name().equals(o.key()))
                 .map(Config::value)
                 .findFirst();
     }
