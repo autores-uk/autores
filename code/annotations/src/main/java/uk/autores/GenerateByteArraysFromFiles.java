@@ -195,6 +195,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         writeSignature(writer);
 
+        // TODO: avoid writing this logic for every resource
         writer.indent().append("byte[] barr = new byte[").append(Ints.toString((int) stats.size)).append("];").nl();
         writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource).append(") ").openBrace().nl();
         writer.indent().append("int offset = 0;").nl();
