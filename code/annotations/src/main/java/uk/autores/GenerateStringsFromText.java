@@ -199,6 +199,7 @@ public final class GenerateStringsFromText implements Handler {
                 .openBrace()
                 .nl();
 
+        // TODO: avoid writing this logic for every resource
         writer.indent().append("int offset = 0;").nl();
         writer.indent().append("while(true) ").openBrace().nl();
         writer.indent().append("int r = reader.read(buf, offset, buf.length - offset);").nl();
@@ -216,6 +217,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private static void writeCopyMethod(JavaWriter writer) throws IOException {
+        // TODO: avoid writing this logic for every resource
         String decl = "private static int copy(java.lang.CharSequence src, char[] dest, int off) ";
 
         writer.nl();
