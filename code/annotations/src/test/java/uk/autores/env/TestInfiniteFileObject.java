@@ -10,8 +10,18 @@ public class TestInfiniteFileObject extends TestFileObject {
         class InfiniteInputStream extends InputStream {
 
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return 0;
+            }
+
+            @Override
+            public int read(byte[] b) {
+                return b.length;
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) {
+                return len;
             }
         }
 
