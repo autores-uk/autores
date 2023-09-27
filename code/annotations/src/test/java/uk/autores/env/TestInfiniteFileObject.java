@@ -2,7 +2,8 @@ package uk.autores.env;
 
 import java.io.*;
 
-public class TestMassiveFileObject extends TestFileObject {
+/** WARNING: reading never finishes */
+public class TestInfiniteFileObject extends TestFileObject {
 
     @Override
     public InputStream openInputStream() throws IOException {

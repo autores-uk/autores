@@ -4,7 +4,7 @@ import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
-import uk.autores.env.TestMassiveFileObject;
+import uk.autores.env.TestInfiniteFileObject;
 import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.*;
 
@@ -94,7 +94,7 @@ class GenerateStringsFromTextTest {
     void reportsFileTooBig() throws Exception {
         String filename = "massive.txt";
 
-        TestMassiveFileObject text = new TestMassiveFileObject();
+        TestInfiniteFileObject text = new TestInfiniteFileObject();
 
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
