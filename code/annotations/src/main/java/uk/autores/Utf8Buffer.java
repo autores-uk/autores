@@ -129,6 +129,10 @@ final class Utf8Buffer implements CharSequence {
         return String.valueOf(cbuf, 0, length);
     }
 
+    public int maxBuffer() {
+        return cbuf.length;
+    }
+
     private void outOfBounds(boolean predicate) {
         if (predicate) {
             throw new IndexOutOfBoundsException();
