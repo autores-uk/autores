@@ -4,4 +4,6 @@ set -ex
 
 BASE=$(dirname $0)/..
 
-mvn --file "${BASE}/annotations/pom.xml" clean gpg:sign deploy
+cd "${BASE}"
+
+mvn --file "${BASE}/code/annotations/pom.xml" clean install -P release
