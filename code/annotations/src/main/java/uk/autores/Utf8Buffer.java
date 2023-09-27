@@ -49,6 +49,16 @@ final class Utf8Buffer implements CharSequence {
             char ch = cbuf[i];
             int codePoint;
             int utf6Len;
+            if (ch <= '\u007F') {
+                // shortcut ASCII range for performance
+                if (maxUtf8Length == utf8Length + 1) {
+                    break;
+                }
+                utf8Length++;
+                length++;
+                continue;
+            }
+
             if (Character.isSurrogate(ch)) {
                 throwMalformed(r == 1);
                 if (i == r - 1) {
