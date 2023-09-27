@@ -170,7 +170,7 @@ public final class GenerateStringsFromText implements Handler {
 
         try (InputStream in = stats.file.openInputStream();
              Reader reader = new InputStreamReader(in, assistants.decoder);
-             Reader bufReader = new BufferedReader(reader)) {
+             Reader bufReader = new BufferedReader(reader, assistants.buffer.maxBuffer())) {
 
             assistants.buffer.receive(bufReader);
             writer.indent().append("return ").string(assistants.buffer).append(";").nl();
