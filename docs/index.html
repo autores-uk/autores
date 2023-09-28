@@ -1,10 +1,10 @@
 <html>
   <head>
-    <title>Automated Resource Handling Library for Java</title>
+    <title>AutoRes - Automated Resource Handling for Java</title>
   </head>
   <body>
 
-    <h1>Autores</h1>
+    <h1>AutoRes</h1>
 
     <p>
       Small library for automating <a href="https://dev.java/">Java&trade;</a> resource handling.
@@ -14,13 +14,12 @@
     <ul>
       <li>Validate resource paths with the compiler</li>
       <li>Mitigate against <a href="https://www.hanselman.com/blog/stringly-typed-vs-strongly-typed">stringly typed</a> things</li>
-      <li>Reduce resource file I/O handling</li>
-      <li>Embed files as byte arrays or strings</li>
+      <li>Reduce resource file I/O handling by embedding files as byte arrays or strings</li>
       <li>Replace localization <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/PropertyResourceBundle.html">resource bundle messages</a> with typed method signatures</li>
       <li>Extend with additional generators or validators</li>
     </ul>
 
-    <p>This library can affect compile time, class sizes, and constant pools. Use judiciously.</p>
+    <p>This library can affect compile time, jar sizes, and constant pools. Use judiciously.</p>
 
     <h2>Documentation</h2>
 
@@ -30,12 +29,24 @@
 
     <h2>Usage</h2>
 
-    <em>TODO</em>
-
-    <h2>Sample</h2>
+    <p>Add the library as a compile-time only dependency.</p>
 
     <pre><code>
-      import uk.autores;
+      &lt;dependency>
+        &lt;groupId>uk.autores&lt;/groupId>
+        &lt;artifactId>annotations&lt;/artifactId>
+        &lt;version>${autores.version}&lt;/version>
+        &lt;scope>provided&lt;/scope>
+      &lt;/dependency>
+    </code></pre>
+
+    <p>Browse <a href="https://s01.oss.sonatype.org/content/repositories/snapshots/uk/autores/annotations/">SNAPSHOT repository</a>
+      for version numbers..</p>
+
+    <p>Annotate a type or package with <code>@uk.autores.ClasspathResource</code> and choose a handler:</p>
+
+    <pre><code>
+      import uk.autores.*;
 
       @ClasspathResource(value = {"Poule.txt", "Roses.txt"}, handler = GenerateStringsFromText.class)
       public class PrintRhymes {
