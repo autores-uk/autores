@@ -12,7 +12,10 @@ import java.lang.annotation.*;
 /**
  * <p>
  *     Indicates resources that are to be processed at compile time.
- *     At a bare minimum this annotation can be used to verify a resource exists without the need for unit tests.
+ * </p>
+ * {@code @ClasspathResource("some-resource.txt")}
+ * <p>
+ *     As a minimum this annotation can be used to verify a resource exists without the need for unit tests.
  *     Specify a {@link #handler()} for other behaviour.
  * </p>
  * <p>
@@ -26,27 +29,27 @@ import java.lang.annotation.*;
 public @interface ClasspathResource {
 
     /**
-     * Values are passed as relativeName (3rd arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
+     * This value is passed as location (1st arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
      *
-     * @return the resources to handle
+     * @return where to search for resources
      */
-    String[] value();
+    StandardLocation location() default StandardLocation.CLASS_PATH;
 
     /**
      * Defines how the pkg (2nd arg) is to be generated for {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
-     * If true the package of the annotated type is used.
-     * If false the package "" is used.
+     * If <code>true</code> the package of the annotated type is used.
+     * If <code>false</code> the package "" is used.
      *
      * @return true by default
      */
     boolean relative() default true;
 
     /**
-     * This value is passed as location (1st arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
+     * Values are passed as relativeName (3rd arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
      *
-     * @return where to search for resources
+     * @return the resources to handle
      */
-    StandardLocation location() default StandardLocation.CLASS_PATH;
+    String[] value();
 
     /**
      * Enables non-default resource handling.
@@ -65,7 +68,7 @@ public @interface ClasspathResource {
     Class<? extends Namer> namer() default Namer.class;
 
     /**
-     * Some implementations of {@link Handler} require and/or support configuration.
+     * Some implementations of {@link Handler} support configuration.
      *
      * @return configured options
      * @see Handler#config()
