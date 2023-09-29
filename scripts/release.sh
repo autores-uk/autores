@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Release script
+# 1) Set the release version
+# 2) Create release branch
+# 3) Deploy to Maven central
+# 4) Increment the build & set to SNAPSHOT
+
 set -ex
 
 BASE=$(dirname $0)/..
