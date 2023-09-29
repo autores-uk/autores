@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>custom-handler</artifactId>
-        <version>alpha-0.0-SNAPSHOT</version>
+        <version>alpha-0.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>file-to-icon-handler</artifactId>
