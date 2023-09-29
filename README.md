@@ -2,7 +2,10 @@
 
 Annotation driven Java code generation library for working with embedded resources.
 
-![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg)
+## CI
+
+ - main: ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main)
+ - dev: ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev)
 
 ## SEE
 
