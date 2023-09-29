@@ -1,6 +1,10 @@
 <html>
   <head>
     <title>AutoRes - Automated Resource Handling for Java</title>
+    <style>
+      body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
+      pre code { font-size: calc(0.5em + 0.5vw); }
+    </style>
   </head>
   <body>
 
@@ -21,6 +25,8 @@
 
     <p>This library can affect compile time, jar sizes, and constant pools. Use judiciously.</p>
 
+    <p>Documentation assumes prior knowledge of how to package and deploy Java libraries and applications.</p>
+
     <h2>Documentation</h2>
 
     <p>See <a href="https://github.com/autores-uk/autores">source control</a> for example code.</p>
@@ -29,26 +35,22 @@
 
     <h2>Usage</h2>
 
-    <p>Add the library as a compile-time only dependency.</p>
+    <p>Add the <code>uk.autores:annotations</code> library to the build system.</p>
 
-    <pre><code>
-      &lt;dependency>
-        &lt;groupId>uk.autores&lt;/groupId>
-        &lt;artifactId>annotations&lt;/artifactId>
-        &lt;version>${autores.version}&lt;/version>
-        &lt;scope>provided&lt;/scope>
-      &lt;/dependency>
-    </code></pre>
-
-    <p>Browse <a href="https://s01.oss.sonatype.org/content/repositories/snapshots/uk/autores/annotations/">SNAPSHOT repository</a>
-      for version numbers.</p>
+    <p>
+      Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> for versions
+      and various build system import snippets.
+    </p>
 
     <p>Annotate a type or package with <code>@uk.autores.ClasspathResource</code> and choose a handler:</p>
 
     <pre><code>
       import uk.autores.*;
 
-      @ClasspathResource(value = {"Poule.txt", "Roses.txt"}, handler = GenerateStringsFromText.class)
+      @ClasspathResource(
+        value = {"Poule.txt", "Roses.txt"},
+        handler = GenerateStringsFromText.class
+      )
       public class PrintRhymes {
 
         public static void main(String...args)  {
@@ -57,6 +59,27 @@
         }
       }
     </code></pre>
+
+    <h3>Dependency Scope</h3>
+
+    <p>
+      AutoRes is a compile-time only dependency and does not need to be distributed with application code.
+      Apache Maven end consumer projects should use the 
+      <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope">provided</a> scope.
+    </p>
+
+    <pre><code>
+    &lt;dependency>
+      &lt;groupId>uk.autores&lt;/groupId>
+      &lt;artifactId>annotations&lt;/artifactId>
+      &lt;version>${autores.version}&lt;/version>
+      &lt;scope>provided&lt;/scope>
+    &lt;/dependency>
+    </code></pre>
+
+    <p>Libraries that extend the API will need to import using the default <code>compile</code> scope.</p>
+
+    <p>See other build system documentation for equivalent scoping.</p>
 
   </body>
 </html>
