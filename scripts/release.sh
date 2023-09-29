@@ -12,7 +12,7 @@ BASE=$(dirname $0)/..
 
 cd "${BASE}"
 
-if [[ -z $(git status -s) ]]; then
+if [[ -z "$(git status -s)" ]]; then
   echo "No uncommitted changes"
 else
   echo "Uncommitted changes; resolve before continuing"
