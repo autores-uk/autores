@@ -7,7 +7,7 @@
     <groupId>uk.autores</groupId>
     <artifactId>autores</artifactId>
     <packaging>pom</packaging>
-    <version>alpha-0.0-SNAPSHOT</version>
+    <version>alpha-0.0.6</version>
 
     <modules>
         <module>annotations</module>
