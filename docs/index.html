@@ -3,7 +3,8 @@
     <title>Automated Resource Handling for Java - AutoRes.uk</title>
     <style>
       body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
-      pre code { font-size: calc(0.5em + 0.5vw); font-weight: bolder; color: steelblue; }
+      pre code { font-size: calc(0.5em + 0.5vw); }
+      code { font-weight: bolder; color: steelblue; }
     </style>
   </head>
   <body>
@@ -11,13 +12,15 @@
     <h1 id="autores">AutoRes.uk</h1>
 
     <p>
-      Small open source library for automating <a href="https://dev.java/">Java&trade;</a> resource handling.
+      Small open source library for automating embedded <a href="https://dev.java/">Java&trade;</a> resource file handling.
       Use annotations for verification and code generation.
+      This is an alternative to manual use of methods like
+      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
     </p>
 
     <ul>
       <li>Validate resource paths with the compiler</li>
-      <li>Reduce resource file I/O handling by embedding files as byte arrays or strings</li>
+      <li>Reduce runtime file I/O handling by embedding files as byte arrays or strings</li>
       <li>Replace localization <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/PropertyResourceBundle.html">resource bundle messages</a> with typed method signatures</li>
       <li>Extend with additional generators or validators</li>
     </ul>
@@ -62,10 +65,22 @@
 
     <p>
       The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
-      See the API for other handlers.
     </p>
 
-    <h3 id="deps">Dependency Scopes</h3>
+    <p>
+      Other handlers include
+      <code>AssertResourceExists</code>,
+      <code>GenerateByteArraysFromFiles</code>,
+      <code>GenerateConstantsFromProperties</code>,
+      <code>GenerateMessagesFromProperties</code>,
+      and the ability add custom implementations.
+    </p>
+
+    <h2 id="compatibility">Compatibility</h2>
+
+    <p>Java 8 is the minimum compatible version.</p>
+
+    <h2 id="deps">Dependency Scopes</h2>
 
     <p>
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.

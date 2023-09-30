@@ -3,12 +3,15 @@ package demo;
 import uk.autores.ClasspathResource;
 import uk.autores.GenerateStringsFromText;
 
+import static uk.autores.ConfigDefs.Names.STRATEGY;
+
 @ClasspathResource(
         value = {
                 "Poule.txt",
                 "Roses.txt",
         },
-        handler = GenerateStringsFromText.class
+        handler = GenerateStringsFromText.class,
+        config = @ClasspathResource.Cfg(key = STRATEGY, value = "inline")
 )
 public class PrintRhymes {
 
