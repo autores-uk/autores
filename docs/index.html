@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>AutoRes - Automated Resource Handling for Java</title>
+    <title>Automated Resource Handling for Java - AutoRes.uk</title>
     <style>
       body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
       pre code { font-size: calc(0.5em + 0.5vw); }
@@ -8,16 +8,15 @@
   </head>
   <body>
 
-    <h1>AutoRes</h1>
+    <h1 id="autores">AutoRes.uk</h1>
 
     <p>
-      Small library for automating <a href="https://dev.java/">Java&trade;</a> resource handling.
+      Small open source library for automating <a href="https://dev.java/">Java&trade;</a> resource handling.
       Use annotations for verification and code generation.
     </p>
 
     <ul>
       <li>Validate resource paths with the compiler</li>
-      <li>Mitigate against <a href="https://www.hanselman.com/blog/stringly-typed-vs-strongly-typed">stringly typed</a> things</li>
       <li>Reduce resource file I/O handling by embedding files as byte arrays or strings</li>
       <li>Replace localization <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/PropertyResourceBundle.html">resource bundle messages</a> with typed method signatures</li>
       <li>Extend with additional generators or validators</li>
@@ -25,24 +24,25 @@
 
     <p>This library can affect compile time, jar sizes, and constant pools. Use judiciously.</p>
 
-    <p>Documentation assumes prior knowledge of how to package and deploy Java libraries and applications.</p>
-
-    <h2>Documentation</h2>
+    <h2 id="docs">Documentation</h2>
 
     <p>See <a href="https://github.com/autores-uk/autores">source control</a> for example code.</p>
 
     <p>See the <a href="apidocs/uk/autores/package-summary.html">API</a> for detailed documentation.</p>
 
-    <h2>Usage</h2>
+    <p>Prior knowledge of how to package and deploy Java libraries and applications is assumed.</p>
 
-    <p>Add the <code>uk.autores:annotations</code> library to the build system.</p>
+    <h2 id="usage">Usage</h2>
 
     <p>
-      Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> for versions
-      and various build system import snippets.
+      Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
+      for a build system import snippet for the <code>uk.autores:annotations</code> library and add a version.
     </p>
 
-    <p>Annotate a type or package with <code>@uk.autores.ClasspathResource</code> and choose a handler:</p>
+    <p>
+      Annotate a type or package with <code>@uk.autores.ClasspathResource</code>,
+      define the resource files, and choose a handler:
+    </p>
 
     <pre><code>
       import uk.autores.*;
@@ -60,10 +60,10 @@
       }
     </code></pre>
 
-    <h3>Dependency Scope</h3>
+    <h3 id="deps">Dependency Scopes</h3>
 
     <p>
-      AutoRes is a compile-time only dependency and does not need to be distributed with application code.
+      AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
       Apache Maven end consumer projects should use the 
       <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope">provided</a> scope.
     </p>
@@ -77,9 +77,9 @@
     &lt;/dependency>
     </code></pre>
 
-    <p>Libraries that extend the API will need to import using the default <code>compile</code> scope.</p>
+    <p>Libraries that extend the API should use the default <code>compile</code> scope.</p>
 
-    <p>See other build system documentation for equivalent scoping.</p>
+    <p>See chosen build system documentation for equivalent scoping.</p>
 
   </body>
 </html>

@@ -17,6 +17,16 @@
     <description>Annotation driven library for handling embedded resources</description>
     <url>https://autores.uk</url>
 
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- unit test dependency versions -->
+        <junit.version>5.10.0</junit.version>
+        <joor.version>0.9.15</joor.version>
+        <guava.version>32.1.2-jre</guava.version>
+    </properties>
+
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
