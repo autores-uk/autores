@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
  *     <li>Be available as compiled types on the compiler classpath</li>
  *  </ul>
  *
- *      Sample usage:
+ *      <p>Sample usage:</p>
  *      <pre>
  *          Namer namer = new Namer();
  *          String simple = namer.simplifyResourceName("META-INF/foo/bar.baz.txt"); // "foo.bar"

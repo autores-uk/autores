@@ -3,7 +3,7 @@
     <title>Automated Resource Handling for Java - AutoRes.uk</title>
     <style>
       body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
-      pre code { font-size: calc(0.5em + 0.5vw); }
+      pre code { font-size: calc(0.5em + 0.5vw); font-weight: bolder; color: steelblue; }
     </style>
   </head>
   <body>
@@ -26,9 +26,9 @@
 
     <h2 id="docs">Documentation</h2>
 
-    <p>See <a href="https://github.com/autores-uk/autores">source control</a> for example code.</p>
-
     <p>See the <a href="apidocs/uk/autores/package-summary.html">API</a> for detailed documentation.</p>
+
+    <p>See <a href="https://github.com/autores-uk/autores">source control</a> for example code.</p>
 
     <p>Prior knowledge of how to package and deploy Java libraries and applications is assumed.</p>
 
@@ -36,7 +36,7 @@
 
     <p>
       Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
-      for a build system import snippet for the <code>uk.autores:annotations</code> library and add a version.
+      for a build system import snippet for the <code>uk.autores:annotations</code> library.
     </p>
 
     <p>
@@ -59,6 +59,11 @@
         }
       }
     </code></pre>
+
+    <p>
+      The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
+      See the API for other handlers.
+    </p>
 
     <h3 id="deps">Dependency Scopes</h3>
 
