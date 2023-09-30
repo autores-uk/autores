@@ -8,10 +8,12 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
+import static uk.autores.ConfigDefs.Names.*;
+
 @ClasspathResource(
         value = "Non-nls.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ClasspathResource.Cfg(key = "localize", value = "false")
+        config = @ClasspathResource.Cfg(key = LOCALIZE, value = "false")
 )
 @ClasspathResource(
         value = "Messages.properties",
@@ -20,7 +22,7 @@ import java.util.function.Consumer;
 @ClasspathResource(
         value = "Sparse.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ClasspathResource.Cfg(key = "missing-key", value = "ignore")
+        config = @ClasspathResource.Cfg(key = MISSING_KEY, value = "ignore")
 )
 public class PrintProperties {
 
