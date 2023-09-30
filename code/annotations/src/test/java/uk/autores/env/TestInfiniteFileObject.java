@@ -1,6 +1,7 @@
 package uk.autores.env;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 /** WARNING: reading never finishes */
 public class TestInfiniteFileObject extends TestFileObject {

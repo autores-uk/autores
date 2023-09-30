@@ -8,7 +8,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
-import static uk.autores.ConfigDefs.Names.*;
+import static uk.autores.ConfigDefs.Names.LOCALIZE;
+import static uk.autores.ConfigDefs.Names.MISSING_KEY;
 
 @ClasspathResource(
         value = "Non-nls.properties",

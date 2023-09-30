@@ -4,8 +4,11 @@ Annotation driven Java code generation library for working with embedded resourc
 
 ## CI
 
- - main: ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main)
- - dev: ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev)
+|
+![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main) main
+|
+![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev) dev
+|
 
 ## See
 
@@ -27,3 +30,8 @@ Pull requests will not be accepted.
 ## Branches
 
 _TODO_
+
+## Releases
+
+Bytecode, source code, and javadoc are published to 
+[the Maven central repository](https://s01.oss.sonatype.org/content/repositories/releases/uk/autores/annotations/).
