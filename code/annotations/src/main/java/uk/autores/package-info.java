@@ -1,12 +1,32 @@
 /**
  * An annotation driven library for working with classpath resource files.
  * This package contains the core library functionality.
- * See other packages are for annotation processing and extensibility.
+ * See other packages for annotation processing and extensibility.
  *
  * <h2>AUTORES</h2>
  *
- * To process a resource annotate a class or package with {@link uk.autores.ClasspathResource}
- * and set fields as appropriate for the specified {@link uk.autores.processing.Handler}.
+ * <h3>Usage</h3>
+ *
+ * <ol>
+ *     <li>
+ *         Place resource files in the appropriate place for the chosen build system.
+ *         <ul><li>
+ *             In Apache Maven this is typically under
+ *             <a href="https://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html">
+ *             <code>src/main/resources</code>
+ *             </a>
+ *          </li></ul>
+ *     </li>
+ *     <li>
+ *         Annotate a type or package declaration with {@link uk.autores.ClasspathResource}.
+ *     </li>
+ *     <li>
+ *         Set the resource file name in the {@link uk.autores.ClasspathResource#value()} array.
+ *     </li>
+ *     <li>
+ *         Specify a {@link uk.autores.processing.Handler} for non-default behaviour.
+ *     </li>
+ * </ol>
  *
  * <h3>Resource Handlers</h3>
  *
