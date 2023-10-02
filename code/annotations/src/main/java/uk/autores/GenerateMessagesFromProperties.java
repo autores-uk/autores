@@ -9,26 +9,61 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 
 /**
+ * <p>
  * {@link Handler} that generates message classes from {@link Properties} files using {@link Locale}s to match localized
  * strings and {@link java.text.MessageFormat} to create typed method signatures.
- *
+ * </p>
+ * <p>
+ *     The properties file name is used to name the class.
+ *     The keys are used to name the methods.
+ * </p>
+ * <p>
+ *     {@link Locale#getAvailableLocales()} and
+ *     {@link ResourceBundle.Control#toBundleName(String, Locale)}
+ *     are used to discover localized properties.
+ * </p>
+ * <p>
+ *     Generated method signatures will vary based on need.
+ * </p>
+ * <ul>
+ *     <li>A method to return the raw value is always generated.
+ *     <ul>
+ *         <li>If "localize" is true and localized files have been detected the method requires a {@link Locale} argument.</li>
+ *     </ul>
+ *     </li>
+ *     <li>
+ *         A second method is generated if "format" is true and format expressions have been detected in the value.
+ *         <ul>
+ *             <li>{@link Locale} is the first argument if "localize" is true and localized files have been detected and number/choice/date us used.</li>
+ *             <li>If any of the format expressions are of type <code>date</code> {@link TimeZone} is the next argument.</li>
+ *             <li>
+ *                 Format expressions form the remaining arguments in index order.
+ *                 {@link MessageFormat} expressions are mapped as follows.
+ *                 <ul>
+ *                     <li>number or choice: {@link Number}</li>
+ *                     <li>date: {@link java.time.Instant}</li>
+ *                     <li>none: {@link String}</li>
+ *                 </ul>
+ *             </li>
+ *         </ul>
+ *     </li>
+ * </ul>
  * <h2>Example</h2>
- * <p>
- * Example file <code>Cosmic.properties</code>:
+ * <p>Example file <code>Cosmic.properties</code>:</p>
  * <pre>planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</pre>
- * <p>
- * This will generate a class <code>Cosmic</code> with the method signature:
+ * <p>This will generate a class <code>Cosmic</code> with the method signature:</p>
  * <pre>static String planet_event(Locale l, TimeZone tz, Number v0, Instant v1, String v2)</pre>
+ * <p>Usage:</p>
+ * <pre>Cosmic.planet_event(Locale.ENGLISH, TimeZone.getTimeZone("GMT"), 4, Instant.EPOCH, "an attack")</pre>
  * <p>
- * Usage:
- * <pre>Cosmic.planet_event(Locale.ENGLISH, TimeZone.getTimeZone("GMT") 4, Instant.EPOCH, "an attack")</pre>
- * <p>
- * This will return the string <code>"At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4."</code>.
+ *     This will return the string <code>"At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4."</code>.
+ * </p>
  */
 public final class GenerateMessagesFromProperties implements Handler {
 
@@ -52,7 +87,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     @Override
-    public void handle(Context context) throws Exception {
+    public void handle(Context context) throws IOException {
         Map<String, FileObject> resources = context.resources();
 
         boolean localize = !context.option(ConfigDefs.LOCALIZE)
