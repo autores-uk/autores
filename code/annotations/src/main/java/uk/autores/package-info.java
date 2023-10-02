@@ -1,8 +1,9 @@
 /**
+ * <p>
  * An annotation driven library for working with classpath resource files.
  * This package contains the core library functionality.
  * See other packages for annotation processing and extensibility.
- *
+ * </p>
  * <h2>AUTORES</h2>
  *
  * <h3>Usage</h3>
