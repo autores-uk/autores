@@ -226,7 +226,7 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("dest[off++] = src.charAt(i);").nl();
         writer.closeBrace();
         writer.indent().append("return off;").nl();
-        writer.close();
+        writer.closeBrace();
     }
 
     private static void writeMethodDeclaration(JavaWriter writer) throws IOException {
