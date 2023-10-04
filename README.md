@@ -29,7 +29,10 @@ Pull requests will not be accepted.
 
 ## Branches
 
-_TODO_
+ - dev8: Development floor for Java 8
+ - dev11: Java 11 fork with module support
+ - main: most recent Java 11 release
+ - release/*: released versions
 
 ## Releases
 
