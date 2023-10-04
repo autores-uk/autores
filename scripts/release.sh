@@ -22,10 +22,11 @@ fi
 HERE="$(pwd)"
 MAJOR="$(cat ${HERE}/scripts/versions/major.txt)"
 MINOR="$(cat ${HERE}/scripts/versions/minor8.txt)"
+STATUS="$(cat ${HERE}/scripts/versions/status.txt)"
 NEXTMINOR="$((${MINOR}+1))"
 
-CURRENT="${MAJOR}.${MINOR}"
-NEXT="${MAJOR}.${NEXTMINOR}"
+CURRENT="${MAJOR}.${MINOR}${STATUS}"
+NEXT="${MAJOR}.${NEXTMINOR}${STATUS}"
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 RELEASEBRANCH="release/${CURRENT}"

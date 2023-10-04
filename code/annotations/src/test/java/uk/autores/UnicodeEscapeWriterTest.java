@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UnicodeEscapeWriterTest {
 
@@ -66,5 +67,16 @@ class UnicodeEscapeWriterTest {
             w.close();
             w.close();
         }
+    }
+
+    @Test
+    void throwsWhenClosed() {
+        assertThrows(IOException.class, () -> {
+                try (Writer w = new UnicodeEscapeWriter(new StringWriter())) {
+                    w.close();
+                    w.append("foo");
+                }
+            }
+        );
     }
 }
