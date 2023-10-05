@@ -2,14 +2,6 @@
 
 Annotation driven Java code generation library for working with embedded resources.
 
-## CI
-
-|
-![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main) main
-|
-![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev) dev
-|
-
 ## See
 
  - [Documentation](https://autores.uk)
@@ -25,7 +17,8 @@ No restrictions are placed on library consumers on licensing of code generated b
 
 ## Contributions
 
-Pull requests will not be accepted.
+Pull requests will NOT be accepted.
+[Defect reports](https://github.com/autores-uk/autores/issues) are welcome but may not be acted upon.
 
 ## Branches
 
@@ -33,6 +26,12 @@ Pull requests will not be accepted.
  - dev11: Java 11 fork with module support
  - main: most recent Java 11 release
  - release/*: released versions
+
+| Branch | CI                                                                                                 |
+| ------ | -------------------------------------------------------------------------------------------------- |
+| dev8   | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev8)  |
+| dev11  | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev11) |
+| main   | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main)  |
 
 ## Releases
 
