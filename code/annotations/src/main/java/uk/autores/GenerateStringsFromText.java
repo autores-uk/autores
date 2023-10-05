@@ -1,5 +1,9 @@
 package uk.autores;
 
+import uk.autores.internal.Ints;
+import uk.autores.internal.JavaWriter;
+import uk.autores.internal.UnicodeEscapeWriter;
+import uk.autores.internal.Utf8Buffer;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -226,7 +230,7 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("dest[off++] = src.charAt(i);").nl();
         writer.closeBrace();
         writer.indent().append("return off;").nl();
-        writer.close();
+        writer.closeBrace();
     }
 
     private static void writeMethodDeclaration(JavaWriter writer) throws IOException {

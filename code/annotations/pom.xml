@@ -5,7 +5,7 @@
     <parent>
         <artifactId>autores</artifactId>
         <groupId>uk.autores</groupId>
-        <version>alpha-0.0.4-SNAPSHOT</version>
+        <version>11.0.0-alpha-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,13 +18,12 @@
     <url>https://autores.uk</url>
 
     <properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- unit test dependency versions -->
         <junit.version>5.10.0</junit.version>
         <joor.version>0.9.15</joor.version>
-        <guava.version>32.1.2-jre</guava.version>
     </properties>
 
     <licenses>
@@ -44,21 +43,14 @@
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
-            <artifactId>joor-java-8</artifactId>
+            <artifactId>joor</artifactId>
             <version>${joor.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -168,7 +160,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.7.2.1</version>
                 <configuration>
-                    <fork>false</fork>
+                    <fork>true</fork>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>

@@ -1,5 +1,8 @@
 package uk.autores;
 
+import uk.autores.internal.JavaWriter;
+import uk.autores.internal.PropLoader;
+import uk.autores.internal.UnicodeEscapeWriter;
 import uk.autores.processing.ConfigDef;
 import uk.autores.processing.Context;
 import uk.autores.processing.Handler;
@@ -70,8 +73,8 @@ public final class GenerateConstantsFromProperties implements Handler {
         Filer filer = ctxt.env().getFiler();
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
-            Writer escaper = new UnicodeEscapeWriter(out);
-            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+             Writer escaper = new UnicodeEscapeWriter(out);
+             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
 
             for (String key : keys) {
                 writeProperty(ctxt, resource, writer, key);

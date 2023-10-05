@@ -1,0 +1,20 @@
+package uk.autores.internal;
+
+import javax.tools.FileObject;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+/** Utility type for loading {@link Properties} files. */
+public final class PropLoader {
+
+    private PropLoader() {}
+
+    public static Properties load(FileObject file) throws IOException {
+        Properties props = new Properties();
+        try (InputStream in = file.openInputStream()) {
+            props.load(in);
+        }
+        return props;
+    }
+}

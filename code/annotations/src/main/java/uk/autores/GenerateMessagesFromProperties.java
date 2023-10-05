@@ -1,5 +1,6 @@
 package uk.autores;
 
+import uk.autores.internal.*;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
