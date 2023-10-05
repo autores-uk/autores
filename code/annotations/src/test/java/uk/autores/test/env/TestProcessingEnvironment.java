@@ -40,7 +40,7 @@ public class TestProcessingEnvironment implements ProcessingEnvironment {
 
     @Override
     public SourceVersion getSourceVersion() {
-        throw new UnsupportedOperationException();
+        return SourceVersion.RELEASE_8;
     }
 
     @Override

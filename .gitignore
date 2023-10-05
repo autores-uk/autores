@@ -5,3 +5,6 @@ code/.idea/
 code/target/
 code/**/target/
 **/pom.xml.versionsBackup
+
+# Merge code
+**/*.orig
