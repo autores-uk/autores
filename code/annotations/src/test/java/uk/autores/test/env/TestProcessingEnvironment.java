@@ -40,7 +40,7 @@ public class TestProcessingEnvironment implements ProcessingEnvironment {
 
     @Override
     public SourceVersion getSourceVersion() {
-        return SourceVersion.RELEASE_8;
+        return SourceVersion.RELEASE_11;
     }
 
     @Override
