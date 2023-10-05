@@ -1,24 +1,40 @@
 package uk.autores.processors;
 
-import com.google.common.io.CharSource;
-import com.google.common.io.Resources;
-
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 final class TestSources {
 
     static Source load(Object relativeTo, String name) throws IOException {
-        URL url = Resources.getResource(relativeTo.getClass(), name);
-        CharSource cs = Resources.asCharSource(url, StandardCharsets.UTF_8);
-        String sourceCode = cs.read();
+        URL url = relativeTo.getClass().getResource(name);
+        String sourceCode = read(url);
 
         String packName = relativeTo.getClass().getPackage().getName();
         String simpleName = name.substring(0, name.length() - ".java".length());
         String className = packName + "." + simpleName;
 
         return new Source(className, sourceCode);
+    }
+
+    private static String read(URL url) throws IOException {
+        StringWriter writer = new StringWriter();
+        try (InputStream in = url.openStream();
+             Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            transferTo(reader, writer);
+        }
+        return writer.toString();
+    }
+
+    private static void transferTo(Reader reader, Writer writer) throws IOException {
+        char[] buf = new char[1024];
+        while (true) {
+            int r = reader.read(buf);
+            if (r < 0) {
+                break;
+            }
+            writer.write(buf, 0, r);
+        }
     }
 
     static final class Source {

@@ -1,5 +1,7 @@
 # AutoRes.uk
 
+THIS PROJECT IS IN ALPHA STATE.
+
 Annotation driven Java code generation library for working with embedded resources.
 
 ## See
@@ -24,7 +26,7 @@ Pull requests will NOT be accepted.
 
  - dev8: Development floor for Java 8
  - dev11: Java 11 fork with module support
- - main: most recent Java 11 release
+ - main: *TODO*
  - release/*: released versions
 
 | Branch | CI                                                                                                 |
