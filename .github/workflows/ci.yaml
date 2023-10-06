@@ -24,7 +24,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./code/annotations/target/site
+          publish_dir: ./code/annotations/target/pages
 
 # CI docs:
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
