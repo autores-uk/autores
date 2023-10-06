@@ -25,8 +25,8 @@ class JavaWriterTest {
         Pkg pkg = new Pkg("foo.bar", false);
         String actual = test(ctxt(pkg), jw -> {});
         // verify
-        String expected = "package foo.bar;" + NL + NL;
-        expected += "@javax.annotation.processing.Generated(\"" + this.getClass().getName() + "\")" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
+        expected += "package foo.bar;" + NL + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -38,7 +38,7 @@ class JavaWriterTest {
     void nl() throws IOException {
         String actual = test(ctxt(), JavaWriter::nl);
         // verify
-        String expected = "@javax.annotation.processing.Generated(\"" + this.getClass().getName() + "\")" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -54,7 +54,7 @@ class JavaWriterTest {
             jw.append(' ');
         });
         // verify
-        String expected = "@javax.annotation.processing.Generated(\"" + this.getClass().getName() + "\")" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -69,7 +69,7 @@ class JavaWriterTest {
             jw.indent().staticFinal("String", "bar").append("\"x\";").nl();
         });
         // verify
-        String expected = "@javax.annotation.processing.Generated(\"" + this.getClass().getName() + "\")" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;

@@ -1,5 +1,4 @@
 package uk.autores.test.processors;
-
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +23,17 @@ final class TestSources {
             reader.transferTo(writer);
         }
         return writer.toString();
+    }
+
+    private static void transferTo(Reader reader, Writer writer) throws IOException {
+        char[] buf = new char[1024];
+        while (true) {
+            int r = reader.read(buf);
+            if (r < 0) {
+                break;
+            }
+            writer.write(buf, 0, r);
+        }
     }
 
     static final class Source {
