@@ -3,7 +3,6 @@ package uk.autores;
 import uk.autores.processing.Context;
 import uk.autores.processing.Pkg;
 
-import javax.lang.model.SourceVersion;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -27,10 +26,7 @@ final class JavaWriter extends Writer {
 
         visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
 
-        // Java 9 deprecates javax.annotation.Generated
-        String gen = ctxt.env().getSourceVersion().compareTo(SourceVersion.RELEASE_8) > 0
-                ? "javax.annotation.processing.Generated"
-                : "javax.annotation.Generated";
+        w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
 
         Pkg pkg = ctxt.pkg();
         if (!pkg.isUnnamed()) {
@@ -42,7 +38,6 @@ final class JavaWriter extends Writer {
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
         }
-        w.append("@").append(gen).append("(\"").append(generator.getClass().getName()).append("\")").append(NL);
         w.append(visibility).append("final class ").append(className).append(" {").append(NL);
         w.append("\n  private ").append(className).append("() {}").append(NL);
     }

@@ -75,13 +75,19 @@
       and the ability add custom implementations.
     </p>
 
-    <h2 id="compatibility">Compatibility</h2>
+    <h2 id="compatibility">Versioning &amp; Compatibility</h2>
 
-    <p>Versions 8.x.x are compatible with Java 8 and above.</p>
+    <p>Versions in the form <code>A.B.C</code> are split into three numbers:</p>
+
+    <ol>
+      <li>A: Java version; minimum version of Java compiler</li>
+      <li>B: the major library version; breaking changes can occur</li>
+      <li>C: the minor library version; breaking changes should not occur</li>
+    </ol>
 
     <p>
-      Versions 11.x.x are compatible with Java 11 and above.
-      This is the minimum version with <a href="https://dev.java/learn/modules/">Java module</a> support.
+      Java 8 is the minimum version.
+      Java 11 is the minimum version with <a href="https://dev.java/learn/modules/">Java module</a> support.
     </p>
 
     <h2 id="deps">Dependency Scopes</h2>
@@ -107,7 +113,12 @@
 
     <h2 id="modules">Modules</h2>
 
-    <p><em>TODO</em></p>
+    <p>
+      Use <code>requires static uk.autores</code> in <code>module-info.java</code> to depend on this library at compile time only.
+      Apache Maven projects may need to use 
+      <a href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html">annotationProcessorPaths</a>
+      to make the compiler aware of the annotation processor service.
+    </p>
 
   </body>
 </html>
