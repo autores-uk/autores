@@ -2,6 +2,8 @@ package uk.autores.processors;
 
 import uk.autores.ClasspathResource;
 import uk.autores.ClasspathResources;
+import uk.autores.internal.CharSeq;
+import uk.autores.internal.OptionValidation;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -30,13 +32,13 @@ import static java.util.stream.Collectors.toSet;
 public final class ClasspathResourceProcessor extends AbstractProcessor {
 
   /**
-   * {@link SourceVersion#RELEASE_8}.
+   * {@link SourceVersion#RELEASE_11}.
    *
-   * @return RELEASE_8
+   * @return RELEASE_11
    */
   @Override
   public SourceVersion getSupportedSourceVersion() {
-    return SourceVersion.RELEASE_8;
+    return SourceVersion.RELEASE_11;
   }
 
   /**

@@ -21,7 +21,7 @@ fi
 
 HERE="$(pwd)"
 MAJOR="$(cat ${HERE}/scripts/versions/major.txt)"
-MINOR="$(cat ${HERE}/scripts/versions/minor8.txt)"
+MINOR="$(cat ${HERE}/scripts/versions/minor11.txt)"
 STATUS="$(cat ${HERE}/scripts/versions/status.txt)"
 NEXTMINOR="$((${MINOR}+1))"
 
@@ -44,7 +44,7 @@ git checkout "${BRANCH}"
 
 mvn --file "${BASE}/code/annotations/pom.xml" clean deploy -P release
 
-echo "${NEXTMINOR}" > "${HERE}/scripts/versions/minor8.txt"
+echo "${NEXTMINOR}" > "${HERE}/scripts/versions/minor11.txt"
 mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="${NEXT}-SNAPSHOT"
 git add code
 git add scripts/versions

@@ -1,5 +1,9 @@
 package uk.autores;
 
+import uk.autores.internal.Ints;
+import uk.autores.internal.JavaWriter;
+import uk.autores.internal.UnicodeEscapeWriter;
+import uk.autores.internal.Utf8Buffer;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
