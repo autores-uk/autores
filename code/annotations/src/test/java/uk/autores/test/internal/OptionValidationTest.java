@@ -2,10 +2,10 @@ package uk.autores.test.internal;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.AssertResourceExists;
+import uk.autores.internal.OptionValidation;
+import uk.autores.processing.*;
 import uk.autores.test.env.TestElement;
 import uk.autores.test.env.TestProcessingEnvironment;
-import uk.autores.processing.*;
-import uk.autores.internal.OptionValidation;
 
 import javax.tools.StandardLocation;
 import java.util.HashSet;

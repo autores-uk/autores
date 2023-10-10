@@ -3,12 +3,12 @@ package uk.autores.test.internal;
 import org.junit.jupiter.api.Test;
 import uk.autores.ConfigDefs;
 import uk.autores.internal.Reporting;
-import uk.autores.test.env.TestPkgs;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
 import uk.autores.processing.Config;
 import uk.autores.processing.Context;
 import uk.autores.processing.Namer;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestPkgs;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;

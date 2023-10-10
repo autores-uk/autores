@@ -4,8 +4,8 @@ import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
 import uk.autores.ConfigDefs;
 import uk.autores.GenerateStringsFromText;
-import uk.autores.test.env.*;
 import uk.autores.processing.*;
+import uk.autores.test.env.*;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
