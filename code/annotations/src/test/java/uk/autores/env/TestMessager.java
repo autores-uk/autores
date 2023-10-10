@@ -22,7 +22,6 @@ public class TestMessager implements Messager {
 
     @Override
     public void printMessage(Diagnostic.Kind kind, CharSequence msg) {
-        System.out.println(kind + ": " + msg);
         messages.get(kind).add(msg);
     }
 

@@ -15,14 +15,12 @@ final class JavaWriter extends Writer {
     private final Writer w;
     private final String visibility;
     private final String className;
-    private final boolean relative;
     private boolean closed = false;
     private int indentation = 2;
 
     JavaWriter(Object generator, Context ctxt, Writer w, String className, String comment) throws IOException {
         this.w = w;
         this.className = className;
-        this.relative = ctxt.pkg().isRelative();
 
         visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
 
@@ -122,11 +120,8 @@ final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(String resource) throws IOException {
-        String loader = relative ? "" : ".getClassLoader()";
         return this.append(className)
-                .append(".class")
-                .append(loader)
-                .append(".getResourceAsStream(")
+                .append(".class.getResourceAsStream(")
                 .string(resource)
                 .append(")");
     }

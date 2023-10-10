@@ -14,7 +14,7 @@
       Small open source library for automating embedded <a href="https://dev.java/">Java&trade;</a> resource file handling.
       Use annotations for verification and code generation.
       This is an alternative to manual use of methods like
-      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
+      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
     </p>
 
     <ul>
@@ -87,38 +87,44 @@
 
     <p>
       Java 8 is the minimum version.
-      Java 11 is the minimum version with <a href="https://dev.java/learn/modules/">Java module</a> support.
+      Java 11 is the minimum version with <a href="https://dev.java/learn/modules/">Java Platform Module System</a> support.
     </p>
 
-    <h2>Dependency Scopes <a id="scopes" href="#scopes">&#x1f517;</a></h2>
+    <h2>Scopes <a id="scopes" href="#scopes">&#x1f517;</a></h2>
 
     <p>
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
+    </p>
+
+    <h3>Modules <a id="modules" href="#modules">&#x1f517;</a></h3>
+
+    <p>
+      Use <code>requires static uk.autores</code> in <code>module-info.java</code> to depend on this library at compile time only.
+    </p>
+
+    <h3>Apache Maven <a id="maven" href="#maven">&#x1f517;</a></h3>
+
+    <p>
       Apache Maven end consumer projects should use the 
       <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope">provided</a> scope.
     </p>
 
     <pre><code>
-    &lt;dependency>
-      &lt;groupId>uk.autores&lt;/groupId>
-      &lt;artifactId>annotations&lt;/artifactId>
-      &lt;version>${autores.version}&lt;/version>
-      &lt;scope>provided&lt;/scope>
-    &lt;/dependency>
+      &lt;dependency>
+        &lt;groupId>uk.autores&lt;/groupId>
+        &lt;artifactId>annotations&lt;/artifactId>
+        &lt;version>${autores.version}&lt;/version>
+        &lt;scope>provided&lt;/scope>
+      &lt;/dependency>
     </code></pre>
 
-    <p>Libraries that extend the API should use the default <code>compile</code> scope.</p>
-
-    <p>See chosen build system documentation for equivalent scoping.</p>
-
-    <h2>Modules <a id="modules" href="#modules">&#x1f517;</a></h2>
-
     <p>
-      Use <code>requires static uk.autores</code> in <code>module-info.java</code> to depend on this library at compile time only.
-      Apache Maven projects may need to use 
+      <a href="https://dev.java/learn/modules/">Java Platform Module System</a> projects should use
       <a href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html">annotationProcessorPaths</a>
       to make the compiler aware of the annotation processor service.
     </p>
+
+    <p>Libraries that extend the API should use the default <code>compile</code> scope.</p>
 
   </body>
 </html>

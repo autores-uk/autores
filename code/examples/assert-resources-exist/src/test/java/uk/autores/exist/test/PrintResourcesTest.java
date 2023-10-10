@@ -1,7 +1,7 @@
 package uk.autores.exist.test;
 
-import uk.autores.exist.PrintResources;
 import org.junit.jupiter.api.Test;
+import uk.autores.exist.PrintResources;
 
 import java.io.IOException;
 

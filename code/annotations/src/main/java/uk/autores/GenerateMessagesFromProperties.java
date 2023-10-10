@@ -88,30 +88,30 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     @Override
     public void handle(Context context) throws IOException {
-        Map<String, FileObject> resources = context.resources();
+        Set<Resource> resources = context.resources();
 
         boolean localize = !context.option(ConfigDefs.LOCALIZE)
                 .filter("false"::equals)
                 .isPresent();
 
-        for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
-            String resource = entry.getKey();
-            if (!resource.endsWith(EXTENSION)) {
-                String msg = "Resource names must end in " + EXTENSION + " - got " + resource;
+        for (Resource res : resources) {
+            if (!res.path().endsWith(EXTENSION)) {
+                String msg = "Resource names must end in " + EXTENSION + " - got " + res;
                 context.printError(msg);
                 continue;
             }
 
-            Properties base = PropLoader.load(entry.getValue());
+            Properties base = PropLoader.load(res);
             List<Localized> localizations = localize
-                    ? loadLocalizations(context, resource)
+                    ? loadLocalizations(context, res)
                     : Collections.emptyList();
 
-            writeProperties(context, resource, base, localizations);
+            writeProperties(context, res, base, localizations);
         }
     }
 
-    private List<Localized> loadLocalizations(Context context, String name) throws IOException {
+    private List<Localized> loadLocalizations(Context context, Resource resource) throws IOException {
+        String name = resource.filerPath();
         Filer filer = context.env().getFiler();
         JavaFileManager.Location location = context.location();
         String resourcePackage = context.pkg().resourcePackage();
@@ -141,7 +141,8 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
 
-            Properties properties = PropLoader.load(file);
+            Resource res = new Resource(file, props);
+            Properties properties = PropLoader.load(res);
             localized.add(new Localized(pattern, properties));
         }
 
@@ -149,7 +150,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private void writeProperties(Context ctxt,
-                                 String resource,
+                                 Resource resource,
                                  Properties base,
                                  List<Localized> localizations) throws IOException {
         Namer namer = ctxt.namer();
@@ -158,7 +159,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
-        String simple = namer.simplifyResourceName(resource);
+        String simple = namer.simplifyResourceName(resource.path());
         String name = namer.nameClass(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
@@ -172,7 +173,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource.path())) {
 
             Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
 
@@ -250,7 +251,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                                Msgs msgs,
                                String key,
                                String baseValue) throws IOException {
-        String resource = msgs.resource;
+        Resource resource = msgs.resource;
         String method = ctxt.namer().nameMethod(key);
         if (!Namer.isJavaIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
@@ -307,7 +308,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        String resource = msgs.resource;
+        Resource resource = msgs.resource;
         List<Localized> localizations = msgs.localizations;
 
         if (!localizedMessagesMatchBase(ctxt, resource, vars, localizations, key)) {
@@ -384,7 +385,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private boolean localizedMessagesMatchBase(Context ctxt,
-                                               String resource,
+                                               Resource resource,
                                                List<MessageParser.VarType> vars,
                                                List<Localized> localizations, String key) {
         boolean ok = true;
@@ -442,12 +443,12 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private static class Msgs {
-        private final String resource;
+        private final Resource resource;
         private final String lookupName;
         private final List<Localized> localizations;
         private final JavaWriter writer;
 
-        private Msgs(String resource, String lookupName, List<Localized> localizations, JavaWriter writer) {
+        private Msgs(Resource resource, String lookupName, List<Localized> localizations, JavaWriter writer) {
             this.resource = resource;
             this.lookupName = lookupName;
             this.localizations = localizations;

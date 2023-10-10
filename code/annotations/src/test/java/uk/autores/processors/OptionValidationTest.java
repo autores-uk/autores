@@ -92,7 +92,7 @@ class OptionValidationTest {
                 StandardLocation.CLASS_PATH,
                 new Pkg("", false),
                 TestElement.INSTANCE,
-                emptySortedMap(),
+                emptySortedSet(),
                 config,
                 new Namer()
         );

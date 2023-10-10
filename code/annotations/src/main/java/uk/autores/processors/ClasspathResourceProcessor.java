@@ -116,23 +116,27 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     }
   }
 
-  private SortedMap<String, FileObject> resources(ClasspathResource cpr,
+  private SortedSet<Resource> resources(ClasspathResource cpr,
                                                   Pkg pkg,
                                                   Element annotated) {
-    SortedMap<String, FileObject> map = new TreeMap<>();
+    SortedSet<Resource> map = new TreeSet<>();
     String value = "";
     try {
-
       Filer filer = processingEnv.getFiler();
 
       for (String resource : cpr.value()) {
-        value = resource;
+        String filerPath = ResPath.massage(processingEnv, annotated, pkg, resource);
+        if (filerPath == null) {
+          continue;
+        }
+
+        value = filerPath;
         FileObject fo = filer.getResource(cpr.location(), pkg.resourcePackage(), value);
         try (InputStream is = fo.openInputStream()) {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
-        map.put(resource, fo);
+        map.add(new Resource(fo, resource));
       }
 
     } catch (Exception e) {
@@ -142,7 +146,7 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
       msg += " Exception: " + e;
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-      return Collections.emptySortedMap();
+      return Collections.emptySortedSet();
     }
 
     return map;
@@ -157,7 +161,7 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     }
 
     Pkg pkg = pkg(cpr.relative(), annotated);
-    SortedMap<String, FileObject> resources = resources(cpr, pkg, annotated);
+    SortedSet<Resource> resources = resources(cpr, pkg, annotated);
 
     return new Context(
             processingEnv,

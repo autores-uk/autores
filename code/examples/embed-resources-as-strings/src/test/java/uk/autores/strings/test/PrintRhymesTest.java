@@ -2,8 +2,8 @@ package uk.autores.strings.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.strings.Poule;
-import uk.autores.strings.Roses;
 import uk.autores.strings.PrintRhymes;
+import uk.autores.strings.Roses;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

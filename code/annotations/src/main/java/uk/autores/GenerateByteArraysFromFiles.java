@@ -3,12 +3,10 @@ package uk.autores;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -74,7 +72,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        Map<String, FileObject> resources = context.resources();
+        Set<Resource> resources = context.resources();
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
@@ -83,19 +81,19 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         byte[] buf = new byte[MAX_BYTES_PER_METHOD];
 
-        for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
-            String resource = entry.getKey();
+        for (Resource entry : resources) {
+            String resource = entry.path();
             String simple = namer.simplifyResourceName(resource);
             String className = namer.nameClass(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isJavaIdentifier(className)) {
-                String msg = "Cannot transform resource name '" + entry.getKey() + "' to class name";
+                String msg = "Cannot transform resource name '" + resource + "' to class name";
                 context.printError(msg);
                 continue;
             }
 
-            FileStats stats = stats(buf, resource, entry.getValue());
+            FileStats stats = stats(buf, entry);
             if (stats.size > Integer.MAX_VALUE) {
                 String err = "Resource " + resource + " too big for byte array; max size is " + Integer.MAX_VALUE;
                 context.printError(err);
@@ -131,7 +129,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private static void writeInlineMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         int methodCount = 0;
 
-        try (InputStream in = stats.file.openInputStream()) {
+        try (InputStream in = stats.resource.open()) {
             while(true) {
                 int r = in.read(buf);
                 if (r < 0) {
@@ -197,7 +195,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         // TODO: avoid writing this logic for every resource
         writer.indent().append("byte[] barr = new byte[").append(Ints.toString((int) stats.size)).append("];").nl();
-        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource).append(") ").openBrace().nl();
+        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource.path()).append(") ").openBrace().nl();
         writer.indent().append("int offset = 0;").nl();
         writer.indent().append("while(true) ").openBrace().nl();
         writer.indent().append("int r = in.read(barr, offset, barr.length - offset);").nl();
@@ -205,9 +203,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == barr.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource);
+        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource.path());
         writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource).append(", e);").nl();
+        writer.indent().append("throw new AssertionError(").string(stats.resource.path()).append(", e);").nl();
         writer.closeBrace().nl();
 
         writeReturn(writer);
@@ -223,9 +221,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.closeBrace().nl();
     }
 
-    private static FileStats stats(byte[] buf, String resource, FileObject file) throws IOException {
+    private static FileStats stats(byte[] buf, Resource resource) throws IOException {
         long size = 0;
-        try (InputStream in = file.openInputStream()) {
+        try (InputStream in = resource.open()) {
             while(true) {
                 int r = in.read(buf);
                 if (r < 0) {
@@ -238,16 +236,14 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 }
             }
         }
-        return new FileStats(resource, file, size);
+        return new FileStats(resource, size);
     }
 
     private static final class FileStats {
-        private final String resource;
-        private final FileObject file;
+        private final Resource resource;
         private final long size;
-        private FileStats(String resource, FileObject file, long size) {
+        private FileStats(Resource resource, long size) {
             this.resource = resource;
-            this.file = file;
             this.size = size;
         }
     }

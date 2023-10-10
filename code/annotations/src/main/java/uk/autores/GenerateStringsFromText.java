@@ -4,13 +4,11 @@ import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -73,7 +71,7 @@ public final class GenerateStringsFromText implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        Map<String, FileObject> resources = context.resources();
+        Set<Resource> resources = context.resources();
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
@@ -88,9 +86,9 @@ public final class GenerateStringsFromText implements Handler {
 
         ClassGenerator generator = strategy(context);
 
-        for (Map.Entry<String, FileObject> entry : resources.entrySet()) {
-            String resource = entry.getKey();
-            Stats stats = stats(entry, buf, decoder);
+        for (Resource res : resources) {
+            String resource = res.path();
+            Stats stats = stats(res, buf, decoder);
             if (stats.utf16Size > Integer.MAX_VALUE) {
                 String msg = "Resource " + resource + " to large for String type";
                 context.printError(msg);
@@ -102,7 +100,7 @@ public final class GenerateStringsFromText implements Handler {
             String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isJavaIdentifier(className)) {
-                String msg = "Cannot transform resource name '" + entry.getKey() + "' to class name";
+                String msg = "Cannot transform resource name '" + res.path() + "' to class name";
                 context.printError(msg);
                 continue;
             }
@@ -111,7 +109,7 @@ public final class GenerateStringsFromText implements Handler {
 
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
-                 JavaWriter writer = new JavaWriter(this, context, escaper, className, entry.getKey())) {
+                 JavaWriter writer = new JavaWriter(this, context, escaper, className, res.path())) {
 
                 generator.generate(assistants, stats, writer);
             }
@@ -149,7 +147,7 @@ public final class GenerateStringsFromText implements Handler {
 
         writeMethodDeclaration(writer);
 
-        try (InputStream in = stats.file.openInputStream();
+        try (InputStream in = stats.resource.open();
              Reader reader = new InputStreamReader(in, assistants.decoder);
              Reader bufReader = new BufferedReader(reader)) {
 
@@ -168,7 +166,7 @@ public final class GenerateStringsFromText implements Handler {
     private static void writeSimpleInline(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
         writeMethodDeclaration(writer);
 
-        try (InputStream in = stats.file.openInputStream();
+        try (InputStream in = stats.resource.open();
              Reader reader = new InputStreamReader(in, assistants.decoder);
              Reader bufReader = new BufferedReader(reader, assistants.buffer.maxBuffer())) {
 
@@ -194,7 +192,7 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent()
                 .append("try (")
                 .append("java.io.InputStream in = ")
-                .openResource(stats.resource)
+                .openResource(stats.resource.path())
                 .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
                 .openBrace()
                 .nl();
@@ -207,9 +205,9 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == buf.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource);
+        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource.path());
         writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource).append(");").nl();
+        writer.indent().append("throw new AssertionError(").string(stats.resource.path()).append(");").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
 
@@ -245,10 +243,10 @@ public final class GenerateStringsFromText implements Handler {
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
     }
 
-    private Stats stats(Map.Entry<String, FileObject> entry, Utf8Buffer buf, CharsetDecoder decoder) throws IOException {
+    private Stats stats(Resource resource, Utf8Buffer buf, CharsetDecoder decoder) throws IOException {
         long utf16Size = 0L;
         long utf8Size = 0L;
-        try (InputStream in = entry.getValue().openInputStream();
+        try (InputStream in = resource.open();
              Reader reader = new InputStreamReader(in, decoder);
              Reader bufReader = new BufferedReader(reader)) {
             while (buf.receive(bufReader)) {
@@ -262,18 +260,16 @@ public final class GenerateStringsFromText implements Handler {
             }
         }
 
-        return new Stats(entry.getKey(), entry.getValue(), utf16Size, utf8Size);
+        return new Stats(resource, utf16Size, utf8Size);
     }
 
     private static final class Stats {
-        private final String resource;
-        private final FileObject file;
+        private final Resource resource;
         private final long utf16Size;
         private final long utf8Size;
 
-        private Stats(String resource, FileObject file, long utf16Size, long utf8Size) {
+        private Stats(Resource resource, long utf16Size, long utf8Size) {
             this.resource = resource;
-            this.file = file;
             this.utf16Size = utf16Size;
             this.utf8Size = utf8Size;
         }
