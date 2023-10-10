@@ -1,8 +1,14 @@
 name: CI
 on: [ push ]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
