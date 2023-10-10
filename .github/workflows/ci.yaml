@@ -17,13 +17,20 @@ jobs:
         run: mv ./code/annotations/target/apidocs ./code/annotations/target/site/
       - name: Add the base index
         run: cp ./docs/* ./code/annotations/target/site
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        #if: github.ref == 'refs/heads/main'
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        if: github.ref == 'refs/heads/dev11'
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         if: github.ref == 'refs/heads/dev11'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./code/annotations/target/site
+          path: './code/annotations/target/site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+        if: github.ref == 'refs/heads/dev11'
+
+
 
 # CI docs:
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
