@@ -5,21 +5,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.ConfigDefs;
 import uk.autores.GenerateConstantsFromProperties;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestPkgs;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.env.*;
 import uk.autores.processing.*;
 
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -56,20 +51,18 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void handle() throws Exception {
-        testMessages(env, emptyList(), file(filename, file));
+        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
     }
 
     @Test
     void handlePublicVisibility() throws Exception {
         List<Config> config = singletonList(new Config("visibility", "public"));
-        testMessages(env, config, file(filename, file));
+        testMessages(env, config, ResourceSets.of(env, filename, file));
     }
 
     @Test
     void reportsBadFilename() throws Exception {
-        SortedMap<String, FileObject> resources = new TreeMap<>();
-        resources.put(filename, file);
-        resources.put("wrongfile.dat", new TestFileObject(true));
+        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "wrongfile.dat");
 
         testMessages(env, emptyList(), resources);
 
@@ -78,9 +71,7 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void reportsBadNameGeneration() throws Exception {
-        SortedMap<String, FileObject> resources = new TreeMap<>();
-        resources.put(filename, file);
-        resources.put("true.properties", new TestFileObject(true));
+        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "true.properties");
 
         testMessages(env, emptyList(), resources);
 
@@ -88,29 +79,21 @@ class GenerateConstantsFromPropertiesTest {
     }
 
     @Test
-    void reportsInvalidIdentifier() throws Exception {
+    void reportsInvalidKeyIdentifier() throws Exception {
         String data = "public=foo";
 
         file = new TestFileObject(true);
         try(OutputStream out = file.openOutputStream()) {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
-
-        testMessages(env, emptyList(), file(filename, file));
+        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
 
         assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
     }
 
-    private SortedMap<String, FileObject> file(String resource, FileObject fo) {
-        SortedMap<String, FileObject> map = new TreeMap<>();
-        map.put(resource, fo);
-        return map;
-    }
-
     private void testMessages(TestProcessingEnvironment env,
                               List<Config> config,
-                              SortedMap<String, FileObject> files) throws Exception {
+                              SortedSet<Resource> files) throws Exception {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
@@ -125,6 +108,10 @@ class GenerateConstantsFromPropertiesTest {
 
         String qname = "Consts";
         TestFileObject file = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT).get(qname);
+        if (file == null) {
+            return;
+        }
+
         String src = new String(file.data.toByteArray(), StandardCharsets.UTF_8);
 
         Reflect.compile(

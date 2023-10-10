@@ -3,14 +3,13 @@ package uk.autores.processing;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import java.util.List;
 import java.util.Optional;
-import java.util.SortedMap;
+import java.util.SortedSet;
 
 import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSortedMap;
+import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -22,7 +21,7 @@ public final class Context {
     private final JavaFileManager.Location location;
     private final Pkg pkg;
     private final Element annotated;
-    private final SortedMap<String, FileObject> resources;
+    private final SortedSet<Resource> resources;
     private final List<Config> config;
     private final Namer namer;
 
@@ -39,14 +38,14 @@ public final class Context {
                    JavaFileManager.Location location,
                    Pkg pkg,
                    Element annotated,
-                   SortedMap<String, FileObject> resources,
+                   SortedSet<Resource> resources,
                    List<Config> config,
                    Namer namer) {
         this.env = env;
         this.location = requireNonNull(location, "location");
         this.pkg = pkg;
         this.annotated = requireNonNull(annotated, "annotatedElement");
-        this.resources = unmodifiableSortedMap(requireNonNull(resources, "resources"));
+        this.resources = unmodifiableSortedSet(requireNonNull(resources, "resources"));
         this.config = unmodifiableList(requireNonNull(config, "config"));
         this.namer = requireNonNull(namer, "namer");
     }
@@ -110,12 +109,10 @@ public final class Context {
     }
 
     /**
-     * Keys are the resources as defined in the {@link uk.autores.ClasspathResource}.
-     *
-     * @return unmodifiable resources map
+     * @return unmodifiable resources set
      * @see uk.autores.ClasspathResource#value()
      */
-    public SortedMap<String, FileObject> resources() {
+    public SortedSet<Resource> resources() {
         return resources;
     }
 

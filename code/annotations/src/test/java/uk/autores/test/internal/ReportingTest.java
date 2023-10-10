@@ -14,7 +14,7 @@ import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 empty,
                 new Namer()
         );
@@ -56,7 +56,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );
@@ -81,7 +81,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );
@@ -106,7 +106,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );

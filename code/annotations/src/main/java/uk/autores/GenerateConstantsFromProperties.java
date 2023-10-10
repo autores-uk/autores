@@ -3,17 +3,16 @@ package uk.autores;
 import uk.autores.internal.JavaWriter;
 import uk.autores.internal.PropLoader;
 import uk.autores.internal.UnicodeEscapeWriter;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.Properties;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Use this code generation {@link Handler} to prevent misspelled keys with {@link java.util.ResourceBundle}.
@@ -41,26 +40,25 @@ public final class GenerateConstantsFromProperties implements Handler {
     @Override
     public void handle(Context context) throws Exception {
 
-        for (Map.Entry<String, FileObject> entry : context.resources().entrySet()) {
-            String resource = entry.getKey();
-            if (!resource.endsWith(EXTENSION)) {
-                String msg = "Resource names must end in " + EXTENSION + " - got " + resource;
+        for (Resource res : context.resources()) {
+            if (!res.path().endsWith(EXTENSION)) {
+                String msg = "Resource names must end in " + EXTENSION + " - got " + res.path();
                 context.printError(msg);
             } else {
-                Properties base = PropLoader.load(entry.getValue());
+                Properties base = PropLoader.load(res);
 
-                writeProperties(context, resource, base);
+                writeProperties(context, res, base);
             }
         }
     }
 
     private void writeProperties(Context ctxt,
-                                 String resource,
+                                 Resource resource,
                                  Properties base) throws IOException {
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
         Namer namer = ctxt.namer();
-        String simple = namer.simplifyResourceName(resource);
+        String simple = namer.simplifyResourceName(resource.path());
         String name = namer.nameClass(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
@@ -74,7 +72,7 @@ public final class GenerateConstantsFromProperties implements Handler {
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource.path())) {
 
             for (String key : keys) {
                 writeProperty(ctxt, resource, writer, key);
@@ -83,7 +81,7 @@ public final class GenerateConstantsFromProperties implements Handler {
     }
 
     private void writeProperty(Context ctxt,
-                               String resource,
+                               Resource resource,
                                JavaWriter writer,
                                String key) throws IOException {
         String field = ctxt.namer().nameStaticField(key);
