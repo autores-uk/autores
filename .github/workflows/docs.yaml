@@ -43,7 +43,7 @@ jobs:
       - name: Move API docs
         run: mv ./code/annotations/target/apidocs ./docs
       - name: Move API docs
-        run: ls -alh ./docs
+        run: ls -alh ./docs/apidocs/uk/autores/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
