@@ -52,7 +52,7 @@
  *             <td>{@link uk.autores.GenerateByteArraysFromFiles}</td>
  *             <td>any files</td>
  *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#STRATEGY}</td>
- *             <td>Generates a class with methods that return resources as byte arrays.</td>
+ *             <td>Generates classes with a method that return a resource as a byte array.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateConstantsFromProperties}</td>
@@ -70,7 +70,7 @@
  *             <td>{@link uk.autores.GenerateStringsFromText}</td>
  *             <td>text files</td>
  *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#ENCODING} {@link uk.autores.ConfigDefs#STRATEGY}</td>
- *             <td>Default {@link uk.autores.processing.Handler} that validates resources exist.</td>
+ *             <td>Generates classes with a method that return a resource as a string.</td>
  *         </tr>
  *     </tbody>
  * </table>
