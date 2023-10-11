@@ -30,6 +30,12 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <email>autores.uk@proton.me</email>
+        </developer>
+    </developers>
+
     <scm>
         <connection>scm:git:git://github.com/autores-uk/autores-uk.git</connection>
         <developerConnection>scm:git:ssh://github.com:autores-uk/autores.git</developerConnection>
