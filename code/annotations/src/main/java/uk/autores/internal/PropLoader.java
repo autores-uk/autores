@@ -1,6 +1,7 @@
 package uk.autores.internal;
 
-import javax.tools.FileObject;
+import uk.autores.processing.Resource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -10,9 +11,9 @@ public final class PropLoader {
 
     private PropLoader() {}
 
-    public static Properties load(FileObject file) throws IOException {
+    public static Properties load(Resource file) throws IOException {
         Properties props = new Properties();
-        try (InputStream in = file.openInputStream()) {
+        try (InputStream in = file.open()) {
             props.load(in);
         }
         return props;

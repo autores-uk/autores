@@ -2,12 +2,12 @@ package uk.autores.test.internal;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.internal.JavaWriter;
-import uk.autores.test.env.TestPkgs;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
 import uk.autores.processing.Context;
 import uk.autores.processing.Namer;
 import uk.autores.processing.Pkg;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestPkgs;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -102,7 +102,7 @@ class JavaWriterTest {
     private Context ctxt(Pkg pkg) {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
 
-        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptySortedMap(), Collections.emptyList(), new Namer());
+        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptySortedSet(), Collections.emptyList(), new Namer());
     }
 
     @FunctionalInterface

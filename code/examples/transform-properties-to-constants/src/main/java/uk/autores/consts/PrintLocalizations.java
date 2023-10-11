@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
-import static uk.autores.ConfigDefs.Names.VISIBILITY;
 
 @ClasspathResource(
         value = "Localizations.properties",

@@ -25,7 +25,7 @@ import java.lang.annotation.*;
  * </p>
  * <p>
  *     Absolute paths within the bundle may be referenced by setting {@link #relative()} to false and
- *     using an absolute path like <code>"META-INF/resources/X.txt</code>.
+ *     using an absolute path like <code>"/META-INF/resources/X.txt</code>.
  * </p>
  * <p>
  *     As a minimum this annotation can be used to verify a resource exists without the need for unit tests.

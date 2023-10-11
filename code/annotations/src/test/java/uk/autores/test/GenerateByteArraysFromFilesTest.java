@@ -4,17 +4,14 @@ import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
 import uk.autores.ConfigDefs;
 import uk.autores.GenerateByteArraysFromFiles;
-import uk.autores.test.env.*;
 import uk.autores.processing.*;
+import uk.autores.test.env.*;
 
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -31,34 +28,7 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void handle() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedMap<String, FileObject> files = new TreeMap<>();
-
-        {
-            String data = "abc";
-            String filename = "foo.txt";
-
-            TestFileObject text = new TestFileObject(true);
-            try (OutputStream out = text.openOutputStream()) {
-                out.write(data.getBytes(StandardCharsets.UTF_8));
-            }
-
-            env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
-
-            files.put(filename, text);
-        }
-        {
-            String data = IntStream.range(0, 1024).mapToObj(i -> "abc").collect(Collectors.joining());
-            String filename = "big.txt";
-
-            TestFileObject text = new TestFileObject(true);
-            try (OutputStream out = text.openOutputStream()) {
-                out.write(data.getBytes(StandardCharsets.UTF_8));
-            }
-
-            env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
-
-            files.put(filename, text);
-        }
+        SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
         for (String strat : Arrays.asList("auto", "inline", "lazy")) {
             List<Config> cfg = singletonList(new Config(ConfigDefs.STRATEGY.name(), strat));
@@ -74,15 +44,15 @@ class GenerateByteArraysFromFilesTest {
         String data = "\0\0\0A\0";
         String filename = "foo.txt";
 
-        TestFileObject text = new TestFileObject(true);
-        try(OutputStream out = text.openOutputStream()) {
+        TestFileObject tfo = new TestFileObject(true);
+        try(OutputStream out = tfo.openOutputStream()) {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
 
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
+        SortedSet<Resource> resources = ResourceSets.of(env, filename, tfo);
 
-        Map<String, String> generated = generate(env, file(filename, text), emptyList());
+        Map<String, String> generated = generate(env, resources, emptyList());
 
         assertFalse(generated.isEmpty());
         assertTrue(generated.get(filename).contains("i += 3;"));
@@ -91,18 +61,10 @@ class GenerateByteArraysFromFilesTest {
 
     @Test
     void reportsBadFilename() throws Exception {
-        String data = "abc";
-        String filename = "true.txt";
-
-        TestFileObject text = new TestFileObject(true);
-        try(OutputStream out = text.openOutputStream()) {
-            out.write(data.getBytes(StandardCharsets.UTF_8));
-        }
-
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
+        SortedSet<Resource> badFile = ResourceSets.junkWithBadFilename(env,"true.txt");
 
-        Map<String, String> generated = generate(env, file(filename, text), emptyList());
+        Map<String, String> generated = generate(env, badFile, emptyList());
 
         assertTrue(generated.isEmpty());
         assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
@@ -110,20 +72,15 @@ class GenerateByteArraysFromFilesTest {
 
     @Test
     void reportsFileTooBig() throws Exception {
-        String filename = "massive.txt";
-
-        TestInfiniteFileObject text = new TestInfiniteFileObject();
-
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, text);
-
-        Map<String, String> generated = generate(env, file(filename, text), emptyList());
+        SortedSet<Resource> infinite = ResourceSets.infinitelyLargeFile(env);
+        Map<String, String> generated = generate(env, infinite, emptyList());
 
         assertTrue(generated.isEmpty());
         assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, SortedMap<String, FileObject> files, List<Config> cfg) throws Exception {
+    private Map<String, String> generate(TestProcessingEnvironment env, SortedSet<Resource> files, List<Config> cfg) throws Exception {
         Handler handler = new GenerateByteArraysFromFiles();
         Context context = new Context(
                 env,
@@ -139,8 +96,8 @@ class GenerateByteArraysFromFilesTest {
 
         Map<String, String> results = new HashMap<>();
 
-        for (String res : files.keySet()) {
-            String simple = context.namer().simplifyResourceName(res);
+        for (Resource res : files) {
+            String simple = context.namer().simplifyResourceName(res.path());
             String className = context.namer().nameClass(simple);
 
             String qname = TestPkgs.P.qualifiedClassName(className);
@@ -156,15 +113,9 @@ class GenerateByteArraysFromFilesTest {
                     src
             ).create().get();
 
-            results.put(res, src);
+            results.put(res.path(), src);
         }
 
         return results;
-    }
-
-    private SortedMap<String, FileObject> file(String resource, FileObject fo) {
-        SortedMap<String, FileObject> map = new TreeMap<>();
-        map.put(resource, fo);
-        return map;
     }
 }

@@ -3,18 +3,18 @@ package uk.autores.test.internal;
 import org.junit.jupiter.api.Test;
 import uk.autores.ConfigDefs;
 import uk.autores.internal.Reporting;
-import uk.autores.test.env.TestPkgs;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
 import uk.autores.processing.Config;
 import uk.autores.processing.Context;
 import uk.autores.processing.Namer;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestPkgs;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +31,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 empty,
                 new Namer()
         );
@@ -56,7 +56,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );
@@ -81,7 +81,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );
@@ -106,7 +106,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeMap<>(),
+                new TreeSet<>(),
                 cfg,
                 new Namer()
         );
