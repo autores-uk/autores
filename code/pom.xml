@@ -7,7 +7,7 @@
     <groupId>uk.autores</groupId>
     <artifactId>autores</artifactId>
     <packaging>pom</packaging>
-    <version>8.0.6-alpha</version>
+    <version>8.0.7-alpha</version>
 
     <modules>
         <!-- aggregates -->
