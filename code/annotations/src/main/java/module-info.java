@@ -1,4 +1,20 @@
-/** An annotation driven module for working with classpath resource files. */
+/**
+ * <h1>AutoRes.uk</h1>
+ *
+ * <p>
+ *     An annotation driven <a href="https://dev.java/learn/modules/intro/">module</a>
+ *     for working with classpath resource files.
+ * </p>
+ * <p>
+ *     Modules that only use the <code>uk.autores</code> package should generally use
+ *     the <code>requires static java.compiler;</code> directive.
+ *     This package is intended to be compile-time only.
+ * </p>
+ * <p>
+ *     Modules that extend the API via the <code>uk.autores.processing</code> package
+ *     should generally use the <code>requires transitive java.compiler;</code> directive.
+ *  </p>
+ */
 module uk.autores {
     // provides annotation processing library
     requires transitive java.compiler;
