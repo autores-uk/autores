@@ -31,7 +31,7 @@ NEXT="${MAJOR}.${NEXTMINOR}${STATUS}"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 RELEASEBRANCH="release/${CURRENT}"
 
-function upversion() {
+upversion() {
   mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="$1"
   mvn --file "${BASE}/code/annotations/pom.xml" versions:set -DnewVersion="$1"
 }
