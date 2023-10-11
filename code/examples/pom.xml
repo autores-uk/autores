@@ -11,6 +11,14 @@
     <artifactId>examples</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- unit test dependency versions -->
+        <junit.version>5.10.0</junit.version>
+    </properties>
+
     <modules>
         <module>assert-resources-exist</module>
         <module>embed-resources-as-bytes</module>

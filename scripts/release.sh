@@ -31,9 +31,18 @@ NEXT="${MAJOR}.${NEXTMINOR}${STATUS}"
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 RELEASEBRANCH="release/${CURRENT}"
 
+function upversion() {
+  mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="$1"
+  mvn --file "${BASE}/code/annotations/pom.xml" versions:set -DnewVersion="$1"
+}
+
+echo "Test current state"
+
+mvn --file "${BASE}/code/annotations/pom.xml" clean package -P release
+
 echo "Releasing version ${CURRENT} on branch ${BRANCH}"
 
-mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="${NEXT}"
+upversion "${NEXT}"
 
 git add code
 git commit -m "Releasing version ${CURRENT}"
@@ -45,7 +54,7 @@ git checkout "${BRANCH}"
 mvn --file "${BASE}/code/annotations/pom.xml" clean deploy -P release
 
 echo "${NEXTMINOR}" > "${HERE}/scripts/versions/minor8.txt"
-mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="${NEXT}-SNAPSHOT"
+upversion "${NEXT}-SNAPSHOT"
 git add code
 git add scripts/versions
 git commit -m "Setting version to ${NEXT}-SNAPSHOT"
