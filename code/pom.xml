@@ -10,42 +10,10 @@
     <version>11.0.5-alpha-SNAPSHOT</version>
 
     <modules>
+        <!-- aggregates -->
         <module>annotations</module>
+        <!-- parents -->
         <module>examples</module>
     </modules>
 
-    <properties>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- unit test dependency versions -->
-        <junit.version>5.10.0</junit.version>
-    </properties>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.13.0</version>
-                    <configuration>
-                        <printFailingErrors>true</printFailingErrors>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>
