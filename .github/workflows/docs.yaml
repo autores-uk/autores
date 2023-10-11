@@ -37,13 +37,13 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: Package with Maven
-        run: mvn --file code/pom.xml --batch-mode --update-snapshots package
+        run: mvn --file code/pom.xml --batch-mode package
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Move API docs
         run: mv ./code/annotations/target/apidocs ./docs
       - name: Move API docs
-        run: ls -alh ./docs/apidocs/uk/autores/
+        run: ls -alh ./docs/apidocs/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
