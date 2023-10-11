@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy Documentation to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -38,10 +38,12 @@ jobs:
           cache: 'maven'
       - name: Package with Maven
         run: mvn --file code/pom.xml --batch-mode --update-snapshots package
-      - name: Move API docs
-        run: mv ./code/annotations/target/apidocs ./docs
       - name: Setup Pages
         uses: actions/configure-pages@v3
+      - name: Move API docs
+        run: mv ./code/annotations/target/apidocs ./docs
+      - name: Move API docs
+        run: ls -alh ./docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
