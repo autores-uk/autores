@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.3-alpha-SNAPSHOT</version>
+        <version>11.0.4-alpha</version>
     </parent>
 
     <artifactId>embed-resources-as-strings</artifactId>
