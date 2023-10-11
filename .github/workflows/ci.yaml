@@ -13,18 +13,6 @@ jobs:
           cache: 'maven'
       - name: Package with Maven
         run: mvn --file code/pom.xml --batch-mode --update-snapshots package
-      - name: Create pages directory
-        run: mkdir ./code/annotations/target/pages
-      - name: Add API docs
-        run: mv ./code/annotations/target/apidocs ./code/annotations/target/pages/
-      - name: Add the base index
-        run: cp ./docs/* ./code/annotations/target/pages
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./code/annotations/target/pages
 
 # CI docs:
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
