@@ -34,7 +34,7 @@ Pull requests will NOT be accepted.
 | dev8   | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev8)        |
 | dev11  | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev11)       |
 | main   | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main)        |
-| main   | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main) (docs) |
+| main   | ![docs.yaml](https://github.com/autores-uk/autores/actions/workflows/docs.yaml/badge.svg?branch=main) (docs) |
 
 ## Releases
 
