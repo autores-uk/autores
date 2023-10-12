@@ -44,14 +44,14 @@
     </p>
 
     <p>
-      Annotate a type or package with <code>@uk.autores.ClasspathResource</code>,
+      Annotate a type or package with <code>@uk.autores.ResourceFiles</code>,
       define the resource files, and choose a handler:
     </p>
 
     <pre><code>
       import uk.autores.*;
 
-      @ClasspathResource(
+      @ResourceFiles(
         value = {"Poule.txt", "Roses.txt"},
         handler = GenerateStringsFromText.class
       )

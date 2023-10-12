@@ -1,7 +1,7 @@
 package uk.autores.processors;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
-@ClasspathResource(value = "ThrowingHandlerTest.java", handler=ThrowingHandler.class)
+@ResourceFiles(value = "ThrowingHandlerTest.java", handler=ThrowingHandler.class)
 class ThrowingHandlerTest {
 }

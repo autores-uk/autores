@@ -13,7 +13,7 @@ import java.lang.annotation.*;
  * <p>
  *     Indicates resources that are to be processed at compile time.
  * </p>
- * {@code @ClasspathResource("some-resource.txt")}
+ * {@code @ResourceFiles("some-resource.txt")}
  * <p>
  *     The compiler must be able to load referenced resources using
  *     {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
@@ -40,8 +40,8 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(ClasspathResources.class)
-public @interface ClasspathResource {
+@Repeatable(ResourceFilesRepeater.class)
+public @interface ResourceFiles {
 
     /**
      * This value is passed as location (1st arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.

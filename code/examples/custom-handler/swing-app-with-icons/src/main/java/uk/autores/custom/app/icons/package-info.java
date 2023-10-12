@@ -1,5 +1,5 @@
 /** A package containing {@link javax.swing.ImageIcon}s. */
-@ClasspathResource(
+@ResourceFiles(
         value = {
                 "Meow.png",
                 "Woof.png",
@@ -8,5 +8,5 @@
 )
 package uk.autores.custom.app.icons;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 import uk.autores.custom.handler.GenerateIconsFromFiles;

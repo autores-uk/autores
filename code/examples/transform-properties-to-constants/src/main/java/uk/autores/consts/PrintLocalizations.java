@@ -1,6 +1,6 @@
 package uk.autores.consts;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 import uk.autores.GenerateConstantsFromProperties;
 
 import java.util.Locale;
@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 
-@ClasspathResource(
+@ResourceFiles(
         value = "Localizations.properties",
         handler = GenerateConstantsFromProperties.class
 )

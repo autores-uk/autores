@@ -1,16 +1,16 @@
 package uk.autores.exist;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.requireNonNull;
 
-@ClasspathResource(
+@ResourceFiles(
         value = PrintResources.RELATIVE
 )
-@ClasspathResource(
+@ResourceFiles(
         value = PrintResources.ABSOLUTE,
         relative = false
 )

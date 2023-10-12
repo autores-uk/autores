@@ -1,15 +1,15 @@
 package uk.autores.processors;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 import uk.autores.GenerateByteArraysFromFiles;
 
-@ClasspathResource(
+@ResourceFiles(
         value = "BadConfig.java",
         handler = GenerateByteArraysFromFiles.class,
         config = {
-                @ClasspathResource.Cfg(key = "foo", value = "bar"),
-                @ClasspathResource.Cfg(key = "visibility", value = "bar"),
-                @ClasspathResource.Cfg(key = "visibility", value = "public"),
+                @ResourceFiles.Cfg(key = "foo", value = "bar"),
+                @ResourceFiles.Cfg(key = "visibility", value = "bar"),
+                @ResourceFiles.Cfg(key = "visibility", value = "public"),
         }
 )
 class BadConfig {

@@ -1,5 +1,7 @@
 package uk.autores.processing;
 
+import uk.autores.ResourceFiles;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
@@ -53,7 +55,7 @@ public final class Context {
     /**
      * @param key key name
      * @return the value if present
-     * @see uk.autores.ClasspathResource.Cfg
+     * @see ResourceFiles.Cfg
      */
     public Optional<String> option(ConfigDef key) {
         return config.stream()
@@ -82,7 +84,7 @@ public final class Context {
 
     /**
      * @return where resources are to be loaded from
-     * @see uk.autores.ClasspathResource#location()
+     * @see ResourceFiles#location()
      * @see ProcessingEnvironment#getFiler()
      * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
      */
@@ -110,7 +112,7 @@ public final class Context {
 
     /**
      * @return unmodifiable resources set
-     * @see uk.autores.ClasspathResource#value()
+     * @see ResourceFiles#value()
      */
     public SortedSet<Resource> resources() {
         return resources;
@@ -118,7 +120,7 @@ public final class Context {
 
     /**
      * @return unmodifiable configuration
-     * @see uk.autores.ClasspathResource#config()
+     * @see ResourceFiles#config()
      */
     public List<Config> config() {
         return config;
@@ -126,7 +128,7 @@ public final class Context {
 
     /**
      * @return  name resolver
-     * @see uk.autores.ClasspathResource#namer()
+     * @see ResourceFiles#namer()
      */
     public Namer namer() {
         return namer;

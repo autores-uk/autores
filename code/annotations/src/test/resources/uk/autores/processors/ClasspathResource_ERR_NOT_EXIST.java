@@ -1,7 +1,7 @@
 package uk.autores.processors;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
-@ClasspathResource("exists/resources/does_not_exist.txt")
+@ResourceFiles("exists/resources/does_not_exist.txt")
 class ClasspathResource_ERR_NOT_EXIST {
 }

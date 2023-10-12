@@ -2,7 +2,7 @@ package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.GenerateStringsFromText;
 import uk.autores.processing.*;
@@ -19,7 +19,7 @@ import java.util.Set;
  * It decorates {@link GenerateByteArraysFromFiles} to reuse its byte handling functionality
  * and uses {@link GenerateStringsFromText} to load the template.
  */
-@ClasspathResource(value = "ImageTemplate.txt", handler = GenerateStringsFromText.class)
+@ResourceFiles(value = "ImageTemplate.txt", handler = GenerateStringsFromText.class)
 public class GenerateIconsFromFiles implements Handler {
 
     private final Handler decorated = new GenerateByteArraysFromFiles();
