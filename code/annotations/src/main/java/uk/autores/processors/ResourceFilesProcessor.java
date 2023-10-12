@@ -1,7 +1,7 @@
 package uk.autores.processors;
 
-import uk.autores.ClasspathResource;
-import uk.autores.ClasspathResources;
+import uk.autores.ResourceFiles;
+import uk.autores.ResourceFilesRepeater;
 import uk.autores.internal.CharSeq;
 import uk.autores.internal.OptionValidation;
 import uk.autores.internal.ResPath;
@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toSet;
  * Processes classpath resource files and passes them to {@link Handler#handle(Context)}.
  * This type is not intended to be public API but must be visible for annotation processing.
  */
-public final class ClasspathResourceProcessor extends AbstractProcessor {
+public final class ResourceFilesProcessor extends AbstractProcessor {
 
   /**
    * {@link SourceVersion#RELEASE_11}.
@@ -43,21 +43,19 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
   }
 
   /**
-   * ClasspathResource &amp; ClasspathResources
-   *
-   * @return ClasspathResource and ClasspathResources
-   * @see ClasspathResource
-   * @see ClasspathResources
+   * @return ResourceFiles and ResourceFilesRepeater
+   * @see ResourceFiles
+   * @see ResourceFilesRepeater
    */
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return Stream.of(ClasspathResource.class, ClasspathResources.class)
+    return Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
             .map(Class::getName)
             .collect(toSet());
   }
 
   /**
-   * Consumes {@link ClasspathResource} and {@link ClasspathResources} and passes derived information to the
+   * Consumes {@link ResourceFiles} and {@link ResourceFilesRepeater} and passes derived information to the
    * specified {@link Handler}.
    *
    * @param annotations the annotation types requested to be processed
@@ -76,12 +74,12 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
         consumed = true;
 
         Name name = annotation.getQualifiedName();
-        if (CharSeq.equivalent(ClasspathResource.class.getName(), name)) {
-          ClasspathResource cpr = annotated.getAnnotation(ClasspathResource.class);
+        if (CharSeq.equivalent(ResourceFiles.class.getName(), name)) {
+          ResourceFiles cpr = annotated.getAnnotation(ResourceFiles.class);
           process(cpr, annotated);
-        } else if (CharSeq.equivalent(ClasspathResources.class.getName(), name)) {
-          ClasspathResources cprs = annotated.getAnnotation(ClasspathResources.class);
-          for (ClasspathResource cpr : cprs.value()) {
+        } else if (CharSeq.equivalent(ResourceFilesRepeater.class.getName(), name)) {
+          ResourceFilesRepeater cprs = annotated.getAnnotation(ResourceFilesRepeater.class);
+          for (ResourceFiles cpr : cprs.value()) {
             process(cpr, annotated);
           }
         }
@@ -91,7 +89,7 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     return consumed;
   }
 
-  private void process(ClasspathResource cpr, Element annotated) {
+  private void process(ResourceFiles cpr, Element annotated) {
     Handler handler;
     Context context;
     try {
@@ -119,9 +117,9 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     }
   }
 
-  private SortedSet<Resource> resources(ClasspathResource cpr,
-                                                  Pkg pkg,
-                                                  Element annotated) {
+  private SortedSet<Resource> resources(ResourceFiles cpr,
+                                        Pkg pkg,
+                                        Element annotated) {
     SortedSet<Resource> map = new TreeSet<>();
     String value = "";
     try {
@@ -155,11 +153,11 @@ public final class ClasspathResourceProcessor extends AbstractProcessor {
     return map;
   }
 
-  private Context ctxt(ClasspathResource cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
+  private Context ctxt(ResourceFiles cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
     Namer namer = instance(cpr::namer);
 
     List<Config> options = new ArrayList<>();
-    for (ClasspathResource.Cfg option : cpr.config()) {
+    for (ResourceFiles.Cfg option : cpr.config()) {
       options.add(new Config(option.key(), option.value()));
     }
 

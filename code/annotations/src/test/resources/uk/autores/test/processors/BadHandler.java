@@ -1,7 +1,7 @@
 package uk.autores.test.processors;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
-@ClasspathResource(value = "won't get this far", handler = Foo.class)
+@ResourceFiles(value = "won't get this far", handler = Foo.class)
 class BadHandler {
 }

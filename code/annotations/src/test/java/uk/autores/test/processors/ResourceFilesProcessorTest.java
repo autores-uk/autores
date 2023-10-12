@@ -5,9 +5,9 @@ import org.joor.Reflect;
 import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ClasspathResource;
-import uk.autores.ClasspathResources;
-import uk.autores.processors.ClasspathResourceProcessor;
+import uk.autores.ResourceFiles;
+import uk.autores.ResourceFilesRepeater;
+import uk.autores.processors.ResourceFilesProcessor;
 
 import javax.lang.model.SourceVersion;
 import java.io.IOException;
@@ -18,19 +18,19 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 // https://blog.jooq.org/how-to-unit-test-your-annotation-processor-using-joor/
-class ClasspathResourceProcessorTest {
+class ResourceFilesProcessorTest {
 
   private DecoratedProcessor processor;
 
   @BeforeEach
   void before() {
-    processor = new DecoratedProcessor(new ClasspathResourceProcessor());
+    processor = new DecoratedProcessor(new ResourceFilesProcessor());
   }
 
   @Test
   void metadata() {
     assertEquals(SourceVersion.RELEASE_11, processor.getSupportedSourceVersion());
-    Set<String> expected = Stream.of(ClasspathResource.class, ClasspathResources.class)
+    Set<String> expected = Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
             .map(Class::getName)
             .collect(Collectors.toSet());
     assertEquals(expected, processor.getSupportedAnnotationTypes());

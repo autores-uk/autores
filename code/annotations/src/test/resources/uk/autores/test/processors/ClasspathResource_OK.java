@@ -1,7 +1,7 @@
 package uk.autores.test.processors;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
-@ClasspathResource("ClasspathResource_OK.java")
+@ResourceFiles("ClasspathResource_OK.java")
 class ClasspathResource_OK {
 }

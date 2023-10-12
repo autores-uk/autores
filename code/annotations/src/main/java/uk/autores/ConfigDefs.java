@@ -76,7 +76,7 @@ public final class ConfigDefs {
 
     /**
      * Convenience type that provides key names.
-     * @see ClasspathResource.Cfg#key()
+     * @see ResourceFiles.Cfg#key()
      */
     public static final class Names {
 

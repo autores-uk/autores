@@ -1,6 +1,6 @@
 /**
  * <p>
- * An annotation driven library for working with classpath resource files.
+ * An annotation driven library for working with embedded resource files.
  * This package contains the core library functionality.
  * See other packages for annotation processing and extensibility.
  * </p>
@@ -19,10 +19,10 @@
  *          </li></ul>
  *     </li>
  *     <li>
- *         Annotate a type or package declaration with {@link uk.autores.ClasspathResource}.
+ *         Annotate a type or package declaration with {@link uk.autores.ResourceFiles}.
  *     </li>
  *     <li>
- *         Set the resource file name in the {@link uk.autores.ClasspathResource#value()} array.
+ *         Set the resource file name in the {@link uk.autores.ResourceFiles#value()} array.
  *     </li>
  *     <li>
  *         Specify a {@link uk.autores.processing.Handler} for non-default behaviour.

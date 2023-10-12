@@ -1,6 +1,6 @@
 package uk.autores.processing;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
@@ -18,7 +18,7 @@ public final class Resource implements Comparable<Resource> {
 
     /**
      * @param file file
-     * @param path as defined in {@link ClasspathResource#value()}
+     * @param path as defined in {@link ResourceFiles#value()}
      */
     public Resource(FileObject file, String path) {
         this.file = Objects.requireNonNull(file, "file");
@@ -34,7 +34,7 @@ public final class Resource implements Comparable<Resource> {
     }
 
     /**
-     * @return as {@link ClasspathResource#value()}
+     * @return as {@link ResourceFiles#value()}
      */
     public String path() {
         return path;

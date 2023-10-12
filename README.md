@@ -24,10 +24,10 @@ Pull requests will NOT be accepted.
 
 ## Branches
 
- - dev8: Development floor for Java 8
+ - dev8: Primary development branch targeting Java 8
  - dev11: Java 11 fork with module support
- - main: *TODO*
  - release/*: released versions
+ - main: Most recent release for Java 11
 
 | Branch | CI                                                                                                       |
 | ------ | -------------------------------------------------------------------------------------------------------- |
@@ -37,5 +37,6 @@ Pull requests will NOT be accepted.
 
 ## Releases
 
-Bytecode, source code, and javadoc are published to 
-[the Maven central repository](https://s01.oss.sonatype.org/content/repositories/releases/uk/autores/annotations/).
+[Bytecode, source code, and javadoc](https://s01.oss.sonatype.org/content/repositories/releases/uk/autores/annotations/)
+ are published to the
+[Maven central repository](https://central.sonatype.com/artifact/uk.autores/annotations).
