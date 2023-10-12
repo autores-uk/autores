@@ -1,5 +1,7 @@
 package uk.autores.processing;
 
+import uk.autores.ResourceFiles;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -16,7 +18,7 @@ public final class Pkg {
      * @param name package name of the annotated type or package
      * @param relative if the resource path is relative to the package
      * @see Package#getName()
-     * @see uk.autores.ClasspathResource#relative()
+     * @see ResourceFiles#relative()
      */
     public Pkg(String name, boolean relative) {
         this.name = requireNonNull(name, "name");

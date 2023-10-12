@@ -38,7 +38,7 @@ import java.util.Set;
  * </p>
  * <p>
  *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)} if
- *     {@link ClasspathResource#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
+ *     {@link ResourceFiles#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
  *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
  * </p>
  */

@@ -1,6 +1,6 @@
 package uk.autores.messages;
 
-import uk.autores.ClasspathResource;
+import uk.autores.ResourceFiles;
 import uk.autores.GenerateMessagesFromProperties;
 
 import java.time.Instant;
@@ -11,19 +11,19 @@ import java.util.function.Consumer;
 import static uk.autores.ConfigDefs.Names.LOCALIZE;
 import static uk.autores.ConfigDefs.Names.MISSING_KEY;
 
-@ClasspathResource(
+@ResourceFiles(
         value = "Non-nls.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ClasspathResource.Cfg(key = LOCALIZE, value = "false")
+        config = @ResourceFiles.Cfg(key = LOCALIZE, value = "false")
 )
-@ClasspathResource(
+@ResourceFiles(
         value = "Messages.properties",
         handler = GenerateMessagesFromProperties.class
 )
-@ClasspathResource(
+@ResourceFiles(
         value = "Sparse.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ClasspathResource.Cfg(key = MISSING_KEY, value = "ignore")
+        config = @ResourceFiles.Cfg(key = MISSING_KEY, value = "ignore")
 )
 public class PrintProperties {
 
