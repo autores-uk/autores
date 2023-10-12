@@ -40,9 +40,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   /**
-   * ClasspathResource &amp; ClasspathResources
-   *
-   * @return ClasspathResource and ClasspathResources
+   * @return ResourceFiles and ResourceFilesRepeater
    * @see ResourceFiles
    * @see ResourceFilesRepeater
    */
