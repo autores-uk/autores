@@ -1,5 +1,6 @@
 package uk.autores;
 
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.Context;
 import uk.autores.processing.Pkg;
 
@@ -23,7 +24,7 @@ final class JavaWriter extends Writer {
         this.w = w;
         this.className = className;
 
-        visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
+        visibility = ctxt.option(Visibility.DEF).isPresent() ? "public " : "";
 
         w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
 

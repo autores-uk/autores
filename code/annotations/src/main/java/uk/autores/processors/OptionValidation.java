@@ -22,7 +22,7 @@ final class OptionValidation {
 
         for (Config option : context.config()) {
             long c = context.config().stream().filter(o -> option.key().equals(o.key())).count();
-            Optional<ConfigDef> def = handler.config().stream().filter(o -> o.name().equals(option.key())).findFirst();
+            Optional<ConfigDef> def = handler.config().stream().filter(o -> o.key().equals(option.key())).findFirst();
             if (def.isPresent()) {
                 ConfigDef od = def.get();
                 if (c > 1) {
@@ -42,7 +42,7 @@ final class OptionValidation {
 
         err = format("%s%nUsage:%n", err);
         for (ConfigDef def : handler.config()) {
-            err = format("%s %s\t%s%n", err, def.name(), def.description());
+            err = format("%s %s\t%s%n", err, def.key(), def.description());
         }
 
         context.printError(err);

@@ -1,5 +1,8 @@
 package uk.autores;
 
+import uk.autores.cfg.Encoding;
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -60,13 +63,13 @@ public final class GenerateStringsFromText implements Handler {
      * </p>
      *
      * @return visibility; encoding; strategy
-     * @see ConfigDefs#VISIBILITY
-     * @see ConfigDefs#ENCODING
-     * @see ConfigDefs#STRATEGY
+     * @see Visibility
+     * @see Encoding
+     * @see Strategy
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.ENCODING, ConfigDefs.STRATEGY);
+        return ConfigDefs.set(Visibility.DEF, Encoding.DEF, Strategy.DEF);
     }
 
     @Override
@@ -77,7 +80,7 @@ public final class GenerateStringsFromText implements Handler {
         Filer filer = context.env().getFiler();
         Element annotated = context.annotated();
 
-        String encoding = context.option(ConfigDefs.ENCODING).orElse("UTF-8");
+        String encoding = context.option(Encoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
         Utf8Buffer buf = Utf8Buffer.size(CONST_BYTE_LIMIT);
@@ -117,7 +120,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private ClassGenerator strategy(Context context) {
-        String strategy = context.option(ConfigDefs.STRATEGY).orElse("auto");
+        String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
             case "lazy":
                 return GenerateStringsFromText::writeLazyLoad;

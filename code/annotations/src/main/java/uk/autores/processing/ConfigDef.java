@@ -17,7 +17,7 @@ public final class ConfigDef {
      * Key name.
      * @see ResourceFiles.Cfg#key()
      */
-    private final String name;
+    private final String key;
     /**
      * When {@link ResourceFiles.Cfg#value()} passed to {@link Predicate#test(Object)} the value is considered correct.
      */
@@ -26,14 +26,14 @@ public final class ConfigDef {
     private final String description;
 
     /**
-     * @param name the config key
+     * @param key the config key
      * @param validator must return true if the value is valid or false otherwise
      * @param description brief description of the config option
      */
-    public ConfigDef(String name,
+    public ConfigDef(String key,
                      Predicate<String> validator,
                      String description) {
-        this.name = requireNonNull(name, "name");
+        this.key = requireNonNull(key, "name");
         this.validator = requireNonNull(validator, "validator");
         this.description = requireNonNull(description, "description");
     }
@@ -43,8 +43,8 @@ public final class ConfigDef {
      * @see ResourceFiles.Cfg#key()
      * @see Config#key()
      */
-    public String name() {
-        return name;
+    public String key() {
+        return key;
     }
 
     /**

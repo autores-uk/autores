@@ -2,6 +2,8 @@ package uk.autores;
 
 import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 import uk.autores.env.ResourceSets;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
@@ -23,7 +25,7 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = new GenerateByteArraysFromFiles().config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
+        assertTrue(supported.contains(Visibility.DEF));
     }
 
     @Test
@@ -32,7 +34,7 @@ class GenerateByteArraysFromFilesTest {
         SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
         for (String strat : Arrays.asList("auto", "inline", "lazy")) {
-            List<Config> cfg = singletonList(new Config(ConfigDefs.STRATEGY.name(), strat));
+            List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strat));
             Map<String, String> generated = generate(env, files, cfg);
             assertFalse(generated.isEmpty());
         }

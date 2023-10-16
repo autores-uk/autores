@@ -2,9 +2,11 @@ package uk.autores.strings;
 
 import uk.autores.ResourceFiles;
 import uk.autores.GenerateStringsFromText;
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 
-import static uk.autores.ConfigDefs.Names.STRATEGY;
-import static uk.autores.ConfigDefs.Names.VISIBILITY;
+import static uk.autores.cfg.Strategy.STRATEGY;
+import static uk.autores.cfg.Visibility.VISIBILITY;
 
 @ResourceFiles(
         value = {
@@ -13,8 +15,8 @@ import static uk.autores.ConfigDefs.Names.VISIBILITY;
         },
         handler = GenerateStringsFromText.class,
         config = {
-                @ResourceFiles.Cfg(key = STRATEGY, value = "inline"),
-                @ResourceFiles.Cfg(key = VISIBILITY, value = "public"),
+                @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.INLINE),
+                @ResourceFiles.Cfg(key = VISIBILITY, value = Visibility.PUBLIC),
         }
 )
 public class PrintRhymes {

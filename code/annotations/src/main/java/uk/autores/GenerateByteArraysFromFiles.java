@@ -1,5 +1,7 @@
 package uk.autores;
 
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -62,12 +64,12 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * </ul>
      *
      * @return visibility strategy
-     * @see ConfigDefs#VISIBILITY
-     * @see ConfigDefs#STRATEGY
+     * @see Visibility
+     * @see Strategy
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.STRATEGY);
+        return ConfigDefs.set(Visibility.DEF, Strategy.DEF);
     }
 
     @Override
@@ -110,7 +112,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private ClassGenerator generatorStrategy(Context context) {
-        String strategy = context.option(ConfigDefs.STRATEGY).orElse("auto");
+        String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
             case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
             case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;

@@ -1,13 +1,11 @@
 package uk.autores.processing;
 
-import uk.autores.ConfigDefs;
 import uk.autores.ResourceFiles;
 
 import java.util.Objects;
 
 /**
  * Config derived from {@link ResourceFiles#config()}.
- * @see ConfigDefs
  */
 public final class Config {
 

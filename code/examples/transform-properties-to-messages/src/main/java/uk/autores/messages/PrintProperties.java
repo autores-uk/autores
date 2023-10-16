@@ -2,19 +2,21 @@ package uk.autores.messages;
 
 import uk.autores.ResourceFiles;
 import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.cfg.Localize;
+import uk.autores.cfg.MissingKey;
 
 import java.time.Instant;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
-import static uk.autores.ConfigDefs.Names.LOCALIZE;
-import static uk.autores.ConfigDefs.Names.MISSING_KEY;
+import static uk.autores.cfg.Localize.LOCALIZE;
+import static uk.autores.cfg.MissingKey.MISSING_KEY;
 
 @ResourceFiles(
         value = "Non-nls.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ResourceFiles.Cfg(key = LOCALIZE, value = "false")
+        config = @ResourceFiles.Cfg(key = LOCALIZE, value = Localize.FALSE)
 )
 @ResourceFiles(
         value = "Messages.properties",
@@ -23,7 +25,7 @@ import static uk.autores.ConfigDefs.Names.MISSING_KEY;
 @ResourceFiles(
         value = "Sparse.properties",
         handler = GenerateMessagesFromProperties.class,
-        config = @ResourceFiles.Cfg(key = MISSING_KEY, value = "ignore")
+        config = @ResourceFiles.Cfg(key = MISSING_KEY, value = MissingKey.IGNORE)
 )
 public class PrintProperties {
 

@@ -1,5 +1,6 @@
 package uk.autores;
 
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -27,11 +28,11 @@ public final class GenerateConstantsFromProperties implements Handler {
      * <p>All configuration is optional.</p>
      *
      * @return visibility
-     * @see ConfigDefs#VISIBILITY
+     * @see Visibility
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY);
+        return ConfigDefs.set(Visibility.DEF);
     }
 
     @Override
