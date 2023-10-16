@@ -40,8 +40,6 @@ class GenerateByteArraysFromFilesTest {
         }
     }
 
-
-
     @Test
     void handlesZeroSkipping() throws Exception {
         String data = "\0\0\0A\0";

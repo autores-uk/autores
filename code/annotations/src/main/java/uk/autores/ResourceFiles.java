@@ -58,6 +58,7 @@ public @interface ResourceFiles {
      *
      * @return true by default
      */
+    @Deprecated
     boolean relative() default true;
 
     /**

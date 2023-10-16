@@ -12,6 +12,7 @@ public final class Pkg {
     /** The fully qualified package name of the annotated element. */
     private final String name;
 
+    // TODO: get rid of this; infer from paths
     private final boolean relative;
 
     /**
@@ -63,6 +64,7 @@ public final class Pkg {
     /**
      * @return true if the resources are relative to the package
      */
+    @Deprecated
     public boolean isRelative() {
         return relative;
     }

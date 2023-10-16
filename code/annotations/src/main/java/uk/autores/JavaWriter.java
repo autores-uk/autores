@@ -127,7 +127,7 @@ final class JavaWriter extends Writer {
 
     public JavaWriter openResource(String resource) throws IOException {
         if (resourceLoadMethod == null) {
-            resourceLoadMethod = "open$" + Integer.toString(className.hashCode(), 16) + "$resource";
+            resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
         }
 
         return this.append(resourceLoadMethod)
