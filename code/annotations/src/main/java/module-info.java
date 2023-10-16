@@ -20,6 +20,7 @@ module uk.autores {
     requires transitive java.compiler;
     // public packages
     exports uk.autores;
+    exports uk.autores.cfg;
     exports uk.autores.processing;
     // annotation processor
     provides javax.annotation.processing.Processor with uk.autores.processors.ResourceFilesProcessor;

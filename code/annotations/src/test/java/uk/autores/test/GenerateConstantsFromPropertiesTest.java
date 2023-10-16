@@ -3,8 +3,8 @@ package uk.autores.test;
 import org.joor.Reflect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ConfigDefs;
 import uk.autores.GenerateConstantsFromProperties;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 import uk.autores.test.env.*;
 
@@ -46,7 +46,7 @@ class GenerateConstantsFromPropertiesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = handler.config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
+        assertTrue(supported.contains(Visibility.DEF));
     }
 
     @Test

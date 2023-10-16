@@ -1,5 +1,9 @@
 package uk.autores;
 
+import uk.autores.cfg.Format;
+import uk.autores.cfg.Localize;
+import uk.autores.cfg.MissingKey;
+import uk.autores.cfg.Visibility;
 import uk.autores.internal.*;
 import uk.autores.processing.*;
 
@@ -77,21 +81,21 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"format" is "true" by default.</p>
      *
      * @return visibility, localize, missing-key
-     * @see ConfigDefs#VISIBILITY
-     * @see ConfigDefs#LOCALIZE
-     * @see ConfigDefs#MISSING_KEY
-     * @see ConfigDefs#FORMAT
+     * @see Visibility
+     * @see Localize
+     * @see MissingKey
+     * @see Format
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.LOCALIZE, ConfigDefs.MISSING_KEY, ConfigDefs.FORMAT);
+        return ConfigDefs.set(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
     }
 
     @Override
     public void handle(Context context) throws IOException {
         Set<Resource> resources = context.resources();
 
-        boolean localize = !context.option(ConfigDefs.LOCALIZE)
+        boolean localize = !context.option(Localize.DEF)
                 .filter("false"::equals)
                 .isPresent();
 
@@ -280,7 +284,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 String value = l.properties.getProperty(key);
                 if (value == null) {
                     String msg = resource + ": " + l.pattern + ": missing key " + key;
-                    Reporting.reporter(ctxt, ConfigDefs.MISSING_KEY).accept(msg);
+                    Reporting.reporter(ctxt, MissingKey.DEF).accept(msg);
                     continue;
                 }
                 String pattern = l.pattern.substring(1);
@@ -300,7 +304,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              String key,
                              String baseValue,
                              String method) throws IOException {
-        if (ctxt.option(ConfigDefs.FORMAT).filter("false"::equals).isPresent()) {
+        if (ctxt.option(Format.DEF).filter(Format.FALSE::equals).isPresent()) {
             return;
         }
 

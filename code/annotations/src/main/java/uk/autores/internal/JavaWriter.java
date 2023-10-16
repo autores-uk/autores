@@ -1,6 +1,6 @@
 package uk.autores.internal;
 
-import uk.autores.ConfigDefs;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.Context;
 import uk.autores.processing.Pkg;
 
@@ -18,12 +18,13 @@ public final class JavaWriter extends Writer {
     private final String className;
     private boolean closed = false;
     private int indentation = 2;
+    private String resourceLoadMethod = null;
 
     public JavaWriter(Object generator, Context ctxt, Writer w, String className, String comment) throws IOException {
         this.w = w;
         this.className = className;
 
-        visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
+        visibility = ctxt.option(Visibility.DEF).isPresent() ? "public " : "";
 
         w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
         Pkg pkg = ctxt.pkg();
@@ -69,6 +70,10 @@ public final class JavaWriter extends Writer {
         }
         closed = true;
         try {
+            if (resourceLoadMethod != null) {
+                writeResourceLoadMethod();
+            }
+
             w.append("}").append(NL);
         } finally {
             w.close();
@@ -120,10 +125,36 @@ public final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(String resource) throws IOException {
-        return this.append(className)
-                .append(".class.getResourceAsStream(")
+        if (resourceLoadMethod == null) {
+            resourceLoadMethod = "open$" + Integer.toString(className.hashCode(), 16) + "$resource";
+        }
+
+        return this.append(resourceLoadMethod)
+                .append("(")
                 .string(resource)
                 .append(")");
+    }
+
+    private void writeResourceLoadMethod() throws IOException {
+        this.nl();
+        this.indent()
+                .append("private static java.io.InputStream ")
+                .append(resourceLoadMethod)
+                .append("(java.lang.String resource) throws java.io.IOException ")
+                .openBrace()
+                .nl();
+        this.indent()
+                .append("java.io.InputStream in = ")
+                .append(className)
+                .append(".class.getResourceAsStream(resource);")
+                .nl();
+        this.indent()
+                .append("if (in == null) { throw new java.io.IOException(")
+                .string("Resource not found: ")
+                .append("+resource); }")
+                .nl();
+        this.indent().append("return in;").nl();
+        this.closeBrace().nl();
     }
 
     public JavaWriter throwOnModification(String predicate, String resource) throws IOException {

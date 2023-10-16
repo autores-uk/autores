@@ -2,9 +2,9 @@ package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import uk.autores.ResourceFiles;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.GenerateStringsFromText;
+import uk.autores.ResourceFiles;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;

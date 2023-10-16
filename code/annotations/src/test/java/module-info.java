@@ -6,6 +6,7 @@ module uk.autores.test {
     requires org.jooq.joor;
 
     opens uk.autores.test to org.junit.platform.commons;
+    opens uk.autores.test.cfg to org.junit.platform.commons;
     opens uk.autores.test.internal to org.junit.platform.commons;
     opens uk.autores.test.processing to org.junit.platform.commons;
     opens uk.autores.test.processors to org.junit.platform.commons;

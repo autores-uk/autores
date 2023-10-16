@@ -3,8 +3,11 @@ package uk.autores.test;
 import org.joor.Reflect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ConfigDefs;
 import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.cfg.Format;
+import uk.autores.cfg.Localize;
+import uk.autores.cfg.MissingKey;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 import uk.autores.test.env.*;
 
@@ -58,10 +61,10 @@ class GenerateMessagesFromPropertiesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = handler.config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
-        assertTrue(supported.contains(ConfigDefs.LOCALIZE));
-        assertTrue(supported.contains(ConfigDefs.MISSING_KEY));
-        assertTrue(supported.contains(ConfigDefs.FORMAT));
+        assertTrue(supported.contains(Visibility.DEF));
+        assertTrue(supported.contains(Localize.DEF));
+        assertTrue(supported.contains(MissingKey.DEF));
+        assertTrue(supported.contains(Format.DEF));
     }
 
     @Test

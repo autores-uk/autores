@@ -105,7 +105,7 @@ public @interface ResourceFiles {
     @interface Cfg {
         /**
          * @return name of config option
-         * @see ConfigDef#name()
+         * @see ConfigDef#key()
          */
         String key();
 

@@ -51,25 +51,25 @@
  *         <tr>
  *             <td>{@link uk.autores.GenerateByteArraysFromFiles}</td>
  *             <td>any files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#STRATEGY}</td>
+ *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Strategy}</td>
  *             <td>Generates classes with a method that return a resource as a byte array.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateConstantsFromProperties}</td>
  *             <td>{@link java.util.Properties} files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY}</td>
+ *             <td>{@link uk.autores.cfg.Visibility}</td>
  *             <td>Generates classes containing String constants of the keys in a properties file.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateMessagesFromProperties}</td>
  *             <td>{@link java.util.Properties} files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#LOCALIZE} {@link uk.autores.ConfigDefs#MISSING_KEY} {@link uk.autores.ConfigDefs#FORMAT}</td>
+ *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Localize} {@link uk.autores.cfg.MissingKey} {@link uk.autores.cfg.Format}</td>
  *             <td>Generates classes with methods for returning property values including support for localization and message formatting.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateStringsFromText}</td>
  *             <td>text files</td>
- *             <td>{@link uk.autores.ConfigDefs#VISIBILITY} {@link uk.autores.ConfigDefs#ENCODING} {@link uk.autores.ConfigDefs#STRATEGY}</td>
+ *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Encoding} {@link uk.autores.cfg.Strategy}</td>
  *             <td>Generates classes with a method that return a resource as a string.</td>
  *         </tr>
  *     </tbody>

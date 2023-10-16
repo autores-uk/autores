@@ -59,7 +59,7 @@ public final class Context {
      */
     public Optional<String> option(ConfigDef key) {
         return config.stream()
-                .filter(o -> key.name().equals(o.key()))
+                .filter(o -> key.key().equals(o.key()))
                 .map(Config::value)
                 .findFirst();
     }
