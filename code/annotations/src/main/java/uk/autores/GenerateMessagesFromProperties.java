@@ -1,5 +1,9 @@
 package uk.autores;
 
+import uk.autores.cfg.Format;
+import uk.autores.cfg.Localize;
+import uk.autores.cfg.MissingKey;
+import uk.autores.cfg.Visibility;
 import uk.autores.internal.*;
 import uk.autores.processing.*;
 
@@ -77,26 +81,26 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"format" is "true" by default.</p>
      *
      * @return visibility, localize, missing-key
-     * @see ConfigDefs#VISIBILITY
-     * @see ConfigDefs#LOCALIZE
-     * @see ConfigDefs#MISSING_KEY
-     * @see ConfigDefs#FORMAT
+     * @see Visibility
+     * @see Localize
+     * @see MissingKey
+     * @see Format
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.LOCALIZE, ConfigDefs.MISSING_KEY, ConfigDefs.FORMAT);
+        return ConfigDefs.set(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
     }
 
     @Override
     public void handle(Context context) throws IOException {
-        Set<Resource> resources = context.resources();
+        List<Resource> resources = context.resources();
 
-        boolean localize = !context.option(ConfigDefs.LOCALIZE)
+        boolean localize = !context.option(Localize.DEF)
                 .filter("false"::equals)
                 .isPresent();
 
         for (Resource res : resources) {
-            if (!res.path().endsWith(EXTENSION)) {
+            if (!res.toString().endsWith(EXTENSION)) {
                 String msg = "Resource names must end in " + EXTENSION + " - got " + res;
                 context.printError(msg);
                 continue;
@@ -112,23 +116,29 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private List<Localized> loadLocalizations(Context context, Resource resource) throws IOException {
-        String name = resource.filerPath();
         Filer filer = context.env().getFiler();
         JavaFileManager.Location location = context.location();
-        String resourcePackage = context.pkg().resourcePackage();
+
+        CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
+        CharSequence name = ResourceFiling.relativeName(resource);
 
         List<Localized> localized = new ArrayList<>();
 
         int end = name.length() - EXTENSION.length();
-        String base = name.substring(0, end);
+        CharSequence base = name.subSequence(0, end);
+        StringBuilder props = new StringBuilder(base.length() + EXTENSION.length() + 6);
+        props.append(base);
+
         for (Map.Entry<String, Locale> entry : expandedLocales().entrySet()) {
+            props.setLength(base.length());
+
             String pattern = entry.getKey();
             Locale locale = entry.getValue();
             if (locale.getLanguage().isEmpty()) {
                 continue;
             }
 
-            String props = base + pattern + EXTENSION;
+            props.append(pattern).append(EXTENSION);
 
             final FileObject file;
             try {
@@ -142,7 +152,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
 
-            Resource res = new Resource(file, props);
+            Resource res = new Resource(file, props.toString());
             Properties properties = PropLoader.load(res);
             localized.add(new Localized(pattern, properties));
         }
@@ -160,7 +170,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
-        String simple = namer.simplifyResourceName(resource.path());
+        String simple = namer.simplifyResourceName(resource.toString());
         String name = namer.nameClass(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
@@ -174,7 +184,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource.path())) {
+             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
 
             Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
 
@@ -280,7 +290,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 String value = l.properties.getProperty(key);
                 if (value == null) {
                     String msg = resource + ": " + l.pattern + ": missing key " + key;
-                    Reporting.reporter(ctxt, ConfigDefs.MISSING_KEY).accept(msg);
+                    Reporting.reporter(ctxt, MissingKey.DEF).accept(msg);
                     continue;
                 }
                 String pattern = l.pattern.substring(1);
@@ -300,7 +310,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              String key,
                              String baseValue,
                              String method) throws IOException {
-        if (ctxt.option(ConfigDefs.FORMAT).filter("false"::equals).isPresent()) {
+        if (ctxt.option(Format.DEF).filter(Format.FALSE::equals).isPresent()) {
             return;
         }
 

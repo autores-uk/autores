@@ -5,7 +5,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>11.0.7-alpha</version>
+        <version>11.0.8-alpha</version>
     </parent>
 
     <artifactId>examples</artifactId>
@@ -21,6 +21,7 @@
 
     <modules>
         <module>assert-resources-exist</module>
+        <module>create-checked-resource</module>
         <module>embed-resources-as-bytes</module>
         <module>embed-resources-as-strings</module>
         <module>transform-properties-to-constants</module>

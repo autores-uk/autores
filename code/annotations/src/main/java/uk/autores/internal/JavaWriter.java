@@ -1,6 +1,6 @@
 package uk.autores.internal;
 
-import uk.autores.ConfigDefs;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.Context;
 import uk.autores.processing.Pkg;
 
@@ -18,20 +18,21 @@ public final class JavaWriter extends Writer {
     private final String className;
     private boolean closed = false;
     private int indentation = 2;
+    private String resourceLoadMethod = null;
 
-    public JavaWriter(Object generator, Context ctxt, Writer w, String className, String comment) throws IOException {
+    public JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
         this.w = w;
         this.className = className;
 
-        visibility = ctxt.option(ConfigDefs.VISIBILITY).isPresent() ? "public " : "";
+        visibility = ctxt.option(Visibility.DEF).isPresent() ? "public " : "";
 
         w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
         Pkg pkg = ctxt.pkg();
         if (!pkg.isUnnamed()) {
-            w.append("package ").append(pkg.name()).append(";").append(NL).append(NL);
+            w.append("package ").append(pkg).append(";").append(NL).append(NL);
         }
 
-        if (!comment.isEmpty()) {
+        if (comment.length() != 0) {
             w.append("/** \"");
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
@@ -69,6 +70,10 @@ public final class JavaWriter extends Writer {
         }
         closed = true;
         try {
+            if (resourceLoadMethod != null) {
+                writeResourceLoadMethod();
+            }
+
             w.append("}").append(NL);
         } finally {
             w.close();
@@ -119,14 +124,40 @@ public final class JavaWriter extends Writer {
         return this;
     }
 
-    public JavaWriter openResource(String resource) throws IOException {
-        return this.append(className)
-                .append(".class.getResourceAsStream(")
+    public JavaWriter openResource(CharSequence resource) throws IOException {
+        if (resourceLoadMethod == null) {
+            resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
+        }
+
+        return this.append(resourceLoadMethod)
+                .append("(")
                 .string(resource)
                 .append(")");
     }
 
-    public JavaWriter throwOnModification(String predicate, String resource) throws IOException {
+    private void writeResourceLoadMethod() throws IOException {
+        this.nl();
+        this.indent()
+                .append("private static java.io.InputStream ")
+                .append(resourceLoadMethod)
+                .append("(java.lang.String resource) throws java.io.IOException ")
+                .openBrace()
+                .nl();
+        this.indent()
+                .append("java.io.InputStream in = ")
+                .append(className)
+                .append(".class.getResourceAsStream(resource);")
+                .nl();
+        this.indent()
+                .append("if (in == null) { throw new java.io.IOException(")
+                .string("Resource not found: ")
+                .append("+resource); }")
+                .nl();
+        this.indent().append("return in;").nl();
+        this.closeBrace().nl();
+    }
+
+    public JavaWriter throwOnModification(CharSequence predicate, CharSequence resource) throws IOException {
         String err = "Resource modified after compilation: ";
 
         this.indent().append("if (").append(predicate).append(") ").openBrace().nl();

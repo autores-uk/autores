@@ -16,4 +16,8 @@ public final class CharSeq {
         }
         return true;
     }
+
+    public static boolean nullOrEmpty(CharSequence cs) {
+        return cs == null || cs.length() == 0;
+    }
 }

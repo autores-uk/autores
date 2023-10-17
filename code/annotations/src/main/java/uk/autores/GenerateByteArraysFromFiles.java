@@ -1,5 +1,7 @@
 package uk.autores;
 
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 import uk.autores.internal.Ints;
 import uk.autores.internal.JavaWriter;
 import uk.autores.internal.UnicodeEscapeWriter;
@@ -10,6 +12,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,8 +30,7 @@ import java.util.Set;
  *     The size of inline files is limited by the class file format to ~500MB.
  * </p>
  * <p>
- *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)} if
- *     {@link ResourceFiles#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
+ *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)}.
  *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
  * </p>
  */
@@ -65,17 +67,17 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * </ul>
      *
      * @return visibility strategy
-     * @see ConfigDefs#VISIBILITY
-     * @see ConfigDefs#STRATEGY
+     * @see Visibility
+     * @see Strategy
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(ConfigDefs.VISIBILITY, ConfigDefs.STRATEGY);
+        return ConfigDefs.set(Visibility.DEF, Strategy.DEF);
     }
 
     @Override
     public void handle(Context context) throws Exception {
-        Set<Resource> resources = context.resources();
+        List<Resource> resources = context.resources();
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
@@ -85,7 +87,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         byte[] buf = new byte[MAX_BYTES_PER_METHOD];
 
         for (Resource entry : resources) {
-            String resource = entry.path();
+            String resource = entry.toString();
             String simple = namer.simplifyResourceName(resource);
             String className = namer.nameClass(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
@@ -113,7 +115,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private ClassGenerator generatorStrategy(Context context) {
-        String strategy = context.option(ConfigDefs.STRATEGY).orElse("auto");
+        String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
             case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
             case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;
@@ -193,12 +195,13 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         writeSignature(writer);
 
         // TODO: avoid writing this logic for every resource
         writer.indent().append("byte[] barr = new byte[").append(Ints.toString((int) stats.size)).append("];").nl();
-        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource.path()).append(") ").openBrace().nl();
+        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource).append(") ").openBrace().nl();
         writer.indent().append("int offset = 0;").nl();
         writer.indent().append("while(true) ").openBrace().nl();
         writer.indent().append("int r = in.read(barr, offset, barr.length - offset);").nl();
@@ -206,9 +209,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == barr.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource.path());
+        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource);
         writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource.path()).append(", e);").nl();
+        writer.indent().append("throw new AssertionError(").string(stats.resource).append(", e);").nl();
         writer.closeBrace().nl();
 
         writeReturn(writer);

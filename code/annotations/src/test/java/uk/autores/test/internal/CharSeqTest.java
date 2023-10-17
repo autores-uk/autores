@@ -18,4 +18,11 @@ class CharSeqTest {
         assertFalse(CharSeq.equivalent("a", "ab"));
         assertFalse(CharSeq.equivalent("a", "b"));
     }
+
+    @Test
+    void testsNullOrEmpty() {
+        assertTrue(CharSeq.nullOrEmpty(null));
+        assertTrue(CharSeq.nullOrEmpty(""));
+        assertFalse(CharSeq.nullOrEmpty("a"));
+    }
 }

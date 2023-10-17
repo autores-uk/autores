@@ -3,7 +3,6 @@ package uk.autores.processing;
 import uk.autores.ResourceFiles;
 
 import javax.tools.FileObject;
-import javax.tools.JavaFileManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -11,7 +10,7 @@ import java.util.Objects;
 /**
  * A representation of the annotated resource.
  */
-public final class Resource implements Comparable<Resource> {
+public final class Resource implements CharSequence {
 
     private final FileObject file;
     private final String path;
@@ -33,55 +32,22 @@ public final class Resource implements Comparable<Resource> {
         return file.openInputStream();
     }
 
-    /**
-     * @return as {@link ResourceFiles#value()}
-     */
-    public String path() {
-        return path;
-    }
 
-    /**
-     * As required by {@link javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
-     *
-     * @return as {@link #path()} but without a leading slash
-     */
-    public String filerPath() {
-        return path.charAt(0) == '/'
-                ? path.substring(1)
-                : path;
-    }
-
-    /**
-     * Compares {@link #path()}.
-     *
-     * @param o other
-     * @return result
-     */
     @Override
-    public int compareTo(Resource o) {
-        return path.compareTo(o.path);
+    public int length() {
+        return path.length();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != Resource.class) {
-            return false;
-        }
-        Resource other = (Resource) obj;
-        return other.path.equals(path);
+    public char charAt(int index) {
+        return path.charAt(index);
     }
 
     @Override
-    public int hashCode() {
-        return path.hashCode();
+    public CharSequence subSequence(int start, int end) {
+        return path.subSequence(start, end);
     }
 
-    /**
-     * @return {@link #path()}
-     */
     @Override
     public String toString() {
         return path;

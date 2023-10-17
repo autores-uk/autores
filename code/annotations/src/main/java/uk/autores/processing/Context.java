@@ -8,10 +8,8 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileManager;
 import java.util.List;
 import java.util.Optional;
-import java.util.SortedSet;
 
 import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSortedSet;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -23,7 +21,7 @@ public final class Context {
     private final JavaFileManager.Location location;
     private final Pkg pkg;
     private final Element annotated;
-    private final SortedSet<Resource> resources;
+    private final List<Resource> resources;
     private final List<Config> config;
     private final Namer namer;
 
@@ -40,14 +38,14 @@ public final class Context {
                    JavaFileManager.Location location,
                    Pkg pkg,
                    Element annotated,
-                   SortedSet<Resource> resources,
+                   List<Resource> resources,
                    List<Config> config,
                    Namer namer) {
         this.env = env;
         this.location = requireNonNull(location, "location");
         this.pkg = pkg;
         this.annotated = requireNonNull(annotated, "annotatedElement");
-        this.resources = unmodifiableSortedSet(requireNonNull(resources, "resources"));
+        this.resources = unmodifiableList(requireNonNull(resources, "resources"));
         this.config = unmodifiableList(requireNonNull(config, "config"));
         this.namer = requireNonNull(namer, "namer");
     }
@@ -59,7 +57,7 @@ public final class Context {
      */
     public Optional<String> option(ConfigDef key) {
         return config.stream()
-                .filter(o -> key.name().equals(o.key()))
+                .filter(o -> key.key().equals(o.key()))
                 .map(Config::value)
                 .findFirst();
     }
@@ -114,7 +112,7 @@ public final class Context {
      * @return unmodifiable resources set
      * @see ResourceFiles#value()
      */
-    public SortedSet<Resource> resources() {
+    public List<Resource> resources() {
         return resources;
     }
 

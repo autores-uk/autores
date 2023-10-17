@@ -4,7 +4,6 @@ import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
 import uk.autores.internal.CharSeq;
 import uk.autores.internal.OptionValidation;
-import uk.autores.internal.ResPath;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -20,7 +19,10 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -110,29 +112,32 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     } catch (Exception e) {
       String msg = "ERROR:";
       msg += " Location: " + context.location();
-      msg += " Package:" + context.pkg().name();
+      msg += " Package:" + context.pkg();
       msg += " Exception: " + e;
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
     }
   }
 
-  private SortedSet<Resource> resources(ResourceFiles cpr,
-                                        Pkg pkg,
+  private List<Resource> resources(ResourceFiles cpr,
+                                        Pkg annotationPackage,
                                         Element annotated) {
-    SortedSet<Resource> map = new TreeSet<>();
-    String value = "";
+    List<Resource> map = new ArrayList<>(cpr.value().length);
+    CharSequence value = "";
     try {
       Filer filer = processingEnv.getFiler();
 
       for (String resource : cpr.value()) {
-        String filerPath = ResPath.massage(processingEnv, annotated, pkg, resource);
-        if (filerPath == null) {
+        if (CharSeq.nullOrEmpty(resource)) {
+          String msg = "Resource paths cannot be null or empty";
+          processingEnv.getMessager()
+                  .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
           continue;
         }
 
-        value = filerPath;
-        FileObject fo = filer.getResource(cpr.location(), pkg.resourcePackage(), value);
+        CharSequence pkg = ResourceFiling.pkg(annotationPackage, resource);
+        value = ResourceFiling.relativeName(resource);
+        FileObject fo = filer.getResource(cpr.location(), pkg, value);
         try (InputStream is = fo.openInputStream()) {
           // NOOP; if file can be opened it exists
           assert is != null;
@@ -147,7 +152,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       msg += " Exception: " + e;
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-      return Collections.emptySortedSet();
+      return Collections.emptyList();
     }
 
     return map;
@@ -161,13 +166,13 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       options.add(new Config(option.key(), option.value()));
     }
 
-    Pkg pkg = pkg(cpr.relative(), annotated);
-    SortedSet<Resource> resources = resources(cpr, pkg, annotated);
+    Pkg pkg = pkg(annotated);
+    List<Resource> resources = resources(cpr, pkg, annotated);
 
     return new Context(
             processingEnv,
             cpr.location(),
-            pkg(cpr.relative(), annotated),
+            pkg(annotated),
             annotated,
             resources,
             options,
@@ -197,11 +202,11 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     throw new AssertionError();
   }
 
-  private Pkg pkg(boolean relative, Element annotated) {
+  private Pkg pkg(Element annotated) {
     String qualified = processingEnv.getElementUtils()
             .getPackageOf(annotated)
             .getQualifiedName()
             .toString();
-    return new Pkg(qualified, relative);
+    return new Pkg(qualified);
   }
 }

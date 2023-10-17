@@ -6,8 +6,8 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,31 +25,31 @@ public final class ResourceSets {
         return new Resource(text, name);
     }
 
-    public static SortedSet<Resource> largeAndSmallTextFile(TestProcessingEnvironment env, int multiplier) throws IOException {
-        SortedSet<Resource> files = new TreeSet<>();
+    public static List<Resource> largeAndSmallTextFile(TestProcessingEnvironment env, int multiplier) throws IOException {
+        List<Resource> files = new ArrayList<>();
         files.add(make(env, "small.txt", "abc", 1));
         files.add(make(env, "large.txt", "abc", multiplier));
         return files;
     }
 
-    public static SortedSet<Resource> infinitelyLargeFile(TestProcessingEnvironment env) {
+    public static List<Resource> infinitelyLargeFile(TestProcessingEnvironment env) {
         String filename = "infinite.txt";
         TestInfiniteFileObject infinite = new TestInfiniteFileObject();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, infinite);
-        SortedSet<Resource> files = new TreeSet<>();
+        List<Resource> files = new ArrayList<>();
         files.add(new Resource(infinite, filename));
         return files;
     }
 
-    public static SortedSet<Resource> junkWithBadFilename(TestProcessingEnvironment env, String filename) throws IOException {
-        SortedSet<Resource> files = new TreeSet<>();
+    public static List<Resource> junkWithBadFilename(TestProcessingEnvironment env, String filename) throws IOException {
+        List<Resource> files = new ArrayList<>();
         files.add(make(env, filename, "abc", 1));
         return files;
     }
 
-    public static SortedSet<Resource> of(TestProcessingEnvironment env, String filename, TestFileObject file) {
+    public static List<Resource> of(TestProcessingEnvironment env, String filename, TestFileObject file) {
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
-        SortedSet<Resource> files = new TreeSet<>();
+        List<Resource> files = new ArrayList<>();
         files.add(new Resource(file, filename));
         return files;
     }

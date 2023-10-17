@@ -3,19 +3,24 @@ package uk.autores.test;
 import org.joor.Reflect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ConfigDefs;
 import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.cfg.Format;
+import uk.autores.cfg.Localize;
+import uk.autores.cfg.MissingKey;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
-import uk.autores.test.env.*;
+import uk.autores.test.env.ResourceSets;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestFileObject;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -58,10 +63,10 @@ class GenerateMessagesFromPropertiesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = handler.config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
-        assertTrue(supported.contains(ConfigDefs.LOCALIZE));
-        assertTrue(supported.contains(ConfigDefs.MISSING_KEY));
-        assertTrue(supported.contains(ConfigDefs.FORMAT));
+        assertTrue(supported.contains(Visibility.DEF));
+        assertTrue(supported.contains(Localize.DEF));
+        assertTrue(supported.contains(MissingKey.DEF));
+        assertTrue(supported.contains(Format.DEF));
     }
 
     @Test
@@ -122,7 +127,7 @@ class GenerateMessagesFromPropertiesTest {
 
     @Test
     void reportsBadFilename() throws Exception {
-        SortedSet<Resource> resources = new TreeSet<>();
+        List<Resource> resources = new ArrayList<>();
         resources.add(new Resource(file, filename));
         resources.add(new Resource(new TestFileObject(true), "wrongfile.dat"));
 
@@ -168,7 +173,7 @@ class GenerateMessagesFromPropertiesTest {
 
     private void testMessages(TestProcessingEnvironment env,
                               List<Config> config,
-                              SortedSet<Resource> files) throws Exception {
+                              List<Resource> files) throws Exception {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,

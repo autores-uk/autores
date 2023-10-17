@@ -22,7 +22,7 @@ class JavaWriterTest {
 
     @Test
     void canGenerateClass() throws IOException {
-        Pkg pkg = new Pkg("foo.bar", false);
+        Pkg pkg = new Pkg("foo.bar");
         String actual = test(ctxt(pkg), jw -> {});
         // verify
         String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
@@ -102,7 +102,7 @@ class JavaWriterTest {
     private Context ctxt(Pkg pkg) {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
 
-        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptySortedSet(), Collections.emptyList(), new Namer());
+        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptyList(), Collections.emptyList(), new Namer());
     }
 
     @FunctionalInterface

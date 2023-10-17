@@ -2,10 +2,14 @@ package uk.autores.test;
 
 import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
-import uk.autores.ConfigDefs;
 import uk.autores.GenerateByteArraysFromFiles;
+import uk.autores.cfg.Strategy;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
-import uk.autores.test.env.*;
+import uk.autores.test.env.ResourceSets;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestFileObject;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
@@ -22,22 +26,20 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = new GenerateByteArraysFromFiles().config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
+        assertTrue(supported.contains(Visibility.DEF));
     }
 
     @Test
     void handle() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
+        List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
         for (String strat : Arrays.asList("auto", "inline", "lazy")) {
-            List<Config> cfg = singletonList(new Config(ConfigDefs.STRATEGY.name(), strat));
+            List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strat));
             Map<String, String> generated = generate(env, files, cfg);
             assertFalse(generated.isEmpty());
         }
     }
-
-
 
     @Test
     void handlesZeroSkipping() throws Exception {
@@ -50,7 +52,7 @@ class GenerateByteArraysFromFilesTest {
         }
 
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> resources = ResourceSets.of(env, filename, tfo);
+        List<Resource> resources = ResourceSets.of(env, filename, tfo);
 
         Map<String, String> generated = generate(env, resources, emptyList());
 
@@ -62,7 +64,7 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void reportsBadFilename() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> badFile = ResourceSets.junkWithBadFilename(env,"true.txt");
+        List<Resource> badFile = ResourceSets.junkWithBadFilename(env,"true.txt");
 
         Map<String, String> generated = generate(env, badFile, emptyList());
 
@@ -73,14 +75,14 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void reportsFileTooBig() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> infinite = ResourceSets.infinitelyLargeFile(env);
+        List<Resource> infinite = ResourceSets.infinitelyLargeFile(env);
         Map<String, String> generated = generate(env, infinite, emptyList());
 
         assertTrue(generated.isEmpty());
         assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, SortedSet<Resource> files, List<Config> cfg) throws Exception {
+    private Map<String, String> generate(TestProcessingEnvironment env, List<Resource> files, List<Config> cfg) throws Exception {
         Handler handler = new GenerateByteArraysFromFiles();
         Context context = new Context(
                 env,
@@ -97,7 +99,7 @@ class GenerateByteArraysFromFilesTest {
         Map<String, String> results = new HashMap<>();
 
         for (Resource res : files) {
-            String simple = context.namer().simplifyResourceName(res.path());
+            String simple = context.namer().simplifyResourceName(res.toString());
             String className = context.namer().nameClass(simple);
 
             String qname = TestPkgs.P.qualifiedClassName(className);
@@ -113,7 +115,7 @@ class GenerateByteArraysFromFilesTest {
                     src
             ).create().get();
 
-            results.put(res.path(), src);
+            results.put(res.toString(), src);
         }
 
         return results;

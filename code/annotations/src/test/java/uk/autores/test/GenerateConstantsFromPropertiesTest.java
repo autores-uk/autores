@@ -3,10 +3,13 @@ package uk.autores.test;
 import org.joor.Reflect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ConfigDefs;
 import uk.autores.GenerateConstantsFromProperties;
+import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
-import uk.autores.test.env.*;
+import uk.autores.test.env.ResourceSets;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestFileObject;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
@@ -14,7 +17,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -46,7 +48,7 @@ class GenerateConstantsFromPropertiesTest {
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = handler.config();
-        assertTrue(supported.contains(ConfigDefs.VISIBILITY));
+        assertTrue(supported.contains(Visibility.DEF));
     }
 
     @Test
@@ -62,7 +64,7 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void reportsBadFilename() throws Exception {
-        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "wrongfile.dat");
+        List<Resource> resources = ResourceSets.junkWithBadFilename(env, "wrongfile.dat");
 
         testMessages(env, emptyList(), resources);
 
@@ -71,7 +73,7 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void reportsBadNameGeneration() throws Exception {
-        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "true.properties");
+        List<Resource> resources = ResourceSets.junkWithBadFilename(env, "true.properties");
 
         testMessages(env, emptyList(), resources);
 
@@ -93,7 +95,7 @@ class GenerateConstantsFromPropertiesTest {
 
     private void testMessages(TestProcessingEnvironment env,
                               List<Config> config,
-                              SortedSet<Resource> files) throws Exception {
+                              List<Resource> files) throws Exception {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
