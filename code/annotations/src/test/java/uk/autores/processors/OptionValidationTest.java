@@ -90,9 +90,9 @@ class OptionValidationTest {
         return new Context(
                 new TestProcessingEnvironment(),
                 StandardLocation.CLASS_PATH,
-                new Pkg("", false),
+                new Pkg(""),
                 TestElement.INSTANCE,
-                emptySortedSet(),
+                emptyList(),
                 config,
                 new Namer()
         );

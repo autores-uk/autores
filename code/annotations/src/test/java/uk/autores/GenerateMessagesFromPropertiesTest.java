@@ -17,10 +17,7 @@ import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -127,7 +124,7 @@ class GenerateMessagesFromPropertiesTest {
 
     @Test
     void reportsBadFilename() throws Exception {
-        SortedSet<Resource> resources = new TreeSet<>();
+        List<Resource> resources = new ArrayList<>();
         resources.add(new Resource(file, filename));
         resources.add(new Resource(new TestFileObject(true), "wrongfile.dat"));
 
@@ -173,7 +170,7 @@ class GenerateMessagesFromPropertiesTest {
 
     private void testMessages(TestProcessingEnvironment env,
                               List<Config> config,
-                              SortedSet<Resource> files) throws Exception {
+                              List<Resource> files) throws Exception {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,

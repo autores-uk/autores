@@ -7,13 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import static java.util.Objects.requireNonNull;
 
-@ResourceFiles(
-        value = PrintResources.RELATIVE
-)
-@ResourceFiles(
-        value = PrintResources.ABSOLUTE,
-        relative = false
-)
+@ResourceFiles({PrintResources.RELATIVE, PrintResources.ABSOLUTE})
 public class PrintResources {
 
     static final String RELATIVE = "relative.txt";

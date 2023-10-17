@@ -25,7 +25,7 @@ public final class GenerateInputStreamsFromFiles implements Handler {
             return;
         }
         Namer namer = context.namer();
-        String segment = lastPackageSegment(context);
+        String segment = context.pkg().lastSegment();
         String className = namer.nameClass(segment);
         String qualifiedName = context.pkg().qualifiedClassName(className);
 
@@ -42,19 +42,12 @@ public final class GenerateInputStreamsFromFiles implements Handler {
     }
 
     private void writeOpenMethod(Namer namer, Resource resource, JavaWriter writer) throws IOException {
-        String simple = namer.simplifyResourceName(resource.path());
+        String simple = namer.simplifyResourceName(resource.toString());
         String method = namer.nameMethod(simple);
 
         writer.nl();
         writer.indent().staticMember("java.io.InputStream", method).append("() throws java.io.IOException ").openBrace().nl();
-        writer.indent().append("return ").openResource(resource.path()).append(";").nl();
+        writer.indent().append("return ").openResource(resource.toString()).append(";").nl();
         writer.closeBrace();
-    }
-
-    private String lastPackageSegment(Context c) {
-        String qualified = c.pkg().name();
-        int idx = qualified.lastIndexOf('.') + 1;
-        int start = Math.max(idx, 0);
-        return qualified.substring(start);
     }
 }

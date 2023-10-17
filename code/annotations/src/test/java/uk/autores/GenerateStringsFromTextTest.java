@@ -36,7 +36,7 @@ class GenerateStringsFromTextTest {
 
             Config config = new Config(Strategy.STRATEGY, strat);
 
-            SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 0xFFFF + 1);
+            List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 0xFFFF + 1);
             boolean generated = generate(env, files, singletonList(config));
 
             assertTrue(generated);
@@ -46,7 +46,7 @@ class GenerateStringsFromTextTest {
     @Test
     void reportsIllegalIdentifier() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> badFilename = ResourceSets.junkWithBadFilename(env, "void.txt");
+        List<Resource> badFilename = ResourceSets.junkWithBadFilename(env, "void.txt");
 
         boolean generated = generate(env, badFilename, emptyList());
 
@@ -70,8 +70,8 @@ class GenerateStringsFromTextTest {
     }
 
     private boolean generate(TestProcessingEnvironment env,
-                          SortedSet<Resource> resources,
-                             List<Config> cfg) throws Exception {
+                             List<Resource> resources,
+                          List<Config> cfg) throws Exception {
 
         Handler handler = new GenerateStringsFromText();
         Context context = new Context(
@@ -87,7 +87,7 @@ class GenerateStringsFromTextTest {
         handler.handle(context);
 
         for (Resource res : resources) {
-            String simple = context.namer().simplifyResourceName(res.path());
+            String simple = context.namer().simplifyResourceName(res.toString());
             String className = context.namer().nameClass(simple);
 
             String qname = TestPkgs.P.qualifiedClassName(className);

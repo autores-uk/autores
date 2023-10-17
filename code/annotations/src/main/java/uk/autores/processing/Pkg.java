@@ -1,36 +1,20 @@
 package uk.autores.processing;
 
-import uk.autores.ResourceFiles;
-
 import static java.util.Objects.requireNonNull;
 
 /**
  * Resource package information.
  */
-public final class Pkg {
+public final class Pkg implements CharSequence {
 
     /** The fully qualified package name of the annotated element. */
     private final String name;
 
-    // TODO: get rid of this; infer from paths
-    private final boolean relative;
-
     /**
      * @param name package name of the annotated type or package
-     * @param relative if the resource path is relative to the package
-     * @see Package#getName()
-     * @see ResourceFiles#relative()
      */
-    public Pkg(String name, boolean relative) {
+    public Pkg(String name) {
         this.name = requireNonNull(name, "name");
-        this.relative = relative;
-    }
-
-    /**
-     * @return the package name or the empty string if this package is relative
-     */
-    public String resourcePackage() {
-        return relative ? name : "";
     }
 
     /**
@@ -54,18 +38,29 @@ public final class Pkg {
         return name.isEmpty();
     }
 
-    /**
-     * @return the package name
-     */
-    public String name() {
-        return name;
+    @Override
+    public int length() {
+        return name.length();
     }
 
-    /**
-     * @return true if the resources are relative to the package
-     */
-    @Deprecated
-    public boolean isRelative() {
-        return relative;
+    @Override
+    public char charAt(int index) {
+        return name.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return name.subSequence(start, end);
+    }
+
+    public String lastSegment() {
+        int idx = name.lastIndexOf('.') + 1;
+        int start = Math.max(idx, 0);
+        return name.substring(start);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

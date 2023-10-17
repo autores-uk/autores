@@ -29,15 +29,15 @@ class GenerateInputStreamsFromFilesTest {
     @Test
     void handle() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
+        List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
         List<Config> cfg = singletonList(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
         Map<String, String> generated = generate(env, files, cfg);
         assertEquals(1, generated.size());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, SortedSet<Resource> files, List<Config> cfg) throws Exception {
-        Pkg pkg = new Pkg("foo", false);
+    private Map<String, String> generate(TestProcessingEnvironment env, List<Resource> files, List<Config> cfg) throws Exception {
+        Pkg pkg = new Pkg("foo");
 
         Context context = new Context(
                 env,

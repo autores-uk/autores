@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,7 +22,6 @@ class ReportingTest {
 
     @Test
     void reportsErrorByDefault() {
-        List<Config> empty = new ArrayList<>();
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         Context context = new Context(
@@ -29,8 +29,8 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeSet<>(),
-                empty,
+                emptyList(),
+                emptyList(),
                 new Namer()
         );
         String expected = "default";
@@ -54,7 +54,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeSet<>(),
+                emptyList(),
                 cfg,
                 new Namer()
         );
@@ -79,7 +79,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeSet<>(),
+                emptyList(),
                 cfg,
                 new Namer()
         );
@@ -104,7 +104,7 @@ class ReportingTest {
                 StandardLocation.CLASS_PATH,
                 TestPkgs.P,
                 TestElement.INSTANCE,
-                new TreeSet<>(),
+                emptyList(),
                 cfg,
                 new Namer()
         );
