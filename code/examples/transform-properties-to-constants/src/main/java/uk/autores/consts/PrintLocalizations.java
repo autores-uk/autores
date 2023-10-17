@@ -1,7 +1,7 @@
 package uk.autores.consts;
 
-import uk.autores.ResourceFiles;
 import uk.autores.GenerateConstantsFromProperties;
+import uk.autores.ResourceFiles;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

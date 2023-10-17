@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

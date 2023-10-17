@@ -1,7 +1,7 @@
 package uk.autores.messages;
 
-import uk.autores.ResourceFiles;
 import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.ResourceFiles;
 import uk.autores.cfg.Localize;
 import uk.autores.cfg.MissingKey;
 

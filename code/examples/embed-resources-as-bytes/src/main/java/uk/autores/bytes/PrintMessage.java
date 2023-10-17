@@ -1,8 +1,8 @@
 package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
-import uk.autores.ResourceFiles;
 import uk.autores.GenerateByteArraysFromFiles;
+import uk.autores.ResourceFiles;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;

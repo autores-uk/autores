@@ -1,7 +1,7 @@
 package uk.autores.strings;
 
-import uk.autores.ResourceFiles;
 import uk.autores.GenerateStringsFromText;
+import uk.autores.ResourceFiles;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 

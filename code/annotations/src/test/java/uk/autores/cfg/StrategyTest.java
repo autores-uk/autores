@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import uk.autores.processing.ConfigDef;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StrategyTest {
 
