@@ -1,6 +1,6 @@
 package uk.autores.test.processing;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CharSequenceTests {
 

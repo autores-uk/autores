@@ -3,7 +3,6 @@ package uk.autores.processing;
 import uk.autores.ResourceFiles;
 
 import javax.tools.FileObject;
-import javax.tools.JavaFileManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;

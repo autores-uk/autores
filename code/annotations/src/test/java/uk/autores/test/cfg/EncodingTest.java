@@ -7,7 +7,6 @@ import uk.autores.cfg.Encoding;
 import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EncodingTest {
 

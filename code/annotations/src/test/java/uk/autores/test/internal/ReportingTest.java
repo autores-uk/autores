@@ -12,9 +12,7 @@ import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

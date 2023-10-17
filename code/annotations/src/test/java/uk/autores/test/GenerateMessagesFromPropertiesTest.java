@@ -9,13 +9,18 @@ import uk.autores.cfg.Localize;
 import uk.autores.cfg.MissingKey;
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
-import uk.autores.test.env.*;
+import uk.autores.test.env.ResourceSets;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestFileObject;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

@@ -1,7 +1,5 @@
 package uk.autores.processing;
 
-import uk.autores.ResourceFiles;
-
 import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
@@ -13,16 +11,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class ConfigDef {
 
-    /**
-     * Key name.
-     * @see ResourceFiles.Cfg#key()
-     */
     private final String key;
-    /**
-     * When {@link ResourceFiles.Cfg#value()} passed to {@link Predicate#test(Object)} the value is considered correct.
-     */
     private final Predicate<String> validator;
-    /** Informational usage text. */
     private final String description;
 
     /**
@@ -40,7 +30,7 @@ public final class ConfigDef {
 
     /**
      * @return config key name
-     * @see ResourceFiles.Cfg#key()
+     * @see uk.autores.ResourceFiles.Cfg#key()
      * @see Config#key()
      */
     public String key() {
@@ -50,7 +40,7 @@ public final class ConfigDef {
     /**
      * @param value the value to test
      * @return true if the value is valid or false otherwise
-     * @see ResourceFiles.Cfg#value()
+     * @see uk.autores.ResourceFiles.Cfg#value()
      * @see Config#value()
      */
     public boolean isValid(String value) {

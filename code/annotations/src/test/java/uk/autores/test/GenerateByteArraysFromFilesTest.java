@@ -6,7 +6,10 @@ import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
-import uk.autores.test.env.*;
+import uk.autores.test.env.ResourceSets;
+import uk.autores.test.env.TestElement;
+import uk.autores.test.env.TestFileObject;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;

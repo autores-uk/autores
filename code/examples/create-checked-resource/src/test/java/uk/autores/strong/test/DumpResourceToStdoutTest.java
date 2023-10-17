@@ -5,8 +5,6 @@ import uk.autores.strong.DumpResourceToStdout;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class DumpResourceToStdoutTest {
 
     @Test

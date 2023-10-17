@@ -195,6 +195,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
         writeSignature(writer);
 

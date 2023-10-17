@@ -8,10 +8,8 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileManager;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
 
-import static java.util.Collections.*;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 
 /**

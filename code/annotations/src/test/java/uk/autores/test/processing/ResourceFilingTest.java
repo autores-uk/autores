@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import uk.autores.processing.Pkg;
 import uk.autores.processing.ResourceFiling;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResourceFilingTest {
     
