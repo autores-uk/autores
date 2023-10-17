@@ -29,7 +29,7 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void handle() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
+        List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
         for (String strat : Arrays.asList("auto", "inline", "lazy")) {
             List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strat));
@@ -37,8 +37,6 @@ class GenerateByteArraysFromFilesTest {
             assertFalse(generated.isEmpty());
         }
     }
-
-
 
     @Test
     void handlesZeroSkipping() throws Exception {
@@ -51,7 +49,7 @@ class GenerateByteArraysFromFilesTest {
         }
 
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> resources = ResourceSets.of(env, filename, tfo);
+        List<Resource> resources = ResourceSets.of(env, filename, tfo);
 
         Map<String, String> generated = generate(env, resources, emptyList());
 
@@ -63,7 +61,7 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void reportsBadFilename() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> badFile = ResourceSets.junkWithBadFilename(env,"true.txt");
+        List<Resource> badFile = ResourceSets.junkWithBadFilename(env,"true.txt");
 
         Map<String, String> generated = generate(env, badFile, emptyList());
 
@@ -74,14 +72,14 @@ class GenerateByteArraysFromFilesTest {
     @Test
     void reportsFileTooBig() throws Exception {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        SortedSet<Resource> infinite = ResourceSets.infinitelyLargeFile(env);
+        List<Resource> infinite = ResourceSets.infinitelyLargeFile(env);
         Map<String, String> generated = generate(env, infinite, emptyList());
 
         assertTrue(generated.isEmpty());
         assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, SortedSet<Resource> files, List<Config> cfg) throws Exception {
+    private Map<String, String> generate(TestProcessingEnvironment env, List<Resource> files, List<Config> cfg) throws Exception {
         Handler handler = new GenerateByteArraysFromFiles();
         Context context = new Context(
                 env,
@@ -98,7 +96,7 @@ class GenerateByteArraysFromFilesTest {
         Map<String, String> results = new HashMap<>();
 
         for (Resource res : files) {
-            String simple = context.namer().simplifyResourceName(res.path());
+            String simple = context.namer().simplifyResourceName(res.toString());
             String className = context.namer().nameClass(simple);
 
             String qname = TestPkgs.P.qualifiedClassName(className);
@@ -114,7 +112,7 @@ class GenerateByteArraysFromFilesTest {
                     src
             ).create().get();
 
-            results.put(res.path(), src);
+            results.put(res.toString(), src);
         }
 
         return results;

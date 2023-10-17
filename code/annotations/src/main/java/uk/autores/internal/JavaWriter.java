@@ -20,7 +20,7 @@ public final class JavaWriter extends Writer {
     private int indentation = 2;
     private String resourceLoadMethod = null;
 
-    public JavaWriter(Object generator, Context ctxt, Writer w, String className, String comment) throws IOException {
+    public JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
         this.w = w;
         this.className = className;
 
@@ -29,10 +29,10 @@ public final class JavaWriter extends Writer {
         w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
         Pkg pkg = ctxt.pkg();
         if (!pkg.isUnnamed()) {
-            w.append("package ").append(pkg.name()).append(";").append(NL).append(NL);
+            w.append("package ").append(pkg).append(";").append(NL).append(NL);
         }
 
-        if (!comment.isEmpty()) {
+        if (comment.length() != 0) {
             w.append("/** \"");
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
@@ -124,9 +124,9 @@ public final class JavaWriter extends Writer {
         return this;
     }
 
-    public JavaWriter openResource(String resource) throws IOException {
+    public JavaWriter openResource(CharSequence resource) throws IOException {
         if (resourceLoadMethod == null) {
-            resourceLoadMethod = "open$" + Integer.toString(className.hashCode(), 16) + "$resource";
+            resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
         }
 
         return this.append(resourceLoadMethod)
@@ -157,7 +157,7 @@ public final class JavaWriter extends Writer {
         this.closeBrace().nl();
     }
 
-    public JavaWriter throwOnModification(String predicate, String resource) throws IOException {
+    public JavaWriter throwOnModification(CharSequence predicate, CharSequence resource) throws IOException {
         String err = "Resource modified after compilation: ";
 
         this.indent().append("if (").append(predicate).append(") ").openBrace().nl();

@@ -42,8 +42,8 @@ public final class GenerateConstantsFromProperties implements Handler {
     public void handle(Context context) throws Exception {
 
         for (Resource res : context.resources()) {
-            if (!res.path().endsWith(EXTENSION)) {
-                String msg = "Resource names must end in " + EXTENSION + " - got " + res.path();
+            if (!res.toString().endsWith(EXTENSION)) {
+                String msg = "Resource names must end in " + EXTENSION + " - got " + res;
                 context.printError(msg);
             } else {
                 Properties base = PropLoader.load(res);
@@ -59,7 +59,7 @@ public final class GenerateConstantsFromProperties implements Handler {
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
         Namer namer = ctxt.namer();
-        String simple = namer.simplifyResourceName(resource.path());
+        String simple = namer.simplifyResourceName(resource.toString());
         String name = namer.nameClass(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
@@ -73,7 +73,7 @@ public final class GenerateConstantsFromProperties implements Handler {
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource.path())) {
+            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
 
             for (String key : keys) {
                 writeProperty(ctxt, resource, writer, key);

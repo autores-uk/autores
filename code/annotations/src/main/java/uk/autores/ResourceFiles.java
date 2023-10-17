@@ -24,8 +24,7 @@ import java.lang.annotation.*;
  *     <code>foo/bar/X.txt</code> with the string <code>"X.txt"</code>.
  * </p>
  * <p>
- *     Absolute paths within the bundle may be referenced by setting {@link #relative()} to false and
- *     using an absolute path like <code>"/META-INF/resources/X.txt</code>.
+ *     Absolute paths like <code>"/META-INF/resources/X.txt</code> must be start with a forward slash.
  * </p>
  * <p>
  *     As a minimum this annotation can be used to verify a resource exists without the need for unit tests.
@@ -52,18 +51,8 @@ public @interface ResourceFiles {
     StandardLocation location() default StandardLocation.CLASS_PATH;
 
     /**
-     * Defines how the pkg (2nd arg) is to be generated for {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
-     * If <code>true</code> the package of the annotated type is used.
-     * If <code>false</code> the package "" is used.
-     *
-     * @return true by default
-     */
-    boolean relative() default true;
-
-    /**
      * Defines the resource files to be processed.
      * <em>In an Apache Maven project these will likely be placed in the <code>src/main/resources</code> directory.</em>
-     * Values are passed as relativeName (3rd arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
      *
      * @return the resources to handle
      */

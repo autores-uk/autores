@@ -62,7 +62,7 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void reportsBadFilename() throws Exception {
-        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "wrongfile.dat");
+        List<Resource> resources = ResourceSets.junkWithBadFilename(env, "wrongfile.dat");
 
         testMessages(env, emptyList(), resources);
 
@@ -71,7 +71,7 @@ class GenerateConstantsFromPropertiesTest {
 
     @Test
     void reportsBadNameGeneration() throws Exception {
-        SortedSet<Resource> resources = ResourceSets.junkWithBadFilename(env, "true.properties");
+        List<Resource> resources = ResourceSets.junkWithBadFilename(env, "true.properties");
 
         testMessages(env, emptyList(), resources);
 
@@ -93,7 +93,7 @@ class GenerateConstantsFromPropertiesTest {
 
     private void testMessages(TestProcessingEnvironment env,
                               List<Config> config,
-                              SortedSet<Resource> files) throws Exception {
+                              List<Resource> files) throws Exception {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,

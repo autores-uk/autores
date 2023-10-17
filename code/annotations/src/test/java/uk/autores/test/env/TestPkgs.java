@@ -4,7 +4,7 @@ import uk.autores.processing.Pkg;
 
 public final class TestPkgs {
 
-    public static final Pkg P = new Pkg("", false);
+    public static final Pkg P = new Pkg("");
 
     private TestPkgs() {}
 }

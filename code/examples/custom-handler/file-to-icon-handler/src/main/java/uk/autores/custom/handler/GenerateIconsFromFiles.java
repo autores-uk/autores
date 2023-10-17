@@ -11,6 +11,7 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,7 +36,7 @@ public class GenerateIconsFromFiles implements Handler {
         decorated.handle(context);
 
         // Context artifacts
-        Set<Resource> resources = context.resources();
+        List<Resource> resources = context.resources();
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
@@ -46,7 +47,7 @@ public class GenerateIconsFromFiles implements Handler {
         Template engine = Mustache.compiler().compile(template);
 
         for (Resource resource : resources) {
-            String simple = namer.simplifyResourceName(resource.path());
+            String simple = namer.simplifyResourceName(resource.toString());
             String dataClassName = namer.nameClass(simple);
             String className = dataClassName + "Icon";
             String qualifiedName = pkg.qualifiedClassName(className);
@@ -57,7 +58,7 @@ public class GenerateIconsFromFiles implements Handler {
             }
 
             // Template context
-            Object itc = new ImageTemplateContext(pkg.name(), className, dataClassName);
+            Object itc = new ImageTemplateContext(pkg.toString(), className, dataClassName);
 
             // Generate code
             JavaFileObject jfo = filer.createSourceFile(qualifiedName, annotatedElement);

@@ -21,6 +21,7 @@
 
     <modules>
         <module>assert-resources-exist</module>
+        <module>create-checked-resource</module>
         <module>embed-resources-as-bytes</module>
         <module>embed-resources-as-strings</module>
         <module>transform-properties-to-constants</module>

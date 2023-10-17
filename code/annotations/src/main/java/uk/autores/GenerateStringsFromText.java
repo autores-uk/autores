@@ -16,6 +16,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,8 +41,7 @@ import java.util.Set;
  *     The size of inline files is limited by the class file format to ~500MB.
  * </p>
  * <p>
- *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)} if
- *     {@link ResourceFiles#relative()} is true or {@link ClassLoader#getResourceAsStream(String)} otherwise.
+ *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)}.
  *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
  * </p>
  */
@@ -78,7 +78,7 @@ public final class GenerateStringsFromText implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        Set<Resource> resources = context.resources();
+        List<Resource> resources = context.resources();
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
@@ -94,20 +94,19 @@ public final class GenerateStringsFromText implements Handler {
         ClassGenerator generator = strategy(context);
 
         for (Resource res : resources) {
-            String resource = res.path();
             Stats stats = stats(res, buf, decoder);
             if (stats.utf16Size > Integer.MAX_VALUE) {
-                String msg = "Resource " + resource + " to large for String type";
+                String msg = "Resource " + res + " too large for String type";
                 context.printError(msg);
                 continue;
             }
 
-            String simple = namer.simplifyResourceName(resource);
+            String simple = namer.simplifyResourceName(res.toString());
             String className = namer.nameClass(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isJavaIdentifier(className)) {
-                String msg = "Cannot transform resource name '" + res.path() + "' to class name";
+                String msg = "Cannot transform resource name '" + res + "' to class name";
                 context.printError(msg);
                 continue;
             }
@@ -116,7 +115,7 @@ public final class GenerateStringsFromText implements Handler {
 
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
-                 JavaWriter writer = new JavaWriter(this, context, escaper, className, res.path())) {
+                 JavaWriter writer = new JavaWriter(this, context, escaper, className, res)) {
 
                 generator.generate(assistants, stats, writer);
             }
@@ -199,7 +198,7 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent()
                 .append("try (")
                 .append("java.io.InputStream in = ")
-                .openResource(stats.resource.path())
+                .openResource(stats.resource)
                 .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
                 .openBrace()
                 .nl();
@@ -212,9 +211,9 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == buf.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource.path());
+        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource);
         writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource.path()).append(");").nl();
+        writer.indent().append("throw new AssertionError(").string(stats.resource).append(");").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
 
