@@ -35,7 +35,8 @@ class CompilerTest {
                 new Namer()
         );
         Compiler.detect(ctxt, () -> null);
-        assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.WARNING).size());
+        Compiler.detect(ctxt, () -> null);
+        assertEquals(1, env.getMessager().messages.get(Diagnostic.Kind.MANDATORY_WARNING).size());
     }
 
     @Test
@@ -51,9 +52,9 @@ class CompilerTest {
                 new Namer()
         );
         Compiler.detect(ctxt, () -> "");
+        assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.MANDATORY_WARNING).size());
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.WARNING).size());
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
     }
-
 
 }

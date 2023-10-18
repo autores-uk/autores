@@ -76,7 +76,7 @@ public final class Context {
 
     public void printWarning(String msg) {
         env.getMessager()
-                .printMessage(Diagnostic.Kind.WARNING, msg, annotated);
+                .printMessage(Diagnostic.Kind.MANDATORY_WARNING, msg, annotated);
     }
 
     public void printStack(Exception e) {
