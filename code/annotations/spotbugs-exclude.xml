@@ -7,8 +7,4 @@
         <Class name="uk.autores.processors.ResourceFilesProcessor" />
         <Bug pattern="REC_CATCH_EXCEPTION" />
     </Match>
-    <Match>
-        <Class name="uk.autores.processors.ResourceFilesProcessor" />
-        <Bug pattern="INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE" />
-    </Match>
 </FindBugsFilter>

@@ -16,8 +16,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,17 +108,8 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     try {
       handler.handle(context);
     } catch (Exception e) {
-      StringWriter stack = new StringWriter();
-      e.printStackTrace(new PrintWriter(stack));
-
-      String msg = "PROCESSING ERROR:";
-      msg += " Location: " + context.location();
-      msg += " Package:" + context.pkg();
-      msg += " Exception: " + e;
-      msg += System.lineSeparator();
-      msg += stack;
-      processingEnv.getMessager()
-              .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
+      context.printStack(e);
+      context.printError("PROCESSING EXCEPTION:" + e);
     }
   }
 
