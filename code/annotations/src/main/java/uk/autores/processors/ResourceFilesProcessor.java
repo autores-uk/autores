@@ -15,12 +15,10 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
+import javax.tools.ToolProvider;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -104,6 +102,8 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     if (!OptionValidation.areValid(handler, context)) {
       return;
     }
+
+    Compiler.detect(context, ToolProvider::getSystemJavaCompiler);
 
     try {
       handler.handle(context);

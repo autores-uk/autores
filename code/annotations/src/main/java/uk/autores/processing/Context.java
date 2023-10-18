@@ -74,6 +74,11 @@ public final class Context {
                 .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
     }
 
+    public void printWarning(String msg) {
+        env.getMessager()
+                .printMessage(Diagnostic.Kind.WARNING, msg, annotated);
+    }
+
     public void printStack(Exception e) {
         Messager m = env.getMessager();
         for (StackTraceElement ste : e.getStackTrace()) {
