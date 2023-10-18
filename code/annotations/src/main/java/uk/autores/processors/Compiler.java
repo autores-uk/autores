@@ -11,11 +11,9 @@ final class Compiler {
 
     private Compiler() {}
 
-    static void detect(Context c, Supplier<Object> provider) {
-        if (provider.get() == null) {
-            if (WARN.getAndSet(false)) {
-                c.printWarning("Java compiler not detected");
-            }
+    static void detect(Context ctxt, Supplier<Object> provider) {
+        if (provider.get() == null && WARN.getAndSet(false)) {
+            ctxt.printWarning("Java compiler not detected");
         }
     }
 }
