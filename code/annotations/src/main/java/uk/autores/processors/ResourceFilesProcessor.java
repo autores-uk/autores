@@ -110,19 +110,15 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     try {
       handler.handle(context);
     } catch (Exception e) {
-      String msg = "ERROR:";
-      msg += " Location: " + context.location();
-      msg += " Package:" + context.pkg();
-      msg += " Exception: " + e;
-      processingEnv.getMessager()
-              .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
+      context.printError("PROCESSING EXCEPTION:" + e);
     }
   }
 
   private List<Resource> resources(ResourceFiles cpr,
                                         Pkg annotationPackage,
                                         Element annotated) {
-    List<Resource> map = new ArrayList<>(cpr.value().length);
+    List<Resource> resources = new ArrayList<>(cpr.value().length);
+    CharSequence pkg = "";
     CharSequence value = "";
     try {
       Filer filer = processingEnv.getFiler();
@@ -135,27 +131,24 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
           continue;
         }
 
-        CharSequence pkg = ResourceFiling.pkg(annotationPackage, resource);
+        pkg = ResourceFiling.pkg(annotationPackage, resource);
         value = ResourceFiling.relativeName(resource);
         FileObject fo = filer.getResource(cpr.location(), pkg, value);
         try (InputStream is = fo.openInputStream()) {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
-        map.add(new Resource(fo, resource));
+        resources.add(new Resource(fo, resource));
       }
 
     } catch (Exception e) {
-      String msg = "ERROR:";
-      msg += " Location: " + cpr.location();
-      msg += " Resource: " + value;
-      msg += " Exception: " + e;
+      String msg = Errors.resourceErrorMessage(e, value, pkg);
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
       return Collections.emptyList();
     }
 
-    return map;
+    return resources;
   }
 
   private Context ctxt(ResourceFiles cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {

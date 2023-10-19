@@ -74,6 +74,7 @@
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
+                <version>3.3.0</version>
             <!-- https://central.sonatype.org/publish/publish-maven/ -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
