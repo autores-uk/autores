@@ -29,7 +29,7 @@ class NamerTest {
     @Test
     void naming() {
         checkNaming(namer::nameClass);
-        checkNaming(namer::nameMethod);
+        checkNaming(namer::nameMember);
         checkNaming(namer::nameStaticField);
     }
 

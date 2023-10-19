@@ -1,5 +1,6 @@
 package uk.autores;
 
+import uk.autores.cfg.Name;
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.*;
 
@@ -9,24 +10,34 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Set;
 
+/**
+ * <p>
+ *     {@link Handler} that, for each resource, generates a statoc method with a name derived from the resource name
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameMember(String)}.
+ * </p>
+ */
 public final class GenerateInputStreamsFromFiles implements Handler {
 
+    /**
+     * @return visibility, name
+     * @see Visibility
+     * @see Name
+     */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF);
+        return ConfigDefs.set(Visibility.DEF, Name.DEF);
     }
 
     @Override
     public void handle(Context context) throws Exception {
-        // TODO: custom names
-
         if (context.pkg().isUnnamed()) {
             context.printError("Unable to generate name for unnamed package");
             return;
         }
         Namer namer = context.namer();
         String segment = context.pkg().lastSegment();
-        String className = namer.nameClass(segment);
+        String base = context.option(Name.DEF).orElse(segment);
+        String className = namer.nameClass(base);
         String qualifiedName = context.pkg().qualifiedClassName(className);
 
         Filer filer = context.env().getFiler();
@@ -43,7 +54,7 @@ public final class GenerateInputStreamsFromFiles implements Handler {
 
     private void writeOpenMethod(Namer namer, Resource resource, JavaWriter writer) throws IOException {
         String simple = namer.simplifyResourceName(resource.toString());
-        String method = namer.nameMethod(simple);
+        String method = namer.nameMember(simple);
 
         writer.nl();
         writer.indent().staticMember("java.io.InputStream", method).append("() throws java.io.IOException ").openBrace().nl();

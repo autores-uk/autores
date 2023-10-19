@@ -61,6 +61,12 @@
  *             <td>Generates classes containing String constants of the keys in a properties file.</td>
  *         </tr>
  *         <tr>
+ *             <td>{@link uk.autores.GenerateInputStreamsFromFiles}</td>
+ *             <td>any files</td>
+ *             <td>{@link uk.autores.cfg.Visibility}</td>
+ *             <td>Generates a single class with methods for opening resource {@link java.io.InputStream}s.</td>
+ *         </tr>
+ *         <tr>
  *             <td>{@link uk.autores.GenerateMessagesFromProperties}</td>
  *             <td>{@link java.util.Properties} files</td>
  *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Localize} {@link uk.autores.cfg.MissingKey} {@link uk.autores.cfg.Format}</td>

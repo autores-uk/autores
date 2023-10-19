@@ -95,9 +95,9 @@ public class Namer {
 
     /**
      * @param src source string
-     * @return source string as a method name
+     * @return source string as a member name
      */
-    public String nameMethod(String src) {
+    public String nameMember(String src) {
         return replace(src);
     }
 

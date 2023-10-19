@@ -262,7 +262,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                                String key,
                                String baseValue) throws IOException {
         Resource resource = msgs.resource;
-        String method = ctxt.namer().nameMethod(key);
+        String method = ctxt.namer().nameMember(key);
         if (!Namer.isJavaIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
             ctxt.printError(msg);
