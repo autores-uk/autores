@@ -7,9 +7,9 @@ Annotation driven Java code generation library for working with embedded resourc
 ## See
 
  - [Documentation](https://autores.uk)
- - [Examples](code/examples/README.md)
- - [Build](code/README.md) with Maven
- - [Core source code](code/annotations/README.md)
+ - [Examples](code/examples/)
+ - [Build](code/) with Maven
+ - [Core source code](code/annotations/)
 
 ## License
 
