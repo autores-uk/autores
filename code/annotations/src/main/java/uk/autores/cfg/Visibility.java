@@ -17,9 +17,7 @@ public final class Visibility {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF= new ConfigDef(VISIBILITY,
-            PUBLIC::equals,
-            "Generated class visibility. Valid value: \"public\"");
+    public static final ConfigDef DEF= new ConfigDef(VISIBILITY, PUBLIC::equals);
 
     private Visibility() {}
 }

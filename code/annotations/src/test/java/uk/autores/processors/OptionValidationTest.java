@@ -57,7 +57,7 @@ class OptionValidationTest {
     @Test
     void detectsDuplicateConfigKeys() {
         boolean repeatable = false;
-        ConfigDef foo = new ConfigDef("foo", s -> true, "");
+        ConfigDef foo = new ConfigDef("foo", s -> true);
         Handler handlerWithNoRepeatingConfig = ConfigurableHandler.with(foo);
 
         Context context = context(asList(new Config("foo", "bar"), new Config("foo", "baz")));
@@ -69,7 +69,7 @@ class OptionValidationTest {
     @Test
     void detectsInvalidValue() {
         Predicate<String> allWrong = s -> false;
-        ConfigDef foo = new ConfigDef("foo", allWrong, "");
+        ConfigDef foo = new ConfigDef("foo", allWrong);
 
         class NoValidationHandler implements Handler {
             @Override

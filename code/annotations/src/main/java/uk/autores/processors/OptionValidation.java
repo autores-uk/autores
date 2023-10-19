@@ -26,23 +26,18 @@ final class OptionValidation {
             if (def.isPresent()) {
                 ConfigDef od = def.get();
                 if (c > 1) {
-                    err = format("%sDuplicate configuration option %s%n", err, option.key());
+                    err = format("%sDuplicate configuration option %s. ", err, option.key());
                 }
                 if (!od.isValid(option.value())) {
-                    err = format("%sInvalid value %s=%s%n", err, option.key(), option.value());
+                    err = format("%sInvalid value %s=%s. ", err, option.key(), option.value());
                 }
             } else {
-                err = format("%sUnknown configuration option %s%n", err, option.key());
+                err = format("%sUnknown configuration option %s. ", err, option.key());
             }
         }
 
         if (err.isEmpty()) {
             return true;
-        }
-
-        err = format("%s%nUsage:%n", err);
-        for (ConfigDef def : handler.config()) {
-            err = format("%s %s\t%s%n", err, def.key(), def.description());
         }
 
         context.printError(err);

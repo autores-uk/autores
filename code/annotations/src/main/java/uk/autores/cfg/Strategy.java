@@ -29,9 +29,7 @@ public final class Strategy {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(STRATEGY,
-            s -> s.matches("auto|inline|lazy"),
-            "Code generation strategy. Valid values: \"auto\"; \"inline\"; \"lazy\".");
+    public static final ConfigDef DEF = new ConfigDef(STRATEGY, s -> s.matches("auto|inline|lazy"));
 
     private Strategy() {}
 }
