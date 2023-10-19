@@ -2,7 +2,6 @@ package uk.autores.processing;
 
 import uk.autores.ResourceFiles;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
@@ -72,18 +71,6 @@ public final class Context {
     public void printError(String msg) {
         env.getMessager()
                 .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-    }
-
-    public void printWarning(String msg) {
-        env.getMessager()
-                .printMessage(Diagnostic.Kind.MANDATORY_WARNING, msg, annotated);
-    }
-
-    public void printStack(Exception e) {
-        Messager m = env.getMessager();
-        for (StackTraceElement ste : e.getStackTrace()) {
-            m.printMessage(Diagnostic.Kind.ERROR, ste.toString(), annotated);
-        }
     }
 
     /**
