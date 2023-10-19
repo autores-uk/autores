@@ -27,4 +27,5 @@ module uk.autores {
     // testable packages
     exports uk.autores.processors to uk.autores.test;
     exports uk.autores.internal to uk.autores.test;
+    exports uk.autores.processors.internal to uk.autores.test;
 }

@@ -1,8 +1,8 @@
-package uk.autores.test.internal;
+package uk.autores.test.processors.internal;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.AssertResourceExists;
-import uk.autores.internal.OptionValidation;
+import uk.autores.processors.internal.OptionValidation;
 import uk.autores.processing.*;
 import uk.autores.test.env.TestElement;
 import uk.autores.test.env.TestProcessingEnvironment;

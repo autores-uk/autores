@@ -1,4 +1,4 @@
-package uk.autores.internal;
+package uk.autores.processors.internal;
 
 import uk.autores.processing.Config;
 import uk.autores.processing.ConfigDef;

@@ -1,8 +1,8 @@
-package uk.autores.test.internal;
+package uk.autores.test.processors.internal;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import uk.autores.internal.CharSeq;
+import uk.autores.processors.internal.CharSeq;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -2,8 +2,9 @@ package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
-import uk.autores.internal.CharSeq;
-import uk.autores.internal.OptionValidation;
+import uk.autores.processors.internal.CharSeq;
+import uk.autores.processors.internal.Errors;
+import uk.autores.processors.internal.OptionValidation;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.AbstractProcessor;

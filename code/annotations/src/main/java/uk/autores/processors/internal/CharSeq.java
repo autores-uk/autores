@@ -1,4 +1,4 @@
-package uk.autores.internal;
+package uk.autores.processors.internal;
 
 /** Utility type for working with {@link java.lang.CharSequence} instances */
 public final class CharSeq {

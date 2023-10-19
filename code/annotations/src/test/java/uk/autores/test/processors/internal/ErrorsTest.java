@@ -1,6 +1,7 @@
-package uk.autores.processors;
+package uk.autores.test.processors.internal;
 
 import org.junit.jupiter.api.Test;
+import uk.autores.processors.internal.Errors;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
