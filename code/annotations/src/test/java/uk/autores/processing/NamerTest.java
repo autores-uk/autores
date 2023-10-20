@@ -28,7 +28,7 @@ class NamerTest {
 
     @Test
     void naming() {
-        checkNaming(namer::nameClass);
+        checkNaming(namer::nameType);
         checkNaming(namer::nameMember);
         checkNaming(namer::nameStaticField);
     }

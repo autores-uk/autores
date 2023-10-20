@@ -48,7 +48,7 @@ public class GenerateIconsFromFiles implements Handler {
 
         for (Resource resource : resources) {
             String simple = namer.simplifyResourceName(resource.toString());
-            String dataClassName = namer.nameClass(simple);
+            String dataClassName = namer.nameType(simple);
             String className = dataClassName + "Icon";
             String qualifiedName = pkg.qualifiedClassName(className);
 

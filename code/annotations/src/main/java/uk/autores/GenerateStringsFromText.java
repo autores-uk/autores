@@ -19,7 +19,7 @@ import java.util.Set;
  * <p>{@link Handler} that generates classes that returns file contents as {@link String}s.</p>
  * <p>
  *     For each resource, generates a class with a name derived from the resource name
- *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}.
  *     The class will have a static method called <code>text</code> that returns the resource
  *     as a {@link String}.
  * </p>
@@ -61,6 +61,9 @@ public final class GenerateStringsFromText implements Handler {
      * <p>
      *     "UTF-8" is assumed if "encoding" is not set and this is the recommended encoding.
      * </p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility; encoding; strategy
      * @see Visibility
@@ -98,7 +101,7 @@ public final class GenerateStringsFromText implements Handler {
             }
 
             String simple = namer.simplifyResourceName(res.toString());
-            String className = namer.nameClass(simple);
+            String className = namer.nameType(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isJavaIdentifier(className)) {

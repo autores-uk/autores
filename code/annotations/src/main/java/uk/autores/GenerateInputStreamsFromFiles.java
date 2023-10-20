@@ -12,13 +12,24 @@ import java.util.Set;
 
 /**
  * <p>
- *     {@link Handler} that, for each resource, generates a statoc method with a name derived from the resource name
+ *     {@link Handler} that, for each resource, generates a static method with a name derived from the resource name
  *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameMember(String)}.
  * </p>
  */
 public final class GenerateInputStreamsFromFiles implements Handler {
 
     /**
+     * <p>
+     *     All configuration is optional.
+     * </p>
+     * <p>
+     *     Use "name" to set the generated class name.
+     *     If absent the last segment of the package name will be used.
+     * </p>
+     * <p>
+     *     Use "visibility" to make the generated class public.
+     * </p>
+     *
      * @return visibility, name
      * @see Visibility
      * @see Name
@@ -30,14 +41,16 @@ public final class GenerateInputStreamsFromFiles implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-        if (context.pkg().isUnnamed()) {
-            context.printError("Unable to generate name for unnamed package");
-            return;
-        }
         Namer namer = context.namer();
         String segment = context.pkg().lastSegment();
         String base = context.option(Name.DEF).orElse(segment);
-        String className = namer.nameClass(base);
+        String className = namer.nameType(base);
+
+        if (!Namer.isJavaIdentifier(className)) {
+            context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
+            return;
+        }
+
         String qualifiedName = context.pkg().qualifiedClassName(className);
 
         Filer filer = context.env().getFiler();

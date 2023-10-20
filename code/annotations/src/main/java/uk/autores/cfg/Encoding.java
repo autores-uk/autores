@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 /**
  * "encoding": encoding of consumed text files.
+ * Values are checked against the canonical names.
  * @see Charset#availableCharsets()
  */
 public final class Encoding {

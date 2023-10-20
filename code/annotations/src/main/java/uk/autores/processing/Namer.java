@@ -78,10 +78,12 @@ public class Namer {
     }
 
     /**
+     * Name a class/interface/etc.
+     *
      * @param src source string
      * @return source string as a class name
      */
-    public String nameClass(String src) {
+    public String nameType(String src) {
         return replace(src);
     }
 
@@ -94,6 +96,8 @@ public class Namer {
     }
 
     /**
+     * Name a method/etc.
+     *
      * @param src source string
      * @return source string as a member name
      */

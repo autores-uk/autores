@@ -78,6 +78,9 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"localize" is "true" by default.</p>
      * <p>"missing-key" is "error" by default.</p>
      * <p>"format" is "true" by default.</p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility, localize, missing-key
      * @see Visibility
@@ -170,7 +173,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
         String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameClass(simple);
+        String name = namer.nameType(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);

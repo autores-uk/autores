@@ -16,7 +16,7 @@ import java.util.TreeSet;
  * Use this code generation {@link Handler} to prevent misspelled keys with {@link java.util.ResourceBundle}.
  * For every {@link Properties} file defined as a resource:
  * <ul>
- *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}</li>
+ *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}</li>
  *    <li>Adds a {@link String} constant named from the property key using {@link Namer#nameStaticField(String)}</li>
  * </ul>
  */
@@ -26,6 +26,9 @@ public final class GenerateConstantsFromProperties implements Handler {
 
     /**
      * <p>All configuration is optional.</p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility
      * @see Visibility
@@ -57,7 +60,7 @@ public final class GenerateConstantsFromProperties implements Handler {
 
         Namer namer = ctxt.namer();
         String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameClass(simple);
+        String name = namer.nameType(simple);
         if (!Namer.isJavaIdentifier(name)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
             ctxt.printError(msg);
