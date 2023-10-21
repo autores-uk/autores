@@ -12,18 +12,18 @@ class NamerTest {
 
     @Test
     void isJavaIdentifier() {
-        assertTrue(Namer.isJavaIdentifier("True"));
-        assertTrue(Namer.isJavaIdentifier("R123"));
-        assertTrue(Namer.isJavaIdentifier("_foo"));
-        assertTrue(Namer.isJavaIdentifier("String"));
+        assertTrue(Namer.isIdentifier("True"));
+        assertTrue(Namer.isIdentifier("R123"));
+        assertTrue(Namer.isIdentifier("_foo"));
+        assertTrue(Namer.isIdentifier("String"));
 
-        assertFalse(Namer.isJavaIdentifier(""));
-        assertFalse(Namer.isJavaIdentifier("_"));
-        assertFalse(Namer.isJavaIdentifier("if"));
-        assertFalse(Namer.isJavaIdentifier("false"));
-        assertFalse(Namer.isJavaIdentifier("true"));
-        assertFalse(Namer.isJavaIdentifier("8able"));
-        assertFalse(Namer.isJavaIdentifier("foo bar"));
+        assertFalse(Namer.isIdentifier(""));
+        assertFalse(Namer.isIdentifier("_"));
+        assertFalse(Namer.isIdentifier("if"));
+        assertFalse(Namer.isIdentifier("false"));
+        assertFalse(Namer.isIdentifier("true"));
+        assertFalse(Namer.isIdentifier("8able"));
+        assertFalse(Namer.isIdentifier("foo bar"));
     }
 
     @Test

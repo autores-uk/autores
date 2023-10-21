@@ -52,7 +52,7 @@ public class GenerateIconsFromFiles implements Handler {
             String className = dataClassName + "Icon";
             String qualifiedName = pkg.qualifiedClassName(className);
 
-            if (!Namer.isJavaIdentifier(className)) {
+            if (!Namer.isIdentifier(className)) {
                 context.printError(className + " is not a valid class name");
                 continue;
             }

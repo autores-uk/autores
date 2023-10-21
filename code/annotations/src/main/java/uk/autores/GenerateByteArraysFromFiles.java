@@ -93,7 +93,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
             String className = namer.nameType(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
-            if (!Namer.isJavaIdentifier(className)) {
+            if (!Namer.isIdentifier(className)) {
                 String msg = "Cannot transform resource name '" + resource + "' to class name";
                 context.printError(msg);
                 continue;

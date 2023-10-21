@@ -174,7 +174,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         String simple = namer.simplifyResourceName(resource.toString());
         String name = namer.nameType(simple);
-        if (!Namer.isJavaIdentifier(name)) {
+        if (!Namer.isIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);
             return;
@@ -266,7 +266,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                                String baseValue) throws IOException {
         Resource resource = msgs.resource;
         String method = ctxt.namer().nameMember(key);
-        if (!Namer.isJavaIdentifier(method)) {
+        if (!Namer.isIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
             ctxt.printError(msg);
             return;

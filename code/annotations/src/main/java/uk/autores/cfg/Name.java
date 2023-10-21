@@ -13,5 +13,5 @@ public final class Name {
     /** Key */
     public static final String NAME = "name";
 
-    public static final ConfigDef DEF = new ConfigDef(NAME, Namer::isJavaIdentifier);
+    public static final ConfigDef DEF = new ConfigDef(NAME, Namer::isIdentifier);
 }

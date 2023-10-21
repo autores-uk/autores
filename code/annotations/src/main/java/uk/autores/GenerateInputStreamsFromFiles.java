@@ -46,7 +46,7 @@ public final class GenerateInputStreamsFromFiles implements Handler {
         String base = context.option(Name.DEF).orElse(segment);
         String className = namer.nameType(base);
 
-        if (!Namer.isJavaIdentifier(className)) {
+        if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
             return;
         }

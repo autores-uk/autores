@@ -61,7 +61,7 @@ public final class GenerateConstantsFromProperties implements Handler {
         Namer namer = ctxt.namer();
         String simple = namer.simplifyResourceName(resource.toString());
         String name = namer.nameType(simple);
-        if (!Namer.isJavaIdentifier(name)) {
+        if (!Namer.isIdentifier(name)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
             ctxt.printError(msg);
             return;
@@ -86,7 +86,7 @@ public final class GenerateConstantsFromProperties implements Handler {
                                JavaWriter writer,
                                String key) throws IOException {
         String field = ctxt.namer().nameStaticField(key);
-        if (!Namer.isJavaIdentifier(field)) {
+        if (!Namer.isIdentifier(field)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to field name";
             ctxt.printError(msg);
             return;
