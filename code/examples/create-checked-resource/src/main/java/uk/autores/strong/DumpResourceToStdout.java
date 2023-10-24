@@ -3,7 +3,6 @@ package uk.autores.strong;
 import com.google.common.io.ByteStreams;
 import uk.autores.GenerateInputStreamsFromFiles;
 import uk.autores.ResourceFiles;
-import uk.autores.cfg.Name;
 
 import java.io.IOException;
 import java.io.InputStream;

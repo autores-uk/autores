@@ -90,7 +90,7 @@ public final class GenerateMessagesFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
+        return Sets.of(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
     }
 
     @Override

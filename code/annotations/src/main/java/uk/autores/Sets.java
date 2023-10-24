@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-final class ConfigDefs {
+final class Sets {
 
-    private ConfigDefs() {}
+    private Sets() {}
 
-    static Set<ConfigDef> set(ConfigDef...defs) {
+    static Set<ConfigDef> of(ConfigDef...defs) {
         Set<ConfigDef> set = new LinkedHashSet<>();
         Collections.addAll(set, defs);
         return set;

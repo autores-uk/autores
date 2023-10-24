@@ -36,7 +36,7 @@ public final class GenerateInputStreamsFromFiles implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Name.DEF);
+        return Sets.of(Visibility.DEF, Name.DEF);
     }
 
     @Override

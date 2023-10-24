@@ -101,7 +101,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       return;
     }
 
-    if (!OptionValidation.areValid(handler, context)) {
+    if (!handler.validConfig(context.config(), context::printError)) {
       return;
     }
 

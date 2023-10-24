@@ -72,7 +72,7 @@ public final class GenerateStringsFromText implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Encoding.DEF, Strategy.DEF);
+        return Sets.of(Visibility.DEF, Encoding.DEF, Strategy.DEF);
     }
 
     @Override

@@ -73,7 +73,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Strategy.DEF);
+        return Sets.of(Visibility.DEF, Strategy.DEF);
     }
 
     @Override
