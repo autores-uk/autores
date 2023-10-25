@@ -26,6 +26,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
+import static uk.autores.processors.Compare.nullOrEmpty;
+import static uk.autores.processors.Compare.sameSeq;
 
 /**
  * Processes classpath resource files and passes them to {@link Handler#handle(Context)}.
@@ -42,7 +44,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   @Override
   public SourceVersion getSupportedSourceVersion() {
     SourceVersion sv = processingEnv.getSourceVersion();
-    return Comparables.max(SourceVersion.RELEASE_8, sv);
+    return Compare.max(SourceVersion.RELEASE_8, sv);
   }
 
   /**
@@ -77,10 +79,10 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
         consumed = true;
 
         Name name = annotation.getQualifiedName();
-        if (CharSeq.equivalent(ResourceFiles.class.getName(), name)) {
+        if (sameSeq(ResourceFiles.class.getName(), name)) {
           ResourceFiles cpr = annotated.getAnnotation(ResourceFiles.class);
           process(cpr, annotated);
-        } else if (CharSeq.equivalent(ResourceFilesRepeater.class.getName(), name)) {
+        } else if (sameSeq(ResourceFilesRepeater.class.getName(), name)) {
           ResourceFilesRepeater cprs = annotated.getAnnotation(ResourceFilesRepeater.class);
           for (ResourceFiles cpr : cprs.value()) {
             process(cpr, annotated);
@@ -125,7 +127,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       Filer filer = processingEnv.getFiler();
 
       for (String resource : cpr.value()) {
-        if (CharSeq.nullOrEmpty(resource)) {
+        if (nullOrEmpty(resource)) {
           String msg = "Resource paths cannot be null or empty";
           processingEnv.getMessager()
                   .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
