@@ -6,6 +6,7 @@ import uk.autores.processing.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -33,13 +34,15 @@ import static java.util.stream.Collectors.toSet;
 public final class ResourceFilesProcessor extends AbstractProcessor {
 
   /**
-   * {@link SourceVersion#RELEASE_8}.
+   * Returns {@link ProcessingEnvironment#getSourceVersion()} or
+   * the minimum {@link SourceVersion#RELEASE_8}.
    *
-   * @return RELEASE_8
+   * @return current source version
    */
   @Override
   public SourceVersion getSupportedSourceVersion() {
-    return SourceVersion.RELEASE_8;
+    SourceVersion sv = processingEnv.getSourceVersion();
+    return Comparables.max(SourceVersion.RELEASE_8, sv);
   }
 
   /**

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
+import uk.autores.env.TestProcessingEnvironment;
 
 import javax.lang.model.SourceVersion;
 import java.io.IOException;
@@ -28,6 +29,7 @@ class ResourceFilesProcessorTest {
 
   @Test
   void metadata() {
+    processor.init(new TestProcessingEnvironment());
     assertEquals(SourceVersion.RELEASE_8, processor.getSupportedSourceVersion());
     Set<String> expected = Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
             .map(Class::getName)
