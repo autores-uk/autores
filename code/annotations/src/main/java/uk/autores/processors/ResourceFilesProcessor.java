@@ -19,12 +19,12 @@ import javax.tools.FileObject;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
 import static uk.autores.processors.Compare.nullOrEmpty;
 import static uk.autores.processors.Compare.sameSeq;
@@ -131,7 +131,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
           String msg = "Resource paths cannot be null or empty";
           processingEnv.getMessager()
                   .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-          continue;
+          return emptyList();
         }
 
         pkg = ResourceFiling.pkg(annotationPackage, resource);
@@ -148,7 +148,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       String msg = Errors.resourceErrorMessage(e, value, pkg);
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-      return Collections.emptyList();
+      return emptyList();
     }
 
     return resources;

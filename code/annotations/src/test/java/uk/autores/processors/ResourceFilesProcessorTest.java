@@ -118,4 +118,19 @@ class ResourceFilesProcessorTest {
       assertTrue(processor.invoked);
     }
   }
+
+  @Test
+  void emptyResourceFailsCompilation() throws IOException {
+    TestSources.Source src = TestSources.load(this, "EmptyResource.java");
+    try {
+      Reflect.compile(
+              src.className,
+              src.sourceCode,
+              new CompileOptions().processors(processor)
+      ).create().get();
+      fail();
+    } catch (ReflectException e) {
+      assertTrue(processor.invoked);
+    }
+  }
 }
