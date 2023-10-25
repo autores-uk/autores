@@ -17,42 +17,36 @@ public final class UnicodeEscapeWriter extends Writer {
 
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
-        checkClosed();
         for (int i = 0; i < len; i++) {
             buffer(cbuf[i]);
         }
-        checkBuffer();
     }
 
     @Override
     public Writer append(CharSequence csq) throws IOException {
-        checkClosed();
-        for (int i = 0; i < csq.length(); i++) {
+        for (int i = 0, len = csq.length(); i < len; i++) {
             buffer(csq.charAt(i));
         }
-        checkBuffer();
-
         return this;
     }
 
     @Override
     public Writer append(char c) throws IOException {
-        checkClosed();
         buffer(c);
-        checkBuffer();
-
         return this;
     }
 
-    private void buffer(char c) {
+    private void buffer(char c) throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
+
         if (c > 127) {
             b.append(String.format("\\u%04x", (int) c));
         } else {
             b.append(c);
         }
-    }
 
-    private void checkBuffer() throws IOException {
         if (b.length() >= 64 * 1024) {
             flushBuffer();
         }
@@ -63,12 +57,6 @@ public final class UnicodeEscapeWriter extends Writer {
             w.append(b);
         } finally {
             b.delete(0, b.length());
-        }
-    }
-
-    private void checkClosed() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
         }
     }
 

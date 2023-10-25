@@ -9,12 +9,12 @@ import static java.util.Arrays.asList;
 
 /**
  * <p>
- * Utilized in naming classes, methods and fields.
- * Does the bare minimum to create viable identifiers by replacing invalid codepoints with underscores.
- * Extend this type to provide alternative behaviour and specify using {@link ResourceFiles#namer()}.
+ *     Utilized in naming classes, methods and fields.
+ *     Does the bare minimum to create viable identifiers by replacing invalid codepoints with underscores.
+ *     Extend this type to provide alternative behaviour and specify using {@link ResourceFiles#namer()}.
  * </p>
  * <p>
- * Implementations MUST:
+ *     Implementations MUST:
  * </p>
  * <ul>
  *     <li>Be public</li>
@@ -62,7 +62,7 @@ public class Namer {
      * @param s the string to test
      * @return true if this is a valid identifier
      */
-    public static boolean isJavaIdentifier(String s) {
+    public static boolean isIdentifier(String s) {
         if ("".equals(s) || RESERVED.contains(s)) {
             return false;
         }
@@ -78,10 +78,12 @@ public class Namer {
     }
 
     /**
+     * Name a class/interface/etc.
+     *
      * @param src source string
      * @return source string as a class name
      */
-    public String nameClass(String src) {
+    public String nameType(String src) {
         return replace(src);
     }
 
@@ -94,10 +96,12 @@ public class Namer {
     }
 
     /**
+     * Name a method/etc.
+     *
      * @param src source string
-     * @return source string as a method name
+     * @return source string as a member name
      */
-    public String nameMethod(String src) {
+    public String nameMember(String src) {
         return replace(src);
     }
 
@@ -120,7 +124,7 @@ public class Namer {
     }
 
     private static String replace(String s) {
-        if (Namer.isJavaIdentifier(s)) {
+        if (Namer.isIdentifier(s)) {
             return s;
         }
         StringBuilder buf = new StringBuilder(s.length());

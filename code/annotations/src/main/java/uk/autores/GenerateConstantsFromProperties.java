@@ -19,7 +19,7 @@ import java.util.TreeSet;
  * Use this code generation {@link Handler} to prevent misspelled keys with {@link java.util.ResourceBundle}.
  * For every {@link Properties} file defined as a resource:
  * <ul>
- *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}</li>
+ *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}</li>
  *    <li>Adds a {@link String} constant named from the property key using {@link Namer#nameStaticField(String)}</li>
  * </ul>
  */
@@ -29,13 +29,16 @@ public final class GenerateConstantsFromProperties implements Handler {
 
     /**
      * <p>All configuration is optional.</p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility
      * @see Visibility
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF);
+        return Sets.of(Visibility.DEF);
     }
 
     @Override
@@ -60,8 +63,8 @@ public final class GenerateConstantsFromProperties implements Handler {
 
         Namer namer = ctxt.namer();
         String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameClass(simple);
-        if (!Namer.isJavaIdentifier(name)) {
+        String name = namer.nameType(simple);
+        if (!Namer.isIdentifier(name)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
             ctxt.printError(msg);
             return;
@@ -86,7 +89,7 @@ public final class GenerateConstantsFromProperties implements Handler {
                                JavaWriter writer,
                                String key) throws IOException {
         String field = ctxt.namer().nameStaticField(key);
-        if (!Namer.isJavaIdentifier(field)) {
+        if (!Namer.isIdentifier(field)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to field name";
             ctxt.printError(msg);
             return;

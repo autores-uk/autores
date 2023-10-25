@@ -79,6 +79,9 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"localize" is "true" by default.</p>
      * <p>"missing-key" is "error" by default.</p>
      * <p>"format" is "true" by default.</p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility, localize, missing-key
      * @see Visibility
@@ -88,7 +91,7 @@ public final class GenerateMessagesFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
+        return Sets.of(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
     }
 
     @Override
@@ -171,8 +174,8 @@ public final class GenerateMessagesFromProperties implements Handler {
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
         String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameClass(simple);
-        if (!Namer.isJavaIdentifier(name)) {
+        String name = namer.nameType(simple);
+        if (!Namer.isIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);
             return;
@@ -263,8 +266,8 @@ public final class GenerateMessagesFromProperties implements Handler {
                                String key,
                                String baseValue) throws IOException {
         Resource resource = msgs.resource;
-        String method = ctxt.namer().nameMethod(key);
-        if (!Namer.isJavaIdentifier(method)) {
+        String method = ctxt.namer().nameMember(key);
+        if (!Namer.isIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
             ctxt.printError(msg);
             return;

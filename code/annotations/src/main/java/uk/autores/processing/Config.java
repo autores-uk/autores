@@ -36,4 +36,9 @@ public final class Config {
     public String value() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return key + "=" + value;
+    }
 }

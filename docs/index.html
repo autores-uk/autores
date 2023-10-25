@@ -1,17 +1,16 @@
 <html>
   <head>
     <title>Automated Resource Handling for Java - AutoRes.uk</title>
-    <style>
-      body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
-      code { font-weight: bolder; color: steelblue; }
-    </style>
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <meta name="description" content="Open source library for automating embedded Java resource file handling">
+    <link rel="icon" href="favicon.png">
   </head>
   <body>
 
     <h1 id="autores">AutoRes.uk</h1>
 
     <p>
-      Small, open source library for automating embedded <a href="https://dev.java/">Java&trade;</a> resource file handling.
+      Open source library for automating embedded <a href="https://dev.java/">Java&trade;</a> resource file handling.
       Use annotations for verification and code generation.
       This is an alternative to manual use of methods like
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
@@ -73,14 +72,14 @@
       <code>AssertResourceExists</code>,
       <code>GenerateByteArraysFromFiles</code>,
       <code>GenerateConstantsFromProperties</code>,
-      <code>GenerateMessagesFromProperties</code>,
-      and the ability add custom implementations.
+      <code>GenerateInputStreamsFromFiles</code>, and
+      <code>GenerateMessagesFromProperties</code>
     </p>
 
     <a id="compat" href="#compat">&#x1f517;</a>
-    <h2>Versioning &amp; Compatibility</h2>
+    <h3>Versioning &amp; Compatibility</h3>
 
-    <p>Versions in the form <code>A.B.C</code> are split into three numbers:</p>
+    <p>Versions in the form <code>A.B.C</code> are split into three integers:</p>
 
     <ul>
       <li>A: Java version; minimum version of Java compiler</li>
@@ -90,7 +89,6 @@
 
     <p>
       Java 8 is the minimum version.
-      A Java 11 port is also published.
     </p>
 
     <a id="scopes" href="#scopes">&#x1f517;</a>

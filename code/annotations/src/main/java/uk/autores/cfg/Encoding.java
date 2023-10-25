@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 
 /**
  * "encoding": encoding of consumed text files.
+ * Values are checked against the canonical names.
  * @see Charset#availableCharsets()
  */
 public final class Encoding {
@@ -19,9 +20,7 @@ public final class Encoding {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(ENCODING,
-            Charset.availableCharsets()::containsKey,
-            "The canonical name of a supported encoding: " + Charset.availableCharsets().keySet());
+    public static final ConfigDef DEF = new ConfigDef(ENCODING, Charset.availableCharsets()::containsKey);
 
     private Encoding() {}
 }

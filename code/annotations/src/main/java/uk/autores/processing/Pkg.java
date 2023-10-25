@@ -53,6 +53,12 @@ public final class Pkg implements CharSequence {
         return name.subSequence(start, end);
     }
 
+    /**
+     * For package "foo.bar" returns "bar".
+     * For unnamed package returns "".
+     *
+     * @return the last dotted segment
+     */
     public String lastSegment() {
         int idx = name.lastIndexOf('.') + 1;
         int start = Math.max(idx, 0);

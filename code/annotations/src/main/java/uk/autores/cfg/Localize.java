@@ -21,9 +21,7 @@ public final class Localize {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(LOCALIZE,
-            s -> s.matches("true|false"),
-            "Enables searching for localized resources. Valid values: \"true\"; \"false\".");
+    public static final ConfigDef DEF = new ConfigDef(LOCALIZE, s -> s.matches("true|false"));
 
     private Localize() {}
 }

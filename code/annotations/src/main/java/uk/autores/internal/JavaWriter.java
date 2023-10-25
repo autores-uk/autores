@@ -149,9 +149,7 @@ public final class JavaWriter extends Writer {
                 .append(".class.getResourceAsStream(resource);")
                 .nl();
         this.indent()
-                .append("if (in == null) { throw new java.io.IOException(")
-                .string("Resource not found: ")
-                .append("+resource); }")
+                .append("if (in == null) { throw new java.io.FileNotFoundException(resource); }")
                 .nl();
         this.indent().append("return in;").nl();
         this.closeBrace().nl();

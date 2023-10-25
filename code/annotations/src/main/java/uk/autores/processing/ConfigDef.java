@@ -13,19 +13,14 @@ public final class ConfigDef {
 
     private final String key;
     private final Predicate<String> validator;
-    private final String description;
 
     /**
      * @param key the config key
      * @param validator must return true if the value is valid or false otherwise
-     * @param description brief description of the config option
      */
-    public ConfigDef(String key,
-                     Predicate<String> validator,
-                     String description) {
+    public ConfigDef(String key, Predicate<String> validator) {
         this.key = requireNonNull(key, "name");
         this.validator = requireNonNull(validator, "validator");
-        this.description = requireNonNull(description, "description");
     }
 
     /**
@@ -45,12 +40,5 @@ public final class ConfigDef {
      */
     public boolean isValid(String value) {
         return validator.test(value);
-    }
-
-    /**
-     * @return brief one line description
-     */
-    public String description() {
-        return description;
     }
 }

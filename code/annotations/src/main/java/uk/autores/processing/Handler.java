@@ -2,8 +2,10 @@ package uk.autores.processing;
 
 import uk.autores.ResourceFiles;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Processes resources from the class path.
@@ -45,11 +47,48 @@ public interface Handler {
     }
 
     /**
-     * If true the annotation processor will validate {@link ResourceFiles#config()} against {@link #config()}.
+     * <p>
+     *     Validates the {@link Context#config()}. Override to change behaviour.
+     * </p>
+     * <p>
+     *     The default implementation returns true if:
+     * </p>
+     * <ul>
+     *     <li>Key names are unique</li>
+     *     <li>Key names match {@link #config()} {@link ConfigDef#key()}</li>
+     *     <li>Values pass {@link #config()} {@link ConfigDef#isValid(String)}</li>
+     * </ul>
      *
-     * @return true by default
+     * @param config handler configuration
+     * @param errorReporter error message consumer
+     * @return true if the config is valid for this handler
      */
-    default boolean validateConfig() {
+    default boolean validConfig(List<Config> config, Consumer<String> errorReporter) {
+        Map<String, ConfigDef> defs = config()
+                .stream()
+                .collect(toMap(ConfigDef::key, cd -> cd));
+        Set<String> configured = new HashSet<>();
+
+        for (Config option : config) {
+            String key = option.key();
+            if (configured.contains(key)) {
+                errorReporter.accept("Duplicate config '" + option + "'");
+                return false;
+            }
+            configured.add(key);
+
+            ConfigDef def = defs.get(key);
+            if (def == null) {
+                errorReporter.accept("Unknown config '" + option + "'");
+                return false;
+            }
+            if (!def.isValid(option.value())) {
+                errorReporter.accept("Invalid config '" + option + "'");
+                return false;
+            }
+        }
+
         return true;
     }
+
 }

@@ -2,13 +2,13 @@ package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
-import uk.autores.processors.internal.CharSeq;
-import uk.autores.processors.internal.Errors;
-import uk.autores.processors.internal.OptionValidation;
 import uk.autores.processing.*;
+import uk.autores.processors.internal.Compare;
+import uk.autores.processors.internal.Errors;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -21,13 +21,15 @@ import javax.tools.FileObject;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
+import static uk.autores.processors.internal.Compare.nullOrEmpty;
+import static uk.autores.processors.internal.Compare.sameSeq;
 
 /**
  * Processes classpath resource files and passes them to {@link Handler#handle(Context)}.
@@ -36,13 +38,15 @@ import static java.util.stream.Collectors.toSet;
 public final class ResourceFilesProcessor extends AbstractProcessor {
 
   /**
-   * {@link SourceVersion#RELEASE_11}.
+   * Returns {@link ProcessingEnvironment#getSourceVersion()} or
+   * the minimum {@link SourceVersion#RELEASE_11}.
    *
-   * @return RELEASE_11
+   * @return current source version
    */
   @Override
   public SourceVersion getSupportedSourceVersion() {
-    return SourceVersion.RELEASE_11;
+    SourceVersion sv = processingEnv.getSourceVersion();
+    return Compare.max(SourceVersion.RELEASE_11, sv);
   }
 
   /**
@@ -77,10 +81,10 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
         consumed = true;
 
         Name name = annotation.getQualifiedName();
-        if (CharSeq.equivalent(ResourceFiles.class.getName(), name)) {
+        if (sameSeq(ResourceFiles.class.getName(), name)) {
           ResourceFiles cpr = annotated.getAnnotation(ResourceFiles.class);
           process(cpr, annotated);
-        } else if (CharSeq.equivalent(ResourceFilesRepeater.class.getName(), name)) {
+        } else if (sameSeq(ResourceFilesRepeater.class.getName(), name)) {
           ResourceFilesRepeater cprs = annotated.getAnnotation(ResourceFilesRepeater.class);
           for (ResourceFiles cpr : cprs.value()) {
             process(cpr, annotated);
@@ -104,7 +108,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       return;
     }
 
-    if (!OptionValidation.areValid(handler, context)) {
+    if (!handler.validConfig(context.config(), context::printError)) {
       return;
     }
 
@@ -125,11 +129,11 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       Filer filer = processingEnv.getFiler();
 
       for (String resource : cpr.value()) {
-        if (CharSeq.nullOrEmpty(resource)) {
+        if (nullOrEmpty(resource)) {
           String msg = "Resource paths cannot be null or empty";
           processingEnv.getMessager()
                   .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-          continue;
+          return emptyList();
         }
 
         pkg = ResourceFiling.pkg(annotationPackage, resource);
@@ -146,7 +150,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
       String msg = Errors.resourceErrorMessage(e, value, pkg);
       processingEnv.getMessager()
               .printMessage(Diagnostic.Kind.ERROR, msg, annotated);
-      return Collections.emptyList();
+      return emptyList();
     }
 
     return resources;

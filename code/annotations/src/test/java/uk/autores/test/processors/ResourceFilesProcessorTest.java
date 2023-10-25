@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
 import uk.autores.processors.ResourceFilesProcessor;
+import uk.autores.test.env.TestProcessingEnvironment;
 
 import javax.lang.model.SourceVersion;
 import java.io.IOException;
@@ -29,6 +30,7 @@ class ResourceFilesProcessorTest {
 
   @Test
   void metadata() {
+    processor.init(new TestProcessingEnvironment());
     assertEquals(SourceVersion.RELEASE_11, processor.getSupportedSourceVersion());
     Set<String> expected = Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
             .map(Class::getName)
@@ -106,6 +108,21 @@ class ResourceFilesProcessorTest {
   @Test
   void throwingHandlerFailsCompilation() throws IOException {
     TestSources.Source src = TestSources.load(this, "ThrowingHandlerTest.java");
+    try {
+      Reflect.compile(
+              src.className,
+              src.sourceCode,
+              new CompileOptions().processors(processor)
+      ).create().get();
+      fail();
+    } catch (ReflectException e) {
+      assertTrue(processor.invoked);
+    }
+  }
+
+  @Test
+  void emptyResourceFailsCompilation() throws IOException {
+    TestSources.Source src = TestSources.load(this, "EmptyResource.java");
     try {
       Reflect.compile(
               src.className,

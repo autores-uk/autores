@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * <p>
  *     {@link Handler} that, for each resource, generates a class with a name derived from the resource name
- *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}.
  *     The class will have a static method called <code>bytes</code> that returns the resource
  *     as a new byte array.
  * </p>
@@ -66,13 +66,17 @@ public final class GenerateByteArraysFromFiles implements Handler {
      *     <li>"lazy": files are loaded using using the {@link ClassLoader}</li>
      * </ul>
      *
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
+     *
      * @return visibility strategy
      * @see Visibility
      * @see Strategy
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Strategy.DEF);
+        return Sets.of(Visibility.DEF, Strategy.DEF);
     }
 
     @Override
@@ -89,10 +93,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
         for (Resource entry : resources) {
             String resource = entry.toString();
             String simple = namer.simplifyResourceName(resource);
-            String className = namer.nameClass(simple);
+            String className = namer.nameType(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
-            if (!Namer.isJavaIdentifier(className)) {
+            if (!Namer.isIdentifier(className)) {
                 String msg = "Cannot transform resource name '" + resource + "' to class name";
                 context.printError(msg);
                 continue;

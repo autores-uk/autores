@@ -79,7 +79,7 @@ public @interface ResourceFiles {
      *
      * @return configured options
      * @see Handler#config()
-     * @see ConfigDefs
+     * @see Sets
      */
     Cfg[] config() default {};
 
@@ -87,9 +87,7 @@ public @interface ResourceFiles {
      * Configuration option.
      *
      * @see Handler#config()
-     * @see Handler#validateConfig()
      * @see ConfigDef
-     * @see ConfigDefs
      */
     @interface Cfg {
         /**

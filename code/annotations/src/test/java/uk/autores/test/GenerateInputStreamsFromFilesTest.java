@@ -58,7 +58,7 @@ class GenerateInputStreamsFromFilesTest {
 
         Map<String, String> results = new HashMap<>();
 
-        String className = context.namer().nameClass("foo");
+        String className = context.namer().nameType("foo");
 
         String qname = pkg.qualifiedClassName(className);
         TestFileObject file = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT).get(qname);

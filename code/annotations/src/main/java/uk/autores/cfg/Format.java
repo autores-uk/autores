@@ -18,9 +18,7 @@ public final class Format {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(FORMAT,
-            s -> s.matches("true|false"),
-            "Enables formatting. Valid values: \"true\"; \"false\".");
+    public static final ConfigDef DEF = new ConfigDef(FORMAT, s -> s.matches("true|false"));
 
     private Format() {}
 }
