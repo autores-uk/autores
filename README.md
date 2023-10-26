@@ -25,9 +25,9 @@ Pull requests will NOT be accepted.
 ## Branches
 
  - dev8: Primary development branch targeting Java 8
- - dev11: Java 11 fork with module support
- - release/*: released versions
+ - dev11: Java 11 fork with native module support
  - main: Most recent release for Java 11
+ - release/*: released versions
 
 | Branch | CI                                                                                                       |
 | ------ | -------------------------------------------------------------------------------------------------------- |

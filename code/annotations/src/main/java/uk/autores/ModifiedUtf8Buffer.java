@@ -113,6 +113,12 @@ final class ModifiedUtf8Buffer implements CharSequence {
         return allocate(CONST_BYTE_LIMIT);
     }
 
+    /**
+     * In Java's modified UTF-8 scheme all chars are measured individually.
+     *
+     * @param ch candidate
+     * @return number of bytes for this char
+     */
     static int byteLen(char ch) {
         if (ch == '\u0000') {
             return 2;

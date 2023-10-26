@@ -37,7 +37,7 @@
 
     <p>
       Prior knowledge of how to package and deploy Java libraries and applications is assumed.
-      This library can affect compile time, jar sizes, and constant pools. Use judiciously.
+      This library can affect compile time, jar sizes, and constant pools.
     </p>
 
     <a id="usage" href="#usage">&#x1f517;</a>
@@ -87,7 +87,7 @@
 
     <p>Versions are split into three integers: Java version; major version; minor version.</p>
 
-    <p>Java 8 and above are supported.</p>
+    <p>Java 8 and Java 11 versions are published.</p>
 
     <a id="modules" href="#modules">&#x1f517;</a>
     <h3>Modules</h3>
@@ -96,6 +96,7 @@
       Use <code>requires static uk.autores</code> in 
       <a href="https://dev.java/learn/modules/">module-info.java</a> to depend on this library at compile time only.
       Add <code>requires static java.compiler</code> to avoid warnings about unknown type <code>StandardLocation</code>.
+      All versions of the library support modules.
     </p>
 
     <a id="maven" href="#maven">&#x1f517;</a>
@@ -120,8 +121,6 @@
       <a href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html">annotationProcessorPaths</a>
       to make the compiler aware of the annotation processor service.
     </p>
-
-    <p>Libraries that extend the API should use the default <code>compile</code> scope.</p>
 
   </body>
 </html>
