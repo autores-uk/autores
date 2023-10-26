@@ -86,7 +86,7 @@ public final class GenerateStringsFromText implements Handler {
         String encoding = context.option(Encoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
-        Utf8Buffer buf = Utf8Buffer.size(CONST_BYTE_LIMIT);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(CONST_BYTE_LIMIT);
 
         Assistants assistants = new Assistants(decoder, buf);
 
@@ -148,7 +148,7 @@ public final class GenerateStringsFromText implements Handler {
         }
 
         String len = Ints.toString((int) stats.utf16Size);
-        Utf8Buffer buf = assistants.buffer;
+        ModifiedUtf8Buffer buf = assistants.buffer;
 
         writeMethodDeclaration(writer);
 
@@ -248,7 +248,7 @@ public final class GenerateStringsFromText implements Handler {
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
     }
 
-    private Stats stats(Resource resource, Utf8Buffer buf, CharsetDecoder decoder) throws IOException {
+    private Stats stats(Resource resource, ModifiedUtf8Buffer buf, CharsetDecoder decoder) throws IOException {
         long utf16Size = 0L;
         long utf8Size = 0L;
         try (InputStream in = resource.open();
@@ -282,9 +282,9 @@ public final class GenerateStringsFromText implements Handler {
 
     private static final class Assistants {
         private final CharsetDecoder decoder;
-        private final Utf8Buffer buffer;
+        private final ModifiedUtf8Buffer buffer;
 
-        private Assistants(CharsetDecoder decoder, Utf8Buffer buffer) {
+        private Assistants(CharsetDecoder decoder, ModifiedUtf8Buffer buffer) {
             this.decoder = decoder;
             this.buffer = buffer;
         }

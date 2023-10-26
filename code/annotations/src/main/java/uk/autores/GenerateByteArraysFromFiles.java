@@ -39,7 +39,6 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">u4 code_length</a>
      * in the Code attribute.
      * </p>
-     *
      * <p>
      * Setting a value in the byte array while steering clear of the constant pool might look like this:
      * <pre>
@@ -150,6 +149,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
+        // TODO: encoding scheme that uses string constants/takes transcoding into account
+
         writer.nl();
         writer.indent()
                 .append("private static int fill")
