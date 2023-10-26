@@ -20,7 +20,7 @@ final class MessageParser {
             return Collections.emptyList();
         }
 
-        List<VarType> list = new ArrayList<>();
+        List<VarType> list = new ArrayList<>(formats.length);
         for (Format format : mf.getFormatsByArgumentIndex()) {
             if (format == null) {
                 list.add(VarType.STRING);
@@ -37,11 +37,16 @@ final class MessageParser {
     }
 
     static boolean needsLocale(List<VarType> vars) {
-        return vars.stream().anyMatch(v -> v == VarType.NUMBER || v == VarType.DATE);
+        for (VarType vt : vars) {
+            if (vt == VarType.NUMBER || vt == VarType.DATE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static boolean needsTimeZone(List<VarType> vars) {
-        return vars.stream().anyMatch(VarType.DATE::equals);
+        return vars.contains(VarType.DATE);
     }
 
     enum VarType {

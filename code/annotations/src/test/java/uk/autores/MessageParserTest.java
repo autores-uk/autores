@@ -1,9 +1,13 @@
 package uk.autores;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MessageParserTest {
@@ -49,5 +53,21 @@ class MessageParserTest {
         assertEquals(MessageParser.VarType.NUMBER, actual.get(0));
         assertEquals(MessageParser.VarType.DATE, actual.get(1));
         assertEquals(MessageParser.VarType.STRING, actual.get(2));
+    }
+
+    @Test
+    void detectsNeedsLocale() {
+        assertTrue(MessageParser.needsLocale(singletonList(MessageParser.VarType.DATE)));
+        assertTrue(MessageParser.needsLocale(singletonList(MessageParser.VarType.NUMBER)));
+        assertFalse(MessageParser.needsLocale(singletonList(MessageParser.VarType.STRING)));
+        assertFalse(MessageParser.needsLocale(emptyList()));
+    }
+
+    @Test
+    void detectsNeedsTimeZone() {
+        assertTrue(MessageParser.needsTimeZone(singletonList(MessageParser.VarType.DATE)));
+        assertFalse(MessageParser.needsTimeZone(singletonList(MessageParser.VarType.NUMBER)));
+        assertFalse(MessageParser.needsTimeZone(singletonList(MessageParser.VarType.STRING)));
+        assertFalse(MessageParser.needsTimeZone(emptyList()));
     }
 }
