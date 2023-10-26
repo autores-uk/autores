@@ -44,12 +44,6 @@ import java.util.Set;
 public final class GenerateStringsFromText implements Handler {
 
     /**
-     * String literals must fit into the constant pool encoded as UTF-8.
-     * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">u4 code_length</a>.
-     */
-    private static final int CONST_BYTE_LIMIT = 65535;
-
-    /**
      * <p>All configuration is optional.</p>
      * Strategy:
      * <ul>
@@ -86,7 +80,7 @@ public final class GenerateStringsFromText implements Handler {
         String encoding = context.option(Encoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(CONST_BYTE_LIMIT);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate();
 
         Assistants assistants = new Assistants(decoder, buf);
 
@@ -134,7 +128,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private static void writeAuto(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size > CONST_BYTE_LIMIT) {
+        if (stats.utf8Size > ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
             writeLazyLoad(assistants, stats, writer);
         } else {
             writeInLine(assistants, stats, writer);
@@ -142,7 +136,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private static void writeInLine(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size < CONST_BYTE_LIMIT) {
+        if (stats.utf8Size < ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
             writeSimpleInline(assistants, stats, writer);
             return;
         }

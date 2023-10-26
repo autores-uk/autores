@@ -5,9 +5,16 @@ import java.io.Reader;
 
 /**
  * <code>char</code> buffer that ensures it does not exceed a certain size when encoded as Modified UTF-8.
+ * This specialized buffer is for generating string constants in classes.
  * https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7
  */
 final class ModifiedUtf8Buffer implements CharSequence {
+
+    /**
+     * String literals must fit into the constant pool encoded as UTF-8.
+     * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">u4 code_length</a>.
+     */
+    static final int CONST_BYTE_LIMIT = 0xFFFF;
 
     private final char[] cbuf;
     private int length = 0;
@@ -96,10 +103,14 @@ final class ModifiedUtf8Buffer implements CharSequence {
      * @param maxUtf8Length must be at least three bytes
      * @return the buffer
      */
-    static ModifiedUtf8Buffer size(int maxUtf8Length) {
+    static ModifiedUtf8Buffer allocate(int maxUtf8Length) {
         assert maxUtf8Length >= 3;
 
         return new ModifiedUtf8Buffer(maxUtf8Length);
+    }
+
+    static ModifiedUtf8Buffer allocate() {
+        return allocate(CONST_BYTE_LIMIT);
     }
 
     static int byteLen(char ch) {

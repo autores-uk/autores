@@ -24,7 +24,7 @@ class ModifiedUtf8BufferTest {
         Reader reader = new StringReader(src);
 
         int maxUtf8Len = 3;
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(maxUtf8Len);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(maxUtf8Len);
 
         while(buf.receive(reader)) {
             int utfLen = modifiedUtfLen(buf.toString());
@@ -34,7 +34,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void canCreateReadData() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(1024);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
 
         boolean received = buf.receive(new StringReader("123"));
         assertTrue(received);
@@ -50,7 +50,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void canCreateSubsequence() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(1024);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
 
         assertEquals("", buf.toString());
         assertEquals("", buf.subSequence(0, 0));
@@ -63,7 +63,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void checksBounds() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.size(1024);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
         buf.receive(new StringReader("123"));
 
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> buf.charAt(100));
