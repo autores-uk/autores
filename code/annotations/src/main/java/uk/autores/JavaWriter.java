@@ -104,7 +104,7 @@ final class JavaWriter extends Writer {
     }
 
     public JavaWriter comment(String comment) throws IOException {
-        return this.append("  /** ").string(comment).append(" */").append(NL);
+        return this.indent().append("/** ").string(comment).append(" */").append(NL);
     }
 
     public JavaWriter openBrace() throws IOException {
