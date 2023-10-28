@@ -50,6 +50,7 @@ public final class GenerateStringsFromText implements Handler {
      *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
      *     "lazy" otherwise</li>
      *     <li>"inline": files become {@link String} literals</li>
+     *     <li>"encode": alias for "inline"</li>
      *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
      * </ul>
      * <p>
@@ -118,12 +119,10 @@ public final class GenerateStringsFromText implements Handler {
     private ClassGenerator strategy(Context context) {
         String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
-            case "lazy":
-                return GenerateStringsFromText::writeLazyLoad;
-            case "inline":
-                return GenerateStringsFromText::writeInLine;
-            default:
-                return GenerateStringsFromText::writeAuto;
+            case Strategy.LAZY: return GenerateStringsFromText::writeLazyLoad;
+            case Strategy.INLINE:
+            case Strategy.ENCODE: return GenerateStringsFromText::writeInLine;
+            default: return GenerateStringsFromText::writeAuto;
         }
     }
 
