@@ -12,7 +12,7 @@ class StrategyTest {
     @Test
     void validates() {
         ConfigDef def = Strategy.DEF;
-        for (String enc : asList(Strategy.AUTO, Strategy.INLINE, Strategy.LAZY)) {
+        for (String enc : asList(Strategy.AUTO, Strategy.INLINE, Strategy.LAZY, Strategy.ENCODE)) {
             assertTrue(def.isValid(enc));
         }
         assertFalse(def.isValid("foobar"));
