@@ -38,8 +38,8 @@ final class JavaWriter extends Writer {
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
         }
-        w.append(visibility).append("final class ").append(className).append(" {").append(NL);
-        w.append("\n  private ").append(className).append("() {}").append(NL);
+        w.append(visibility).append("final class ").append(className).append(" {").append(NL).append(NL);
+        w.append("  private ").append(className).append("() {}").append(NL);
     }
 
     @Override
