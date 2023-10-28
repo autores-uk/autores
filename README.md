@@ -40,3 +40,7 @@ Pull requests will NOT be accepted.
 [Bytecode, source code, and javadoc](https://s01.oss.sonatype.org/content/repositories/releases/uk/autores/annotations/)
  are published to the
 [Maven central repository](https://central.sonatype.com/artifact/uk.autores/annotations).
+
+## Tests
+
+See [autores-integration](https://github.com/autores-uk/autores-integration) for additional examples.
