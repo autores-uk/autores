@@ -5,8 +5,8 @@ import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 import uk.autores.internal.Ints;
 import uk.autores.internal.JavaWriter;
+import uk.autores.internal.ModifiedUtf8Buffer;
 import uk.autores.internal.UnicodeEscapeWriter;
-import uk.autores.internal.Utf8Buffer;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -48,18 +48,13 @@ import java.util.Set;
 public final class GenerateStringsFromText implements Handler {
 
     /**
-     * String literals must fit into the constant pool encoded as UTF-8.
-     * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">u4 code_length</a>.
-     */
-    private static final int CONST_BYTE_LIMIT = 65535;
-
-    /**
      * <p>All configuration is optional.</p>
      * Strategy:
      * <ul>
      *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
      *     "lazy" otherwise</li>
      *     <li>"inline": files become {@link String} literals</li>
+     *     <li>"encode": alias for "inline"</li>
      *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
      * </ul>
      * <p>
@@ -90,7 +85,7 @@ public final class GenerateStringsFromText implements Handler {
         String encoding = context.option(Encoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
-        Utf8Buffer buf = Utf8Buffer.size(CONST_BYTE_LIMIT);
+        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate();
 
         Assistants assistants = new Assistants(decoder, buf);
 
@@ -128,17 +123,15 @@ public final class GenerateStringsFromText implements Handler {
     private ClassGenerator strategy(Context context) {
         String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
-            case "lazy":
-                return GenerateStringsFromText::writeLazyLoad;
-            case "inline":
-                return GenerateStringsFromText::writeInLine;
-            default:
-                return GenerateStringsFromText::writeAuto;
+            case Strategy.LAZY: return GenerateStringsFromText::writeLazyLoad;
+            case Strategy.INLINE:
+            case Strategy.ENCODE: return GenerateStringsFromText::writeInLine;
+            default: return GenerateStringsFromText::writeAuto;
         }
     }
 
     private static void writeAuto(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size > CONST_BYTE_LIMIT) {
+        if (stats.utf8Size > ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
             writeLazyLoad(assistants, stats, writer);
         } else {
             writeInLine(assistants, stats, writer);
@@ -146,13 +139,13 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private static void writeInLine(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size < CONST_BYTE_LIMIT) {
+        if (stats.utf8Size < ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
             writeSimpleInline(assistants, stats, writer);
             return;
         }
 
         String len = Ints.toString((int) stats.utf16Size);
-        Utf8Buffer buf = assistants.buffer;
+        ModifiedUtf8Buffer buf = assistants.buffer;
 
         writeMethodDeclaration(writer);
 
@@ -252,7 +245,7 @@ public final class GenerateStringsFromText implements Handler {
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
     }
 
-    private Stats stats(Resource resource, Utf8Buffer buf, CharsetDecoder decoder) throws IOException {
+    private Stats stats(Resource resource, ModifiedUtf8Buffer buf, CharsetDecoder decoder) throws IOException {
         long utf16Size = 0L;
         long utf8Size = 0L;
         try (InputStream in = resource.open();
@@ -286,9 +279,9 @@ public final class GenerateStringsFromText implements Handler {
 
     private static final class Assistants {
         private final CharsetDecoder decoder;
-        private final Utf8Buffer buffer;
+        private final ModifiedUtf8Buffer buffer;
 
-        private Assistants(CharsetDecoder decoder, Utf8Buffer buffer) {
+        private Assistants(CharsetDecoder decoder, ModifiedUtf8Buffer buffer) {
             this.decoder = decoder;
             this.buffer = buffer;
         }

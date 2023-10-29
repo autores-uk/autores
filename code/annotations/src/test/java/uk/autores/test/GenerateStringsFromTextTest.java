@@ -12,10 +12,10 @@ import uk.autores.test.env.*;
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +31,7 @@ class GenerateStringsFromTextTest {
 
     @Test
     void handle() throws Exception {
-        for (String strat : Arrays.asList("auto", "inline", "lazy")) {
+        for (String strat : asList(Strategy.AUTO, Strategy.INLINE, Strategy.LAZY, Strategy.ENCODE)) {
             TestProcessingEnvironment env = new TestProcessingEnvironment();
 
             Config config = new Config(Strategy.STRATEGY, strat);

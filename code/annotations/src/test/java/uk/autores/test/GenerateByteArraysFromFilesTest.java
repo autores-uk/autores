@@ -15,8 +15,12 @@ import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +38,7 @@ class GenerateByteArraysFromFilesTest {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
 
-        for (String strat : Arrays.asList("auto", "inline", "lazy")) {
+        for (String strat : asList(Strategy.AUTO, Strategy.INLINE, Strategy.LAZY, Strategy.ENCODE)) {
             List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strat));
             Map<String, String> generated = generate(env, files, cfg);
             assertFalse(generated.isEmpty());

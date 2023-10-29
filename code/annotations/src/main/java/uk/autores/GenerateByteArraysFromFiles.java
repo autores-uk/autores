@@ -2,16 +2,12 @@ package uk.autores;
 
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.internal.Ints;
-import uk.autores.internal.JavaWriter;
-import uk.autores.internal.UnicodeEscapeWriter;
+import uk.autores.internal.*;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +38,6 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">u4 code_length</a>
      * in the Code attribute.
      * </p>
-     *
      * <p>
      * Setting a value in the byte array while steering clear of the constant pool might look like this:
      * <pre>
@@ -61,9 +56,15 @@ public final class GenerateByteArraysFromFiles implements Handler {
      *
      * Strategy:
      * <ul>
-     *     <li>"auto": "inline" for files up to 1kB; "lazy" otherwise</li>
+     *     <li>
+     *         "auto":
+     *         "inline" for files up to 128 bytes;
+     *         "encode" for files up to 65535 bytes;
+     *         "lazy" otherwise
+     *     </li>
      *     <li>"inline": files become bytecode instructions</li>
-     *     <li>"lazy": files are loaded using using the {@link ClassLoader}</li>
+     *     <li>"encode": files are encoded in string literals in the class constant pool</li>
+     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)}</li>
      * </ul>
      *
      * <p>
@@ -121,17 +122,20 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private ClassGenerator generatorStrategy(Context context) {
         String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
-            case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
-            case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;
+            case Strategy.ENCODE: return GenerateByteArraysFromFiles::writeStringMethods;
+            case Strategy.INLINE: return GenerateByteArraysFromFiles::writeInlineMethods;
+            case Strategy.LAZY: return GenerateByteArraysFromFiles::writeLazyLoad;
             default: return GenerateByteArraysFromFiles::writeAuto;
         }
     }
 
     private static void writeAuto(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
-        if (stats.size > 1024) {
-            writeLazyLoad(writer, buf, stats);
-        } else {
+        if (stats.size <= 128) {
             writeInlineMethods(writer, buf, stats);
+        } else if (stats.size <= 0xFFFF) {
+            writeStringMethods(writer, buf, stats);
+        } else {
+            writeLazyLoad(writer, buf, stats);
         }
     }
 
@@ -153,6 +157,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
+        // TODO: encoding scheme that uses string constants/takes transcoding into account
+
         writer.nl();
         writer.indent()
                 .append("private static int fill")
@@ -221,6 +227,44 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private static void writeStringMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+        writeSignature(writer);
+
+        ModifiedUtf8Buffer buf8 = ModifiedUtf8Buffer.allocate();
+
+        int size = (int) stats.size;
+        writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
+        writer.indent().append("int off = 0;").nl();
+
+        ByteHackReader odd;
+        try (InputStream in = stats.resource.open();
+             ByteHackReader bhr = new ByteHackReader(in);
+             Reader br = new BufferedReader(bhr, 0xFFFF)) {
+            odd = bhr;
+            while (buf8.receive(br)) {
+                writer.indent().append("off = decode(").string(buf8).append(", barr, off);").nl();
+            }
+        }
+
+        if (odd.lastByteOdd()) {
+            String lastIndex = Ints.toString(size - 1);
+            String oddByte = Ints.toString(odd.getOddByte());
+            writer.indent().append("barr[").append(lastIndex).append("] = ").append(oddByte).append(";").nl();
+        }
+
+        writeReturn(writer);
+
+        writer.indent().append("private static int decode(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
+        writer.indent().append("for (int i = 0, len = s.length(); i < len; i++) ").openBrace().nl();
+        writer.indent().append("char c = s.charAt(i);").nl();
+        writer.indent().append("barr[off++] = (byte) (c >> 8);").nl();
+        writer.indent().append("barr[off++] = (byte) c;").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return off;").nl();
+        writer.closeBrace().nl();
+    }
+
     private static void writeSignature(JavaWriter writer) throws IOException {
         writer.nl();
         writer.indent().staticMember("byte[]", "bytes").append("() ").openBrace().nl();
@@ -228,7 +272,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     private static void writeReturn(JavaWriter writer) throws IOException {
         writer.indent().append("return barr;").nl();
-        writer.closeBrace().nl();
+        writer.closeBrace().nl().nl();
     }
 
     private static FileStats stats(byte[] buf, Resource resource) throws IOException {

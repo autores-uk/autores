@@ -37,8 +37,8 @@ public final class JavaWriter extends Writer {
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
         }
-        w.append(visibility).append("final class ").append(className).append(" {").append(NL);
-        w.append("\n  private ").append(className).append("() {}").append(NL);
+        w.append(visibility).append("final class ").append(className).append(" {").append(NL).append(NL);
+        w.append("  private ").append(className).append("() {}").append(NL);
     }
 
     @Override
@@ -103,7 +103,7 @@ public final class JavaWriter extends Writer {
     }
 
     public JavaWriter comment(String comment) throws IOException {
-        return this.append("  /** ").string(comment).append(" */").append(NL);
+        return this.indent().append("/** ").string(comment).append(" */").append(NL);
     }
 
     public JavaWriter openBrace() throws IOException {

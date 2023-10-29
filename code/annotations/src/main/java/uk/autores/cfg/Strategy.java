@@ -23,13 +23,17 @@ public final class Strategy {
     public static final String INLINE = "inline";
     /** Value */
     public static final String LAZY = "lazy";
+    /** Value */
+    public static final String ENCODE = "encode";
 
     /**
      * Config definition.
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(STRATEGY, s -> s.matches("auto|inline|lazy"));
+    public static final ConfigDef DEF = new ConfigDef(STRATEGY, s -> s.matches(
+            AUTO + '|' + INLINE + '|' + LAZY + '|' + ENCODE
+    ));
 
     private Strategy() {}
 }

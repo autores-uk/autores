@@ -74,6 +74,6 @@ public final class GenerateInputStreamsFromFiles implements Handler {
         writer.nl();
         writer.indent().staticMember("java.io.InputStream", method).append("() throws java.io.IOException ").openBrace().nl();
         writer.indent().append("return ").openResource(resource.toString()).append(";").nl();
-        writer.closeBrace();
+        writer.closeBrace().nl();
     }
 }
