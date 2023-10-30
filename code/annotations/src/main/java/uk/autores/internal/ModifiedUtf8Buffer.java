@@ -13,8 +13,8 @@ public final class ModifiedUtf8Buffer implements CharSequence {
     /**
      * String literals must fit into the constant pool encoded as UTF-8.
      * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">u4 code_length</a>.
+     * String literals of exactly 0xFFFF length fail as too long on some compilers.
      */
-    // TODO: look at this limit again 0xFFFF failed under JDK11; worked under JDK8
     public static final int CONST_BYTE_LIMIT = 0xFFFF - 1;
 
     private final char[] cbuf;

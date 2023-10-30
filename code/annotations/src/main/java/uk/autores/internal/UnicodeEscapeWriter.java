@@ -7,6 +7,9 @@ import java.util.Objects;
 /** Writes non-ASCII chars as Unicode escape sequences. */
 public final class UnicodeEscapeWriter extends Writer {
 
+    private static final char[] HEX = "0123456789abcdef".toCharArray();
+    private final char[] formatBuffer = "\\u0000".toCharArray();
+
     private final Writer w;
     private final StringBuilder b = new StringBuilder();
     boolean closed = false;
@@ -41,8 +44,8 @@ public final class UnicodeEscapeWriter extends Writer {
             throw new IOException("Stream closed");
         }
 
-        if (c > 127) {
-            b.append(String.format("\\u%04x", (int) c));
+        if (escape(c)) {
+            b.append(format(c));
         } else {
             b.append(c);
         }
@@ -50,6 +53,27 @@ public final class UnicodeEscapeWriter extends Writer {
         if (b.length() >= 64 * 1024) {
             flushBuffer();
         }
+    }
+
+    private boolean escape(char ch) {
+        if (ch > '~') {
+            // Outside ASCII range except DEL which will be escaped
+            return true;
+        }
+        if (ch >= ' ') {
+            // Visible ASCII
+            return false;
+        }
+        // Allow select control characters as visible whitespace
+        return ch != '\n' && ch != '\r' && ch != '\t';
+    }
+
+    private char[] format(char c) {
+        formatBuffer[5] = HEX[c & 0xF];
+        formatBuffer[4] = HEX[(c >>> 4) & 0xF];
+        formatBuffer[3] = HEX[(c >>> 8) & 0xF];
+        formatBuffer[2] = HEX[(c >>> 12) & 0xF];
+        return formatBuffer;
     }
 
     private void flushBuffer() throws IOException {
