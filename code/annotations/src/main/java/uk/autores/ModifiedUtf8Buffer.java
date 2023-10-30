@@ -5,7 +5,7 @@ import java.io.Reader;
 
 /**
  * <code>char</code> buffer that ensures it does not exceed a certain size when encoded as Modified UTF-8.
- * This specialized buffer is for generating string constants in classes.
+ * This specialized buffer is for generating string literals in classes.
  * https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7
  */
 final class ModifiedUtf8Buffer implements CharSequence {
