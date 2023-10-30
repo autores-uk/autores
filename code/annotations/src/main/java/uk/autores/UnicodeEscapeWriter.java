@@ -41,7 +41,7 @@ final class UnicodeEscapeWriter extends Writer {
             throw new IOException("Stream closed");
         }
 
-        if (c > 127) {
+        if (escaped(c)) {
             b.append(String.format("\\u%04x", (int) c));
         } else {
             b.append(c);
@@ -50,6 +50,16 @@ final class UnicodeEscapeWriter extends Writer {
         if (b.length() >= 64 * 1024) {
             flushBuffer();
         }
+    }
+
+    private boolean escaped(char ch) {
+        if (ch > '~') {
+            return true;
+        }
+        if (ch >= ' ') {
+            return false;
+        }
+        return ch != '\n' && ch != '\r' && ch != '\t';
     }
 
     private void flushBuffer() throws IOException {
