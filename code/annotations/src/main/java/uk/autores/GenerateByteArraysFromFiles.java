@@ -50,6 +50,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
      */
     private static final int MAX_BYTES_PER_METHOD = 65535 / 8;
 
+    private static byte[] inlineBuffer() {
+        return new byte[MAX_BYTES_PER_METHOD];
+    }
+
     /**
      * <p>All configuration is optional.</p>
      *
@@ -88,7 +92,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         ClassGenerator generator = generatorStrategy(context);
 
-        byte[] buf = new byte[MAX_BYTES_PER_METHOD];
+        StateTracker<Key> st = StateTracker.of(Key.class);
+        st.getOrSet(Key.BUFFER, GenerateByteArraysFromFiles::inlineBuffer);
 
         for (Resource entry : resources) {
             String resource = entry.toString();
@@ -102,7 +107,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 continue;
             }
 
-            FileStats stats = stats(buf, entry);
+            FileStats stats = stats(st, entry);
             if (stats.size > Integer.MAX_VALUE) {
                 String err = "Resource " + resource + " too big for byte array; max size is " + Integer.MAX_VALUE;
                 context.printError(err);
@@ -113,7 +118,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, resource)) {
-                generator.generate(writer, buf, stats);
+                generator.generate(st, writer, stats);
             }
         }
     }
@@ -128,17 +133,18 @@ public final class GenerateByteArraysFromFiles implements Handler {
         }
     }
 
-    private static void writeAuto(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeAuto(StateTracker<Key> st, JavaWriter writer, FileStats stats) throws IOException {
         if (stats.size <= 128) {
-            writeInlineMethods(writer, buf, stats);
+            writeInlineMethods(st, writer, stats);
         } else if (stats.size <= 0xFFFF) {
-            writeStringMethods(writer, buf, stats);
+            writeStringMethods(st, writer, stats);
         } else {
-            writeLazyLoad(writer, buf, stats);
+            writeLazyLoad(st, writer, stats);
         }
     }
 
-    private static void writeInlineMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeInlineMethods(StateTracker<Key> st, JavaWriter writer, FileStats stats) throws IOException {
+        byte[] buf = st.getOrSet(Key.BUFFER, GenerateByteArraysFromFiles::inlineBuffer);
         int methodCount = 0;
 
         try (InputStream in = stats.resource.open()) {
@@ -156,7 +162,6 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
-
         writer.nl();
         writer.indent()
                 .append("private static int fill")
@@ -203,8 +208,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeLazyLoad(StateTracker<Key> st, JavaWriter writer, FileStats stats) throws IOException {
+        st.getOrSet(Key.NEEDS_LOAD_METHOD, () -> true);
+
         writeSignature(writer);
 
         // TODO: avoid writing this logic for every resource
@@ -225,8 +231,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private static void writeStringMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeStringMethods(StateTracker<Key> st, JavaWriter writer, FileStats stats) throws IOException {
+        st.getOrSet(Key.NEEDS_DECODE_METHOD, () -> true);
+
         writeSignature(writer);
 
         ModifiedUtf8Buffer buf8 = ModifiedUtf8Buffer.allocate();
@@ -253,6 +260,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         writeReturn(writer);
 
+        // TODO: avoid writing this logic for every resource
         writer.indent().append("private static int decode(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
         writer.indent().append("for (int i = 0, len = s.length(); i < len; i++) ").openBrace().nl();
         writer.indent().append("char c = s.charAt(i);").nl();
@@ -273,7 +281,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.closeBrace().nl().nl();
     }
 
-    private static FileStats stats(byte[] buf, Resource resource) throws IOException {
+    private static FileStats stats(StateTracker<Key> st, Resource resource) throws IOException {
+        byte[] buf = st.getOrSet(Key.BUFFER, GenerateByteArraysFromFiles::inlineBuffer);
         long size = 0;
         try (InputStream in = resource.open()) {
             while(true) {
@@ -302,6 +311,12 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     @FunctionalInterface
     private interface ClassGenerator {
-        void generate(JavaWriter writer, byte[] buf, FileStats stats) throws IOException;
+        void generate(StateTracker<Key> st, JavaWriter writer, FileStats stats) throws IOException;
+    }
+
+    private enum Key {
+        BUFFER,
+        NEEDS_LOAD_METHOD,
+        NEEDS_DECODE_METHOD,
     }
 }
