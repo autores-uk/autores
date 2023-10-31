@@ -3,11 +3,11 @@ package uk.autores;
 import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.Visibility;
-import uk.autores.env.ResourceSets;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
 import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.*;
+import uk.autores.testing.ResourceSets;
 
 import javax.tools.StandardLocation;
 import java.nio.charset.StandardCharsets;

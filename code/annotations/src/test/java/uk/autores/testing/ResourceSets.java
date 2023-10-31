@@ -1,5 +1,8 @@
-package uk.autores.env;
+package uk.autores.testing;
 
+import uk.autores.env.TestFileObject;
+import uk.autores.env.TestInfiniteFileObject;
+import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.Resource;
 
 import javax.tools.StandardLocation;

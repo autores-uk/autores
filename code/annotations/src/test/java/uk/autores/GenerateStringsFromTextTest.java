@@ -5,8 +5,12 @@ import org.junit.jupiter.api.Test;
 import uk.autores.cfg.Encoding;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.env.*;
+import uk.autores.env.TestElement;
+import uk.autores.env.TestFileObject;
+import uk.autores.env.TestInfiniteFileObject;
+import uk.autores.env.TestProcessingEnvironment;
 import uk.autores.processing.*;
+import uk.autores.testing.ResourceSets;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
