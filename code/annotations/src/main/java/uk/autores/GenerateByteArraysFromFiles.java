@@ -156,7 +156,6 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
-        // TODO: encoding scheme that uses string constants/takes transcoding into account
 
         writer.nl();
         writer.indent()
