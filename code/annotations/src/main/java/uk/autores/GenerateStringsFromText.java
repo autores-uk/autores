@@ -164,9 +164,9 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append(decl).openBrace().nl();
         writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
         writer.indent().append("dest[off++] = src.charAt(i);").nl();
-        writer.closeBrace();
+        writer.closeBrace().nl();
         writer.indent().append("return off;").nl();
-        writer.closeBrace();
+        writer.closeBrace().nl();
     }
 
     private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
@@ -201,7 +201,6 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("throw new AssertionError(resource, e);").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
-
     }
 
     private static void writeAuto(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
