@@ -55,19 +55,19 @@
     </p>
 
     <pre><code>
-      import uk.autores.*;
+    import uk.autores.*;
 
-      @ResourceFiles(
-        value = {"Poule.txt", "Roses.txt"},
-        handler = GenerateStringsFromText.class
-      )
-      public class PrintRhymes {
+    @ResourceFiles(
+      value = {"Poule.txt", "Roses.txt"},
+      handler = GenerateStringsFromText.class
+    )
+    public class PrintRhymes {
 
-        public static void main(String...args)  {
-          System.out.println(Poule.text());
-          System.out.println(Roses.text());
-        }
+      public static void main(String...args)  {
+        System.out.println(Poule.text());
+        System.out.println(Roses.text());
       }
+    }
     </code></pre>
 
     <p>
@@ -88,7 +88,10 @@
 
     <p>Versions are split into three integers: Java version; major version; minor version.</p>
 
-    <p>Java 8 and Java 11 versions are published.</p>
+    <p>
+      Java 8 and Java 11 versions are published.
+      They are functionaly identical.
+    </p>
 
     <a id="modules" href="#modules">&#x1f517;</a>
     <h3>Modules</h3>
@@ -100,21 +103,29 @@
       All versions of the library support modules.
     </p>
 
+    <pre><code>
+    module example.module.name {
+      requires static uk.autores;
+      requires static java.compiler;
+    }
+    </code></pre>
+
     <a id="maven" href="#maven">&#x1f517;</a>
     <h3>Apache Maven</h3>
 
     <p>
-      <a href="https://maven.apache.org/">Apache Maven</a> end consumer projects should use the 
+      <a href="https://maven.apache.org/">Apache Maven</a> projects should use the 
       <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-scope">provided</a> scope.
     </p>
 
     <pre><code>
-      &lt;dependency>
-        &lt;groupId>uk.autores&lt;/groupId>
-        &lt;artifactId>annotations&lt;/artifactId>
-        &lt;version>${autores.version}&lt;/version>
-        &lt;scope>provided&lt;/scope>
-      &lt;/dependency>
+    &lt;!-- Maven 3 --&gt;
+    &lt;dependency>
+      &lt;groupId>uk.autores&lt;/groupId>
+      &lt;artifactId>annotations&lt;/artifactId>
+      &lt;version>${autores.version}&lt;/version>
+      &lt;scope>provided&lt;/scope>
+    &lt;/dependency>
     </code></pre>
 
     <p>
@@ -124,24 +135,43 @@
     </p>
 
     <pre><code>
-      &lt;build>
-        &lt;plugins>
-            &lt;plugin>
-                &lt;groupId>org.apache.maven.plugins&lt;/groupId>
-                &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
-                &lt;version>${maven.compiler.plugin.version}&lt;/version>
-                &lt;configuration>
-                    &lt;annotationProcessorPaths>
-                        &lt;path>
-                            &lt;groupId>uk.autores&lt;/groupId>
-                            &lt;artifactId>annotations&lt;/artifactId>
-                            &lt;version>${autores.version}&lt;/version>
-                        &lt;/path>
-                    &lt;/annotationProcessorPaths>
-                &lt;/configuration>
-            &lt;/plugin>
-        &lt;/plugins>
-      &lt;/build>
+    &lt;!-- Maven 3 --&gt;
+    &lt;build>
+      &lt;plugins>
+          &lt;plugin>
+              &lt;groupId>org.apache.maven.plugins&lt;/groupId>
+              &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
+              &lt;version>${maven.compiler.plugin.version}&lt;/version>
+              &lt;configuration>
+                  &lt;annotationProcessorPaths>
+                      &lt;path>
+                          &lt;groupId>uk.autores&lt;/groupId>
+                          &lt;artifactId>annotations&lt;/artifactId>
+                          &lt;version>${autores.version}&lt;/version>
+                      &lt;/path>
+                  &lt;/annotationProcessorPaths>
+              &lt;/configuration>
+          &lt;/plugin>
+      &lt;/plugins>
+    &lt;/build>
+    </code></pre>
+
+    <h3>Gradle</h3>
+
+    <p>
+      <a href="https://gradle.org/">Gradle</a> projects must add resource files to the classpath.
+      The library must be exposed to the annotation processor.
+    </p>
+
+    <pre><code>
+    // Gradle 8; Kotlin syntax
+    var autores = "uk.autores:annotations:" + autoresVersion
+
+    dependencies {
+      compileOnly(files("src/main/resources"))
+      compileOnly(autores)
+      annotationProcessor(autores)
+    }
     </code></pre>
 
   </body>
