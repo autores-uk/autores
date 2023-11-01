@@ -1,80 +1,64 @@
 package uk.autores;
 
-import org.joor.Reflect;
 import org.junit.jupiter.api.Test;
+import uk.autores.cfg.Name;
 import uk.autores.cfg.Visibility;
-import uk.autores.env.TestElement;
-import uk.autores.env.TestFileObject;
-import uk.autores.env.TestProcessingEnvironment;
-import uk.autores.processing.*;
-import uk.autores.testing.ResourceSets;
+import uk.autores.processing.Config;
+import uk.autores.processing.ConfigDef;
+import uk.autores.processing.Handler;
+import uk.autores.processing.Pkg;
+import uk.autores.testing.HandlerResults;
+import uk.autores.testing.HandlerTester;
 
-import javax.tools.StandardLocation;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GenerateInputStreamsFromFilesTest {
 
     private final Handler handler = new GenerateInputStreamsFromFiles();
 
+    private HandlerTester tester() {
+        return new HandlerTester(handler);
+    }
+
     @Test
     void checkConfigDefs() {
         Set<ConfigDef> supported = handler.config();
         assertTrue(supported.contains(Visibility.DEF));
+        assertTrue(supported.contains(Name.DEF));
     }
 
     @Test
-    void handle() throws Exception {
-        TestProcessingEnvironment env = new TestProcessingEnvironment();
-        List<Resource> files = ResourceSets.largeAndSmallTextFile(env, 1024);
-
-        List<Config> cfg = singletonList(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
-        Map<String, String> generated = generate(env, files, cfg);
-        assertEquals(1, generated.size());
+    void canGenerateSourcesFromFiles() throws Exception {
+        Pkg foo = new Pkg("foo");
+        HandlerResults hr = tester().withPkg(foo).withLargeAndSmallTextFiles(1).test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
+        String src = hr.generatedSource().get("foo.foo");
+        assertNotNull(src, hr.generatedSource().toString());
     }
 
-    private Map<String, String> generate(TestProcessingEnvironment env, List<Resource> files, List<Config> cfg) throws Exception {
-        Pkg pkg = new Pkg("foo");
-
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                pkg,
-                TestElement.INSTANCE,
-                files,
-                cfg,
-                new Namer()
+    @Test
+    void canGenerateNamedSourcesFromFiles() throws Exception {
+        List<Config> cfg = Arrays.asList(
+                new Config(Name.NAME, "Foo"),
+                new Config(Visibility.VISIBILITY, Visibility.PUBLIC)
         );
+        HandlerResults hr = tester().withConfig(cfg).withLargeAndSmallTextFiles(1).test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
+        String src = hr.generatedSource().get("Foo");
+        assertNotNull(src, hr.generatedSource().toString());
+    }
 
-        handler.handle(context);
-
-        Map<String, String> results = new HashMap<>();
-
-        String className = context.namer().nameType("foo");
-
-        String qname = pkg.qualifiedClassName(className);
-        TestFileObject file = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT).get(qname);
-        if (file == null) {
-            return results;
-        }
-
-        String src = new String(file.data.toByteArray(), StandardCharsets.UTF_8);
-
-        Reflect.compile(
-                qname,
-                src
-        ).create().get();
-
-        results.put("foo", src);
-
-        return results;
+    @Test
+    void reportsInvalidClassName() throws Exception {
+        HandlerResults hr = tester().withLargeAndSmallTextFiles(1).test();
+        hr.assertErrorMessagesReported();
     }
 }
 

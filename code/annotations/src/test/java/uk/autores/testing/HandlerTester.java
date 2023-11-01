@@ -1,6 +1,5 @@
 package uk.autores.testing;
 
-import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.env.TestElement;
 import uk.autores.env.TestFileObject;
 import uk.autores.env.TestProcessingEnvironment;
@@ -16,12 +15,12 @@ import java.util.List;
 public final class HandlerTester {
 
     private static final Namer NAMER = new Namer();
-    private static final Pkg PKG = new Pkg("");
 
     private final Handler handler;
     private List<Config> cfg = Collections.emptyList();
     private final TestProcessingEnvironment env = new TestProcessingEnvironment();
     private final List<Resource> resources = new ArrayList<>();
+    private Pkg pkg = new Pkg("");
 
     public HandlerTester(Handler handler) {
         this.handler = handler;
@@ -35,6 +34,15 @@ public final class HandlerTester {
     public HandlerTester withInfinitelyLargeFile() {
         List<Resource> added = ResourceSets.infinitelyLargeFile(env);
         resources.addAll(added);
+        return this;
+    }
+
+    public HandlerTester withUnspecifiedFile(String filename, byte[] data) throws IOException {
+        TestFileObject tfo = new TestFileObject(true);
+        try(OutputStream out = tfo.openOutputStream()) {
+            out.write(data);
+        }
+        ResourceSets.of(env, filename, tfo);
         return this;
     }
 
@@ -60,12 +68,16 @@ public final class HandlerTester {
         return this;
     }
 
+    public HandlerTester withPkg(Pkg pkg) {
+        this.pkg = pkg;
+        return this;
+    }
+
     public HandlerResults test() throws Exception {
-        Handler handler = new GenerateByteArraysFromFiles();
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
-                PKG,
+                pkg,
                 TestElement.INSTANCE,
                 resources,
                 cfg,

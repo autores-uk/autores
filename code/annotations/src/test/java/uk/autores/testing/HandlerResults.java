@@ -30,12 +30,12 @@ public final class HandlerResults {
     }
 
     public void assertNoErrorMessagesReported() {
-        assertTrue(errors().isEmpty());
+        assertTrue(errors().isEmpty(), errors().toString());
     }
 
     public void assertAllGeneratedFilesCompile(int expected) {
         Map<String, TestFileObject> sources = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT);
-        assertEquals(expected, sources.size());
+        assertEquals(expected, sources.size(), sources.keySet().toString());
 
         for (Map.Entry<String, TestFileObject> entry : sources.entrySet()) {
             String qualifiedClassName = entry.getKey();
