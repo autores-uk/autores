@@ -1,6 +1,8 @@
 package uk.autores;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.Config;
@@ -33,34 +35,16 @@ class GenerateByteArraysFromFilesTest {
         assertTrue(supported.contains(Strategy.DEF));
     }
 
-    @Test
-    void canGenerateByteArraysFromFilesAuto() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.AUTO, true);
-    }
-
-    @Test
-    void canGenerateByteArraysFromFilesLazy() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.LAZY, true);
-    }
-
-    @Test
-    void canGenerateByteArraysFromFilesInline() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.INLINE, false);
-    }
-
-    @Test
-    void canGenerateByteArraysFromFilesEncode() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.ENCODE, true);
-    }
-
-    private void canGenerateByteArraysFromFiles(String strat, boolean generatesUtilityType) throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {Strategy.AUTO, Strategy.INLINE, Strategy.ENCODE, Strategy.LAZY})
+    void canGenerateByteArraysFromFiles(String strat) throws Exception {
         List<Config> cfg = singletonList(new Config(STRATEGY, strat));
         HandlerResults results = tester()
                 .withConfig(cfg)
                 .withLargeAndSmallTextFiles(1024)
                 .test();
         results.assertNoErrorMessagesReported();
-        int expectedOutputs = generatesUtilityType ? 3 : 2;
+        int expectedOutputs = Strategy.INLINE.equals(strat) ? 2 : 3;
         results.assertAllGeneratedFilesCompile(expectedOutputs);
     }
 

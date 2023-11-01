@@ -1,6 +1,8 @@
 package uk.autores;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.autores.cfg.Encoding;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
@@ -31,27 +33,9 @@ class GenerateStringsFromTextTest {
         assertTrue(supported.contains(Encoding.DEF));
     }
 
-    @Test
-    void canGenerateTextFromFilesAuto() throws Exception {
-        canGenerateTextFromFiles(Strategy.AUTO);
-    }
-
-    @Test
-    void canGenerateTextFromFilesInline() throws Exception {
-        canGenerateTextFromFiles(Strategy.INLINE);
-    }
-
-    @Test
-    void canGenerateTextFromFilesEncode() throws Exception {
-        canGenerateTextFromFiles(Strategy.ENCODE);
-    }
-
-    @Test
-    void canGenerateTextFromFilesLazy() throws Exception {
-        canGenerateTextFromFiles(Strategy.LAZY);
-    }
-
-    private void canGenerateTextFromFiles(String strategy) throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {Strategy.AUTO, Strategy.INLINE, Strategy.ENCODE, Strategy.LAZY})
+    void canGenerateTextFromFiles(String strategy) throws Exception {
         List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strategy));
         HandlerResults hr = tester().withLargeAndSmallTextFiles(0xFFFF + 1).withConfig(cfg).test();
         hr.assertNoErrorMessagesReported();
