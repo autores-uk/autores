@@ -56,13 +56,11 @@
 
     <pre><code>
     import uk.autores.*;
-
     @ResourceFiles(
       value = {"Poule.txt", "Roses.txt"},
       handler = GenerateStringsFromText.class
     )
     public class PrintRhymes {
-
       public static void main(String...args)  {
         System.out.println(Poule.text());
         System.out.println(Roses.text());
@@ -74,13 +72,32 @@
       The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
     </p>
 
+    <pre><code>
+      import uk.autores.*;
+      @ResourceFiles(
+        // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
+        value = "Msgs.properties",
+        handler = GenerateMessagesFromProperties.class
+      )
+      public class PrintProperties {
+        public static void main(String...args)  {
+          TimeZone gmt = TimeZone.getTimeZone("GMT");
+          String msg = Msgs.planet_event(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack");
+          System.out.println(msg);
+        }
+      }
+    </code></pre>
+
+    <p>
+      The <code>GenerateMessagesFromProperties</code> handler can generate typed methods that match on a locale and then format the string.
+    </p>
+
     <p>
       Other handlers include
       <code>AssertResourceExists</code>,
       <code>GenerateByteArraysFromFiles</code>,
-      <code>GenerateConstantsFromProperties</code>,
-      <code>GenerateInputStreamsFromFiles</code>, and
-      <code>GenerateMessagesFromProperties</code>.
+      <code>GenerateConstantsFromProperties</code>, and
+      <code>GenerateInputStreamsFromFiles</code>.
     </p>
 
     <a id="compat" href="#compat">&#x1f517;</a>
