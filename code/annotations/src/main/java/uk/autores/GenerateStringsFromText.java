@@ -201,6 +201,8 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("throw new AssertionError(resource, e);").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
+
+        writer.closeBrace().nl();
     }
 
     private static void writeAuto(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
@@ -262,14 +264,13 @@ public final class GenerateStringsFromText implements Handler {
 
         writeMethodDeclaration(writer);
 
-        writer.indent().append("char[] buf = ")
+        writer.indent().append("return ")
                 .append(generationState.utilityTypeClassName)
                 .append(".load(")
                 .string(stats.resource)
                 .append(", ")
                 .append(Ints.toString(size))
                 .append(");").nl();
-        writer.indent().append("return new java.lang.String(buf);").nl();
 
         writeMethodClose(writer);
     }
