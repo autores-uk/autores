@@ -125,14 +125,22 @@ public final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(CharSequence resource) throws IOException {
+        return openResource(resource, true);
+    }
+
+    public JavaWriter openResource(CharSequence resource, boolean literal) throws IOException {
         if (resourceLoadMethod == null) {
             resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
         }
 
-        return this.append(resourceLoadMethod)
-                .append("(")
-                .string(resource)
-                .append(")");
+        append(resourceLoadMethod).append("(");
+        if (literal) {
+            string(resource);
+        } else {
+            append(resource);
+        }
+        append(")");
+        return this;
     }
 
     private void writeResourceLoadMethod() throws IOException {
@@ -153,14 +161,5 @@ public final class JavaWriter extends Writer {
                 .nl();
         this.indent().append("return in;").nl();
         this.closeBrace().nl();
-    }
-
-    public JavaWriter throwOnModification(CharSequence predicate, CharSequence resource) throws IOException {
-        String err = "Resource modified after compilation: ";
-
-        this.indent().append("if (").append(predicate).append(") ").openBrace().nl();
-        this.indent().append("throw new AssertionError(").string(err).append("+").string(resource).append(");").nl();
-        this.closeBrace().nl();
-        return this;
     }
 }

@@ -16,6 +16,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -87,7 +88,8 @@ public final class GenerateStringsFromText implements Handler {
 
         ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate();
 
-        Assistants assistants = new Assistants(decoder, buf);
+        String util = ClassNames.generateClassName(context.resources());
+        GenerationState gs = new GenerationState(decoder, util);
 
         ClassGenerator generator = strategy(context);
 
@@ -115,8 +117,12 @@ public final class GenerateStringsFromText implements Handler {
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, res)) {
 
-                generator.generate(assistants, stats, writer);
+                generator.generate(gs, stats, writer);
             }
+        }
+
+        if (gs.needsLoadMethod || gs.needsCopyMethod) {
+            writeUtilityType(context, gs);
         }
     }
 
@@ -130,76 +136,61 @@ public final class GenerateStringsFromText implements Handler {
         }
     }
 
-    private static void writeAuto(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size > ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
-            writeLazyLoad(assistants, stats, writer);
-        } else {
-            writeInLine(assistants, stats, writer);
-        }
-    }
+    private void writeUtilityType(Context context, GenerationState gs) throws IOException {
+        Context copy = new Context(context.env(),
+                context.location(),
+                context.pkg(),
+                context.annotated(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                context.namer());
 
-    private static void writeInLine(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        if (stats.utf8Size < ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
-            writeSimpleInline(assistants, stats, writer);
-            return;
-        }
-
-        String len = Ints.toString((int) stats.utf16Size);
-        ModifiedUtf8Buffer buf = assistants.buffer;
-
-        writeMethodDeclaration(writer);
-
-        try (InputStream in = stats.resource.open();
-             Reader reader = new InputStreamReader(in, assistants.decoder);
-             Reader bufReader = new BufferedReader(reader)) {
-
-            writer.indent().append("char[] arr = new char[").append(len).append("];").nl();
-            writer.indent().append("int offset = 0;").nl();
-            while (buf.receive(bufReader)) {
-                writer.indent().append("offset = copy(").string(buf).append(", arr, offset);").nl();
+        Pkg pkg = context.pkg();
+        String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
+        Filer filer = context.env().getFiler();
+        JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
+        try (Writer out = javaFile.openWriter();
+             Writer escaper = new UnicodeEscapeWriter(out);
+             JavaWriter writer = new JavaWriter(this, copy, escaper, gs.utilityTypeClassName, "")) {
+            if (gs.needsCopyMethod) {
+                writeUtilityCopyMethod(writer);
             }
-            writer.indent().append("return new java.lang.String(arr);").nl();
+            if (gs.needsLoadMethod) {
+                writeUtilityLoadMethod(writer, gs.decoder.charset().name());
+            }
         }
-
-        writeMethodClose(writer);
-        writeCopyMethod(writer);
     }
 
-    private static void writeSimpleInline(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        writeMethodDeclaration(writer);
+    private static void writeUtilityCopyMethod(JavaWriter writer) throws IOException {
+        String decl = "static int copy(CharSequence src, char[] dest, int off) ";
 
-        try (InputStream in = stats.resource.open();
-             Reader reader = new InputStreamReader(in, assistants.decoder);
-             Reader bufReader = new BufferedReader(reader, assistants.buffer.maxBuffer())) {
-
-            assistants.buffer.receive(bufReader);
-            writer.indent().append("return ").string(assistants.buffer).append(";").nl();
-        }
-
-        writeMethodClose(writer);
+        writer.nl();
+        writer.indent().append(decl).openBrace().nl();
+        writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
+        writer.indent().append("dest[off++] = src.charAt(i);").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return off;").nl();
+        writer.closeBrace().nl();
     }
 
-    private static void writeLazyLoad(Assistants assistants, Stats stats, JavaWriter writer) throws IOException {
-        String encoding = assistants.decoder.charset().name();
-        int size = (int) stats.utf16Size;
+    private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
+        String decl = "static String load(String resource, int size) ";
 
-        writeMethodDeclaration(writer);
-
+        writer.indent().append(decl).openBrace().nl();
         writer.indent()
                 .append("java.nio.charset.Charset enc = java.nio.charset.Charset.forName(")
                 .string(encoding)
                 .append(");")
                 .nl();
-        writer.indent().append("char[] buf = new char[").append(Ints.toString(size)).append("];").nl();
+        writer.indent().append("char[] buf = new char[size];").nl();
         writer.indent()
                 .append("try (")
                 .append("java.io.InputStream in = ")
-                .openResource(stats.resource)
+                .openResource("resource", false)
                 .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
                 .openBrace()
                 .nl();
 
-        // TODO: avoid writing this logic for every resource
         writer.indent().append("int offset = 0;").nl();
         writer.indent().append("while(true) ").openBrace().nl();
         writer.indent().append("int r = reader.read(buf, offset, buf.length - offset);").nl();
@@ -207,26 +198,85 @@ public final class GenerateStringsFromText implements Handler {
         writer.indent().append("offset += r;").nl();
         writer.indent().append("if (offset == buf.length) { break; }").nl();
         writer.closeBrace().nl();
-        writer.throwOnModification("offset < buf.length || reader.read() >= 0", stats.resource);
+        writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
+        writer.closeBrace().nl();
         writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource).append(");").nl();
+        writer.indent().append("throw new AssertionError(resource, e);").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
+
+        writer.closeBrace().nl();
+    }
+
+    private static void writeAuto(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
+        if (stats.utf8Size > ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
+            writeLazyLoad(generationState, stats, writer);
+        } else {
+            writeInLine(generationState, stats, writer);
+        }
+    }
+
+    private static void writeInLine(GenerationState gs, Stats stats, JavaWriter writer) throws IOException {
+        if (stats.utf8Size < ModifiedUtf8Buffer.CONST_BYTE_LIMIT) {
+            writeSimpleInline(gs, stats, writer);
+            return;
+        }
+
+        gs.needsCopyMethod = true;
+
+        String len = Ints.toString((int) stats.utf16Size);
+        ModifiedUtf8Buffer buf = gs.buffer;
+
+        writeMethodDeclaration(writer);
+
+        try (InputStream in = stats.resource.open();
+             Reader reader = new InputStreamReader(in, gs.decoder);
+             Reader bufReader = new BufferedReader(reader)) {
+
+            writer.indent().append("char[] arr = new char[").append(len).append("];").nl();
+            writer.indent().append("int offset = 0;").nl();
+            while (buf.receive(bufReader)) {
+                writer.indent().append("offset = ")
+                        .append(gs.utilityTypeClassName)
+                        .append(".copy(").string(buf).append(", arr, offset);").nl();
+            }
+            writer.indent().append("return new java.lang.String(arr);").nl();
+        }
 
         writeMethodClose(writer);
     }
 
-    private static void writeCopyMethod(JavaWriter writer) throws IOException {
-        // TODO: avoid writing this logic for every resource
-        String decl = "private static int copy(java.lang.CharSequence src, char[] dest, int off) ";
+    private static void writeSimpleInline(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
+        writeMethodDeclaration(writer);
 
-        writer.nl();
-        writer.indent().append(decl).openBrace().nl();
-        writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
-        writer.indent().append("dest[off++] = src.charAt(i);").nl();
-        writer.closeBrace();
-        writer.indent().append("return off;").nl();
-        writer.closeBrace();
+        try (InputStream in = stats.resource.open();
+             Reader reader = new InputStreamReader(in, generationState.decoder);
+             Reader bufReader = new BufferedReader(reader, generationState.buffer.maxBuffer())) {
+
+            generationState.buffer.receive(bufReader);
+            writer.indent().append("return ").string(generationState.buffer).append(";").nl();
+        }
+
+        writeMethodClose(writer);
+    }
+
+    private static void writeLazyLoad(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
+        generationState.needsLoadMethod = true;
+
+        int size = (int) stats.utf16Size;
+
+        writeMethodDeclaration(writer);
+
+        writer.indent().append("return ")
+                .append(generationState.utilityTypeClassName)
+                .append(".load(")
+                .string(stats.resource)
+                .append(", ")
+                .append(Ints.toString(size))
+                .append(");").nl();
+
+        writeMethodClose(writer);
     }
 
     private static void writeMethodDeclaration(JavaWriter writer) throws IOException {
@@ -277,18 +327,21 @@ public final class GenerateStringsFromText implements Handler {
         }
     }
 
-    private static final class Assistants {
-        private final CharsetDecoder decoder;
-        private final ModifiedUtf8Buffer buffer;
+    private static final class GenerationState {
+        final CharsetDecoder decoder;
+        final String utilityTypeClassName;
+        final ModifiedUtf8Buffer buffer = ModifiedUtf8Buffer.allocate();
+        boolean needsCopyMethod;
+        boolean needsLoadMethod;
 
-        private Assistants(CharsetDecoder decoder, ModifiedUtf8Buffer buffer) {
+        private GenerationState(CharsetDecoder decoder, String utilityTypeClassName) {
             this.decoder = decoder;
-            this.buffer = buffer;
+            this.utilityTypeClassName = utilityTypeClassName;
         }
     }
 
     @FunctionalInterface
     private interface ClassGenerator {
-        void generate(Assistants assistants, Stats stats, JavaWriter writer) throws IOException;
+        void generate(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException;
     }
 }
