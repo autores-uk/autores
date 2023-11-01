@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class ResourceSets {
+final class ResourceSets {
 
     private ResourceSets() {}
 
