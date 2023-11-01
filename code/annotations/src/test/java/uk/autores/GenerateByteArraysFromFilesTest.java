@@ -35,32 +35,33 @@ class GenerateByteArraysFromFilesTest {
 
     @Test
     void canGenerateByteArraysFromFilesAuto() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.AUTO);
+        canGenerateByteArraysFromFiles(Strategy.AUTO, true);
     }
 
     @Test
     void canGenerateByteArraysFromFilesLazy() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.LAZY);
+        canGenerateByteArraysFromFiles(Strategy.LAZY, true);
     }
 
     @Test
     void canGenerateByteArraysFromFilesInline() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.INLINE);
+        canGenerateByteArraysFromFiles(Strategy.INLINE, false);
     }
 
     @Test
     void canGenerateByteArraysFromFilesEncode() throws Exception {
-        canGenerateByteArraysFromFiles(Strategy.ENCODE);
+        canGenerateByteArraysFromFiles(Strategy.ENCODE, true);
     }
 
-    private void canGenerateByteArraysFromFiles(String strat) throws Exception {
+    private void canGenerateByteArraysFromFiles(String strat, boolean generatesUtilityType) throws Exception {
         List<Config> cfg = singletonList(new Config(STRATEGY, strat));
         HandlerResults results = tester()
                 .withConfig(cfg)
                 .withLargeAndSmallTextFiles(1024)
                 .test();
         results.assertNoErrorMessagesReported();
-        results.assertAllGeneratedFilesCompile(2);
+        int expectedOutputs = generatesUtilityType ? 3 : 2;
+        results.assertAllGeneratedFilesCompile(expectedOutputs);
     }
 
     @Test

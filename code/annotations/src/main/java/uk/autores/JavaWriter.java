@@ -126,14 +126,22 @@ final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(CharSequence resource) throws IOException {
+        return openResource(resource, true);
+    }
+
+    public JavaWriter openResource(CharSequence resource, boolean literal) throws IOException {
         if (resourceLoadMethod == null) {
             resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
         }
 
-        return this.append(resourceLoadMethod)
-                .append("(")
-                .string(resource)
-                .append(")");
+        append(resourceLoadMethod).append("(");
+        if (literal) {
+            string(resource);
+        } else {
+            append(resource);
+        }
+        append(")");
+        return this;
     }
 
     private void writeResourceLoadMethod() throws IOException {

@@ -37,14 +37,27 @@ public final class HandlerResults {
         Map<String, TestFileObject> sources = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT);
         assertEquals(expected, sources.size(), sources.keySet().toString());
 
+        String utilityType = "";
+        String utilitySrc = "";
+        for (Map.Entry<String, TestFileObject> entry : sources.entrySet()) {
+            if (entry.getKey().startsWith("AutoRes$")) {
+                utilityType = entry.getKey();
+                utilitySrc = new String(entry.getValue().data.toByteArray(), StandardCharsets.UTF_8);
+            }
+        }
+
         for (Map.Entry<String, TestFileObject> entry : sources.entrySet()) {
             String qualifiedClassName = entry.getKey();
+            if (qualifiedClassName.equals(utilityType)) {
+                continue;
+            }
+
             TestFileObject file = entry.getValue();
             String src = new String(file.data.toByteArray(), StandardCharsets.UTF_8);
 
             Reflect.compile(
                     qualifiedClassName,
-                    src
+                    src + System.lineSeparator() + utilitySrc
             ).create().get();
         }
     }
