@@ -163,13 +163,4 @@ final class JavaWriter extends Writer {
         this.indent().append("return in;").nl();
         this.closeBrace().nl();
     }
-
-    public JavaWriter throwOnModification(CharSequence predicate, CharSequence resource) throws IOException {
-        String err = "Resource modified after compilation: ";
-
-        this.indent().append("if (").append(predicate).append(") ").openBrace().nl();
-        this.indent().append("throw new AssertionError(").string(err).append("+").string(resource).append(");").nl();
-        this.closeBrace().nl();
-        return this;
-    }
 }

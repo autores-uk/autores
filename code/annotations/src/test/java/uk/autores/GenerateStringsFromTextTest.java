@@ -55,7 +55,7 @@ class GenerateStringsFromTextTest {
         List<Config> cfg = singletonList(new Config(Strategy.STRATEGY, strategy));
         HandlerResults hr = tester().withLargeAndSmallTextFiles(0xFFFF + 1).withConfig(cfg).test();
         hr.assertNoErrorMessagesReported();
-        hr.assertAllGeneratedFilesCompile(2);
+        hr.assertAllGeneratedFilesCompile(3);
     }
 
     @Test
