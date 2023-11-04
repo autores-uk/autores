@@ -15,6 +15,8 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
+        <exec.maven.plugin.version>3.1.0</exec.maven.plugin.version>
         <!-- unit test dependency versions -->
         <junit.version>5.10.0</junit.version>
     </properties>

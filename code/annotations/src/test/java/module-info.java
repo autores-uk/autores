@@ -3,6 +3,7 @@ module uk.autores.test {
     requires java.compiler;
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
+    requires org.junit.jupiter.params;
     requires org.jooq.joor;
 
     opens uk.autores.test to org.junit.platform.commons;

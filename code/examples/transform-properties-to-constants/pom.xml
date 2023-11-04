@@ -27,4 +27,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>uk.autores.consts.PrintLocalizations</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

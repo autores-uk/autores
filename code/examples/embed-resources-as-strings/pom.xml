@@ -34,11 +34,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*.txt</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>uk.autores.strings.PrintRhymes</mainClass>
                 </configuration>
             </plugin>
         </plugins>
