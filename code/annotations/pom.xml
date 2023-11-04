@@ -10,7 +10,7 @@
 
     <packaging>jar</packaging>
 
-    <name>Autores.uk Annotations</name>
+    <name>AutoRes.uk Annotations</name>
     <description>Annotation driven library for handling embedded resources</description>
     <url>https://autores.uk</url>
 
