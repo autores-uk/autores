@@ -3,8 +3,8 @@ package uk.autores.test;
 import org.junit.jupiter.api.Test;
 import uk.autores.GenerateConstantsFromProperties;
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Handler;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
 import uk.autores.test.testing.HandlerResults;
 import uk.autores.test.testing.HandlerTester;
 

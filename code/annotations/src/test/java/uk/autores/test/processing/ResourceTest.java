@@ -1,7 +1,7 @@
 package uk.autores.test.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Resource;
+import uk.autores.handling.Resource;
 import uk.autores.test.env.TestFileObject;
 
 import java.io.IOException;

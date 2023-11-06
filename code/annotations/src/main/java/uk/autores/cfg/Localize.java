@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 /**
  * "localize": whether to search for localized resources. "true" or "false".

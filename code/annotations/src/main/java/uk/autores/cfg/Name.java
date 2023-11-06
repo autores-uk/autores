@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Namer;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Namer;
 
 /**
  * Generated class name.

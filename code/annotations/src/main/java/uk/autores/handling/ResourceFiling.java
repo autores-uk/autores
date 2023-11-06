@@ -1,4 +1,4 @@
-package uk.autores.processing;
+package uk.autores.handling;
 
 import java.util.Objects;
 

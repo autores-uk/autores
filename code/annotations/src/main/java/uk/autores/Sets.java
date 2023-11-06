@@ -1,6 +1,6 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;

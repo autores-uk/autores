@@ -1,4 +1,4 @@
-package uk.autores.processing;
+package uk.autores.handling;
 
 import uk.autores.ResourceFiles;
 

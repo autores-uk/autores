@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 /**
  * "strategy": how to consume resources.

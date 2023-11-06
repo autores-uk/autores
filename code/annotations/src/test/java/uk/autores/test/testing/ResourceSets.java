@@ -1,6 +1,6 @@
 package uk.autores.test.testing;
 
-import uk.autores.processing.Resource;
+import uk.autores.handling.Resource;
 import uk.autores.test.env.TestFileObject;
 import uk.autores.test.env.TestInfiniteFileObject;
 import uk.autores.test.env.TestProcessingEnvironment;

@@ -1,7 +1,7 @@
 package uk.autores.test.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Namer;
+import uk.autores.handling.Namer;
 
 import java.util.function.Function;
 

@@ -5,7 +5,7 @@ import com.samskivert.mustache.Template;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.GenerateStringsFromText;
 import uk.autores.ResourceFiles;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;

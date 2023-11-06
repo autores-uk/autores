@@ -6,9 +6,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.Config;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Handler;
+import uk.autores.handling.Config;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
 import uk.autores.test.testing.HandlerResults;
 import uk.autores.test.testing.HandlerTester;
 

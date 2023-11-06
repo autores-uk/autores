@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 /** "visibility": set to "public" to generate public instead of package visible artefacts. */
 public final class Visibility {
