@@ -1,24 +1,25 @@
-package uk.autores.test.internal;
+package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.MissingKey;
-import uk.autores.internal.Reporting;
-import uk.autores.processing.Config;
-import uk.autores.processing.Context;
-import uk.autores.processing.Namer;
+import uk.autores.processing.*;
 import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestPkgs;
 import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.Proxies;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReportingTest {
+
+    private final RProxy Reporting = Proxies.utility(RProxy.class, "uk.autores.Reporting");
+    private final Pkg unnamed = new Pkg("");
 
     @Test
     void reportsErrorByDefault() {
@@ -27,7 +28,7 @@ class ReportingTest {
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
-                TestPkgs.P,
+                unnamed,
                 TestElement.INSTANCE,
                 emptyList(),
                 emptyList(),
@@ -45,14 +46,14 @@ class ReportingTest {
     void errorCanBeConfigured() {
         List<Config> cfg = singletonList(new Config(
                 MissingKey.DEF.key(),
-                "error"
+                MissingKey.ERROR
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
-                TestPkgs.P,
+                unnamed,
                 TestElement.INSTANCE,
                 emptyList(),
                 cfg,
@@ -70,14 +71,14 @@ class ReportingTest {
     void warnCanBeConfigured() {
         List<Config> cfg = singletonList(new Config(
                 MissingKey.DEF.key(),
-                "warn"
+                MissingKey.WARN
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
-                TestPkgs.P,
+                unnamed,
                 TestElement.INSTANCE,
                 emptyList(),
                 cfg,
@@ -95,14 +96,14 @@ class ReportingTest {
     void errorsCanBeIgnored() {
         List<Config> cfg = singletonList(new Config(
                 MissingKey.DEF.key(),
-                "ignore"
+                MissingKey.IGNORE
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
         Context context = new Context(
                 env,
                 StandardLocation.CLASS_PATH,
-                TestPkgs.P,
+                unnamed,
                 TestElement.INSTANCE,
                 emptyList(),
                 cfg,
@@ -114,5 +115,9 @@ class ReportingTest {
         // verify
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.WARNING).size());
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
+    }
+
+    private interface RProxy {
+        Consumer<String> reporter(Context context, ConfigDef def);
     }
 }

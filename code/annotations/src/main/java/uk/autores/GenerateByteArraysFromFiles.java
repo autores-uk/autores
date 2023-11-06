@@ -2,7 +2,6 @@ package uk.autores;
 
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.internal.*;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -383,7 +382,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         ModifiedUtf8Buffer utf8Buffer() {
             if (utf8Buffer == null) {
-                utf8Buffer = ModifiedUtf8Buffer.allocate();
+                utf8Buffer = new ModifiedUtf8Buffer();
             }
             return utf8Buffer;
         }

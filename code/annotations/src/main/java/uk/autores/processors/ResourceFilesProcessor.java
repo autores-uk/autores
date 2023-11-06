@@ -3,8 +3,6 @@ package uk.autores.processors;
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
 import uk.autores.processing.*;
-import uk.autores.processors.internal.Compare;
-import uk.autores.processors.internal.Errors;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -28,8 +26,8 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
-import static uk.autores.processors.internal.Compare.nullOrEmpty;
-import static uk.autores.processors.internal.Compare.sameSeq;
+import static uk.autores.processors.Compare.nullOrEmpty;
+import static uk.autores.processors.Compare.sameSeq;
 
 /**
  * Processes classpath resource files and passes them to {@link Handler#handle(Context)}.

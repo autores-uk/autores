@@ -1,10 +1,10 @@
-package uk.autores.processors.internal;
+package uk.autores.processors;
 
-public final class Errors {
+final class Errors {
 
     private Errors() {}
 
-    public static String resourceErrorMessage(Exception e, CharSequence resource, CharSequence pkg) {
+    static String resourceErrorMessage(Exception e, CharSequence resource, CharSequence pkg) {
         boolean missing = e.getClass().getSimpleName().equals("ClientCodeException")
                 && e.getCause() != null
                 && NullPointerException.class == e.getCause().getClass();

@@ -1,9 +1,9 @@
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.GenerateByteArraysFromFiles;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.Config;

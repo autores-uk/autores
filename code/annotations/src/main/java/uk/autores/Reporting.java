@@ -1,4 +1,4 @@
-package uk.autores.internal;
+package uk.autores;
 
 import uk.autores.processing.ConfigDef;
 import uk.autores.processing.Context;
@@ -9,11 +9,11 @@ import javax.tools.Diagnostic;
 import java.util.function.Consumer;
 
 /** Utility type to aid in optional error reporting. */
-public final class Reporting {
+final class Reporting {
 
     private Reporting() {}
 
-    public static Consumer<String> reporter(Context context, ConfigDef def) {
+    static Consumer<String> reporter(Context context, ConfigDef def) {
         String action = context.option(def).orElse("error");
         if ("ignore".equals(action)) {
             return (m) -> {};

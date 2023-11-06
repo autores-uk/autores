@@ -1,8 +1,9 @@
-package uk.autores.test.internal;
+package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.internal.UnicodeEscapeWriter;
+import uk.autores.test.testing.Proxies;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -20,7 +21,7 @@ class UnicodeEscapeWriterTest {
     void testWrite() throws IOException {
         String input = "Cost: \u00a3200";
         StringWriter buf = new StringWriter();
-        try (Writer w = new UnicodeEscapeWriter(buf)) {
+        try (UEW w = instance(buf)) {
             w.write(input);
             w.flush();
         }
@@ -34,7 +35,7 @@ class UnicodeEscapeWriterTest {
     void testAppend() throws IOException {
         String input = "Cost: \u20ac200";
         StringWriter buf = new StringWriter();
-        try (Writer w = new UnicodeEscapeWriter(buf)) {
+        try (UEW w = instance(buf)) {
             w.append(input);
         }
 
@@ -49,7 +50,7 @@ class UnicodeEscapeWriterTest {
         String input = "foo bar baz";
 
         StringWriter buf = new StringWriter();
-        try (Writer w = new UnicodeEscapeWriter(buf)) {
+        try (UEW w = instance(buf)) {
             for (int i = 0; i < rounds; i++) {
                 w.append(input);
                 w.append('\n');
@@ -64,7 +65,7 @@ class UnicodeEscapeWriterTest {
     @Test
     void closeIsIdempotent() throws IOException {
         StringWriter buf = new StringWriter();
-        try (Writer w = new UnicodeEscapeWriter(buf)) {
+        try (UEW w = instance(buf)) {
             w.close();
             w.close();
         }
@@ -73,11 +74,36 @@ class UnicodeEscapeWriterTest {
     @Test
     void throwsWhenClosed() {
         assertThrows(IOException.class, () -> {
-                try (Writer w = new UnicodeEscapeWriter(new StringWriter())) {
+                try (UEW w = instance(new StringWriter())) {
                     w.close();
                     w.append("foo");
                 }
             }
         );
+    }
+
+    @Test
+    void testWriteChars() throws IOException {
+        char[] input = "Cost: \u20ac200".toCharArray();
+        StringWriter buf = new StringWriter();
+        try (UEW w = instance(buf)) {
+            w.write(input, 0, input.length);
+        }
+
+        String expected = "Cost: \\u20ac200";
+        String actual = buf.toString();
+        assertEquals(expected, actual);
+    }
+
+    private UEW instance(Writer w) {
+        Class<?>[] types = {Writer.class};
+        Object[] args = {w};
+        return Proxies.instance(UEW.class, "uk.autores.UnicodeEscapeWriter", types, args);
+    }
+
+    private interface UEW extends Closeable, Appendable {
+        void flush() throws IOException;
+        void write(String str) throws IOException;
+        void write(char[] array, int off, int len) throws IOException;
     }
 }

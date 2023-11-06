@@ -1,4 +1,5 @@
 package uk.autores.test.processors;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -19,8 +20,8 @@ final class TestSources {
     private static String read(URL url) throws IOException {
         StringWriter writer = new StringWriter();
         try (InputStream in = url.openStream();
-            Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-            reader.transferTo(writer);
+             Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            transferTo(reader, writer);
         }
         return writer.toString();
     }

@@ -1,4 +1,4 @@
-package uk.autores.internal;
+package uk.autores;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,13 +11,13 @@ import static java.util.Objects.requireNonNull;
  * Each pair of <code>byte</code>s becomes one <code>char</code>.
  * @see #lastByteOdd() for byte streams that are odd numbers
  */
-public final class ByteHackReader extends Reader {
+final class ByteHackReader extends Reader {
 
     private final InputStream in;
     private int oddByte = -1;
     private boolean closed = false;
 
-    public ByteHackReader(final InputStream in) {
+    ByteHackReader(final InputStream in) {
         this.in = requireNonNull(in);
     }
 
@@ -34,6 +34,11 @@ public final class ByteHackReader extends Reader {
         }
 
         return count == 0 ? -1 : count;
+    }
+
+    @Override
+    public int read(char[] cbuf) throws IOException {
+        return read(cbuf, 0, cbuf.length);
     }
 
     @Override

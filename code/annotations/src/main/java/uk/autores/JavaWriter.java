@@ -1,4 +1,4 @@
-package uk.autores.internal;
+package uk.autores;
 
 import uk.autores.cfg.Visibility;
 import uk.autores.processing.Context;
@@ -10,7 +10,7 @@ import java.io.Writer;
 /**
  * Convenience type for writing Java files.
  */
-public final class JavaWriter extends Writer {
+final class JavaWriter extends Writer {
 
     private static final String NL = System.lineSeparator();
     private final Writer w;
@@ -20,13 +20,14 @@ public final class JavaWriter extends Writer {
     private int indentation = 2;
     private String resourceLoadMethod = null;
 
-    public JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
+    JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
         this.w = w;
         this.className = className;
 
         visibility = ctxt.option(Visibility.DEF).isPresent() ? "public " : "";
 
         w.append("// GENERATED CODE: ").append(generator.getClass().getName()).append(NL);
+
         Pkg pkg = ctxt.pkg();
         if (!pkg.isUnnamed()) {
             w.append("package ").append(pkg).append(";").append(NL).append(NL);

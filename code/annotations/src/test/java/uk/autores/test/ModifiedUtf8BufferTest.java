@@ -1,7 +1,7 @@
-package uk.autores.test.internal;
+package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.internal.ModifiedUtf8Buffer;
+import uk.autores.test.testing.Proxies;
 
 import java.io.*;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ class ModifiedUtf8BufferTest {
         Reader reader = new StringReader(src);
 
         int maxUtf8Len = 3;
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(maxUtf8Len);
+        MUB buf = instance(maxUtf8Len);
 
         while(buf.receive(reader)) {
             int utfLen = modifiedUtfLen(buf.toString());
@@ -35,7 +35,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void canCreateReadData() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
+        MUB buf = instance(1024);
 
         boolean received = buf.receive(new StringReader("123"));
         assertTrue(received);
@@ -51,7 +51,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void canCreateSubsequence() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
+        MUB buf = instance(1024);
 
         assertEquals("", buf.toString());
         assertEquals("", buf.subSequence(0, 0));
@@ -64,7 +64,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void checksBounds() throws IOException {
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate(1024);
+        MUB buf = instance(1024);
         buf.receive(new StringReader("123"));
 
         assertThrowsExactly(IndexOutOfBoundsException.class, () -> buf.charAt(100));
@@ -72,6 +72,7 @@ class ModifiedUtf8BufferTest {
 
     @Test
     void byteLen() {
+        MUB ModifiedUtf8Buffer = instance(10);
         // https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7
         assertEquals(2, ModifiedUtf8Buffer.byteLen('\u0000'));
         assertEquals(1, ModifiedUtf8Buffer.byteLen('\u0001'));
@@ -90,5 +91,20 @@ class ModifiedUtf8BufferTest {
             dos.writeUTF(s);
         }
         return buf.size() - 2;
+    }
+
+    private MUB instance(int n) {
+        Class<?>[] types = {Integer.TYPE};
+        Object[] args = {n};
+        return Proxies.instance(MUB.class, "uk.autores.ModifiedUtf8Buffer", types, args);
+    }
+
+    private interface MUB {
+        int byteLen(char c);
+        char charAt(int idx);
+        int length();
+        CharSequence subSequence(int i, int j);
+        boolean receive(Reader r) throws IOException;
+        MUB allocate(int n);
     }
 }

@@ -1,10 +1,10 @@
-package uk.autores.internal;
+package uk.autores;
 
 import java.io.IOException;
 import java.io.Writer;
 
 /** Methods for escaping special characters in string literals. */
-public final class StringLiterals {
+final class StringLiterals {
 
     private static final String[] ESCS = generateEscapes();
 

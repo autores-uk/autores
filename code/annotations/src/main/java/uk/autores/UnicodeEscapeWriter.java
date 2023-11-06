@@ -1,11 +1,11 @@
-package uk.autores.internal;
+package uk.autores;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Objects;
 
 /** Writes non-ASCII chars as Unicode escape sequences. */
-public final class UnicodeEscapeWriter extends Writer {
+final class UnicodeEscapeWriter extends Writer {
 
     private static final char[] HEX = "0123456789abcdef".toCharArray();
     private final char[] formatBuffer = "\\u0000".toCharArray();
@@ -14,7 +14,7 @@ public final class UnicodeEscapeWriter extends Writer {
     private final StringBuilder b = new StringBuilder();
     boolean closed = false;
 
-    public UnicodeEscapeWriter(Writer w) {
+    UnicodeEscapeWriter(Writer w) {
         this.w = Objects.requireNonNull(w);
     }
 
@@ -23,6 +23,11 @@ public final class UnicodeEscapeWriter extends Writer {
         for (int i = 0; i < len; i++) {
             buffer(cbuf[i]);
         }
+    }
+
+    @Override
+    public void write(String str) throws IOException {
+        append(str);
     }
 
     @Override

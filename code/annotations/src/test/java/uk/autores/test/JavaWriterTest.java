@@ -1,17 +1,18 @@
-package uk.autores.test.internal;
+package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.internal.JavaWriter;
 import uk.autores.processing.Context;
 import uk.autores.processing.Namer;
 import uk.autores.processing.Pkg;
 import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestPkgs;
 import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.Proxies;
 
 import javax.tools.StandardLocation;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +26,7 @@ class JavaWriterTest {
         Pkg pkg = new Pkg("foo.bar");
         String actual = test(ctxt(pkg), jw -> {});
         // verify
-        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
         expected += "package foo.bar;" + NL + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
@@ -36,9 +37,9 @@ class JavaWriterTest {
 
     @Test
     void nl() throws IOException {
-        String actual = test(ctxt(), JavaWriter::nl);
+        String actual = test(ctxt(), JW::nl);
         // verify
-        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -54,7 +55,7 @@ class JavaWriterTest {
             jw.append(' ');
         });
         // verify
-        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -69,7 +70,7 @@ class JavaWriterTest {
             jw.indent().staticFinal("String", "bar").append("\"x\";").nl();
         });
         // verify
-        String expected = "// GENERATED CODE: uk.autores.test.internal.JavaWriterTest" + NL;
+        String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
         expected += "final class Foo {" + NL;
         expected += NL;
         expected += "  private Foo() {}" + NL;
@@ -89,14 +90,14 @@ class JavaWriterTest {
 
     private String test(Context ctxt, Invoker invoker) throws IOException {
         StringWriter sw = new StringWriter();
-        try (JavaWriter jw = new JavaWriter(this, ctxt, sw, "Foo", "")) {
+        try (JW jw = instance(this, ctxt, sw, "Foo", "")) {
             invoker.invoke(jw);
         }
         return sw.toString();
     }
 
     private Context ctxt() {
-        return ctxt(TestPkgs.P);
+        return ctxt(new Pkg(""));
     }
 
     private Context ctxt(Pkg pkg) {
@@ -105,8 +106,36 @@ class JavaWriterTest {
         return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptyList(), Collections.emptyList(), new Namer());
     }
 
+    private JW instance(Object generator, Context ctxt, Writer writer, String className, String comment) {
+        Class<?>[] types = {
+                Object.class,
+                Context.class,
+                Writer.class,
+                String.class,
+                CharSequence.class,
+        };
+        Object[] args = {
+                generator,
+                ctxt,
+                writer,
+                className,
+                comment,
+        };
+        return Proxies.instance(JW.class, "uk.autores.JavaWriter", types, args);
+    }
+
+    private interface JW extends Closeable {
+        void flush() throws IOException;
+        JW indent() throws IOException;
+        JW append(char c) throws IOException;
+        JW append(CharSequence cs) throws IOException;
+        JW staticFinal(String s1, String s2) throws IOException;
+        JW write(char[] arr, int off, int len) throws IOException;
+        JW nl() throws IOException;
+    }
+
     @FunctionalInterface
     private interface Invoker {
-        void invoke(JavaWriter jw) throws IOException;
+        void invoke(JW jw) throws IOException;
     }
 }

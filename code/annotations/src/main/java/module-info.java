@@ -25,7 +25,9 @@ module uk.autores {
     // annotation processor
     provides javax.annotation.processing.Processor with uk.autores.processors.ResourceFilesProcessor;
     // testable packages
+    opens uk.autores to uk.autores.test;
+    opens uk.autores.cfg to uk.autores.test;
+    opens uk.autores.processing to uk.autores.test;
+    opens uk.autores.processors to uk.autores.test;
     exports uk.autores.processors to uk.autores.test;
-    exports uk.autores.processors.internal to uk.autores.test;
-    exports uk.autores.internal;
 }

@@ -3,10 +3,6 @@ package uk.autores;
 import uk.autores.cfg.Encoding;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.internal.Ints;
-import uk.autores.internal.JavaWriter;
-import uk.autores.internal.ModifiedUtf8Buffer;
-import uk.autores.internal.UnicodeEscapeWriter;
 import uk.autores.processing.*;
 
 import javax.annotation.processing.Filer;
@@ -86,15 +82,13 @@ public final class GenerateStringsFromText implements Handler {
         String encoding = context.option(Encoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
 
-        ModifiedUtf8Buffer buf = ModifiedUtf8Buffer.allocate();
-
         String util = ClassNames.generateClassName(context.resources());
         GenerationState gs = new GenerationState(decoder, util);
 
         ClassGenerator generator = strategy(context);
 
         for (Resource res : resources) {
-            Stats stats = stats(res, buf, decoder);
+            Stats stats = stats(res, gs.buffer, decoder);
             if (stats.utf16Size > Integer.MAX_VALUE) {
                 String msg = "Resource " + res + " too large for String type";
                 context.printError(msg);
@@ -330,7 +324,7 @@ public final class GenerateStringsFromText implements Handler {
     private static final class GenerationState {
         final CharsetDecoder decoder;
         final String utilityTypeClassName;
-        final ModifiedUtf8Buffer buffer = ModifiedUtf8Buffer.allocate();
+        final ModifiedUtf8Buffer buffer = new ModifiedUtf8Buffer();
         boolean needsCopyMethod;
         boolean needsLoadMethod;
 

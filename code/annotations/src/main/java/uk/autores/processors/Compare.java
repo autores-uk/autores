@@ -1,16 +1,16 @@
-package uk.autores.processors.internal;
+package uk.autores.processors;
 
 /** Utility type for comparing certain types. */
-public final class Compare {
+final class Compare {
 
     private Compare() {}
 
-    public static <C extends Comparable<C>> C max(C a, C b) {
+    static <C extends Comparable<C>> C max(C a, C b) {
         int n = a.compareTo(b);
         return n > 0 ? a : b;
     }
 
-    public static boolean sameSeq(CharSequence cs1, CharSequence cs2) {
+    static boolean sameSeq(CharSequence cs1, CharSequence cs2) {
         if (cs1.length() != cs2.length()) {
             return false;
         }
@@ -22,7 +22,7 @@ public final class Compare {
         return true;
     }
 
-    public static boolean nullOrEmpty(CharSequence cs) {
+    static boolean nullOrEmpty(CharSequence cs) {
         return cs == null || cs.length() == 0;
     }
 }
