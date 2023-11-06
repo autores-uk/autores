@@ -1,7 +1,7 @@
 package uk.autores.test.processors;
 
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
+import uk.autores.handling.Context;
+import uk.autores.handling.Handler;
 
 public class ThrowingHandler implements Handler {
     @Override

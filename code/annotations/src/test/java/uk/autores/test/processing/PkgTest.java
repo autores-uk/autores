@@ -1,7 +1,7 @@
 package uk.autores.test.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Pkg;
+import uk.autores.handling.Pkg;
 
 import static org.junit.jupiter.api.Assertions.*;
 

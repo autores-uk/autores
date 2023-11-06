@@ -1,10 +1,10 @@
 package uk.autores.test.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Config;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
+import uk.autores.handling.Config;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Context;
+import uk.autores.handling.Handler;
 
 import java.util.ArrayList;
 import java.util.List;

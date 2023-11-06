@@ -1,7 +1,7 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Context;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Context;
 
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;

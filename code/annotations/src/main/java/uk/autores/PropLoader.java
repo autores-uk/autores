@@ -1,6 +1,6 @@
 package uk.autores;
 
-import uk.autores.processing.Resource;
+import uk.autores.handling.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;

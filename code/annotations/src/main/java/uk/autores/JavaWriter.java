@@ -1,8 +1,8 @@
 package uk.autores;
 
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.Context;
-import uk.autores.processing.Pkg;
+import uk.autores.handling.Context;
+import uk.autores.handling.Pkg;
 
 import java.io.IOException;
 import java.io.Writer;

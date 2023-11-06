@@ -1,6 +1,6 @@
 package uk.autores.test.testing;
 
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 import uk.autores.test.env.TestElement;
 import uk.autores.test.env.TestFileObject;
 import uk.autores.test.env.TestProcessingEnvironment;

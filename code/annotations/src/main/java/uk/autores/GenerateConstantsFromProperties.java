@@ -1,7 +1,7 @@
 package uk.autores;
 
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;

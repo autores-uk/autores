@@ -1,6 +1,6 @@
 package uk.autores;
 
-import uk.autores.processing.Namer;
+import uk.autores.handling.Namer;
 
 final class ClassNames {
 

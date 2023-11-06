@@ -2,7 +2,7 @@ package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;

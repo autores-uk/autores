@@ -1,8 +1,8 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
+import uk.autores.handling.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileManager;

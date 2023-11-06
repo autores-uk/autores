@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import uk.autores.GenerateInputStreamsFromFiles;
 import uk.autores.cfg.Name;
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.Config;
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Pkg;
+import uk.autores.handling.Config;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
+import uk.autores.handling.Pkg;
 import uk.autores.test.testing.HandlerResults;
 import uk.autores.test.testing.HandlerTester;
 

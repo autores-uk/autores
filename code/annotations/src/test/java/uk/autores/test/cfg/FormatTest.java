@@ -2,7 +2,7 @@ package uk.autores.test.cfg;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.Format;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertFalse;

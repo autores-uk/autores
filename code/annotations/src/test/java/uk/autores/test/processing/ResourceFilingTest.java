@@ -1,8 +1,8 @@
 package uk.autores.test.processing;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.processing.Pkg;
-import uk.autores.processing.ResourceFiling;
+import uk.autores.handling.Pkg;
+import uk.autores.handling.ResourceFiling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -2,7 +2,7 @@ package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.MissingKey;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 import uk.autores.test.env.TestElement;
 import uk.autores.test.env.TestProcessingEnvironment;
 import uk.autores.test.testing.Proxies;
