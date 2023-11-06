@@ -13,18 +13,30 @@ import java.util.function.Function;
  */
 public final class IdiomaticNamer extends Namer {
 
+    /**
+     * @param src source string
+     * @return lower snake case
+     */
     @Override
     public String nameMember(String src) {
         String name = super.nameMember(src);
         return transform(name, new MemberTransform(), "");
     }
 
+    /**
+     * @param src source string
+     * @return upper snake case
+     */
     @Override
     public String nameStaticField(String src) {
         String name = super.nameStaticField(src);
         return transform(name, IdiomaticNamer::allUpper, "_");
     }
 
+    /**
+     * @param src source string
+     * @return upper camel case
+     */
     @Override
     public String nameType(String src) {
         String name = super.nameType(src);

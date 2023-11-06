@@ -88,6 +88,8 @@ public class Namer {
     }
 
     /**
+     * Name a public static field.
+     *
      * @param src source string
      * @return source string as a field name if possible
      */
@@ -96,7 +98,7 @@ public class Namer {
     }
 
     /**
-     * Name a method/etc.
+     * Name a method/field/etc.
      *
      * @param src source string
      * @return source string as a member name
