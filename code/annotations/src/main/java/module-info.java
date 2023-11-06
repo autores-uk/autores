@@ -21,13 +21,13 @@ module uk.autores {
     // public packages
     exports uk.autores;
     exports uk.autores.cfg;
-    exports uk.autores.processing;
+    exports uk.autores.handling;
     // annotation processor
     provides javax.annotation.processing.Processor with uk.autores.processors.ResourceFilesProcessor;
     // testable packages
     opens uk.autores to uk.autores.test;
     opens uk.autores.cfg to uk.autores.test;
-    opens uk.autores.processing to uk.autores.test;
+    opens uk.autores.handling to uk.autores.test;
     opens uk.autores.processors to uk.autores.test;
     exports uk.autores.processors to uk.autores.test;
 }
