@@ -1,4 +1,4 @@
-package uk.autores.test.processing;
+package uk.autores.test.handling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

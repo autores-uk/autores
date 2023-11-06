@@ -1,4 +1,4 @@
-package uk.autores.test.processing;
+package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.handling.Pkg;
