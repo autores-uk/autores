@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,23 +12,27 @@ import java.util.List;
 /** Utility type for analysing {@link MessageFormat} strings */
 final class MessageParser {
 
+    static final String STRING = String.class.getName();
+    static final String NUMBER = Number.class.getName();
+    static final String DATE = Instant.class.getName();
+
     private MessageParser() {}
 
-    static List<VarType> parse(String msg) {
+    static List<String> parse(String msg) {
         MessageFormat mf = new MessageFormat(msg);
         Format[] formats = mf.getFormatsByArgumentIndex();
         if (formats.length == 0) {
             return Collections.emptyList();
         }
 
-        List<VarType> list = new ArrayList<>(formats.length);
+        List<String> list = new ArrayList<>(formats.length);
         for (Format format : mf.getFormatsByArgumentIndex()) {
             if (format == null) {
-                list.add(VarType.STRING);
+                list.add(STRING);
             } else if (format instanceof NumberFormat) {
-                list.add(VarType.NUMBER);
+                list.add(NUMBER);
             } else if (format instanceof DateFormat) {
-                list.add(VarType.DATE);
+                list.add(DATE);
             } else {
                 // unreachable unless MessageFormat adds new Formats
                 throw new IllegalStateException("Cannot handle: " + format.getClass().getCanonicalName());
@@ -36,30 +41,17 @@ final class MessageParser {
         return list;
     }
 
-    static boolean needsLocale(List<VarType> vars) {
-        for (VarType vt : vars) {
-            if (vt == VarType.NUMBER || vt == VarType.DATE) {
+    static boolean needsLocale(List<String> vars) {
+        for (String vt : vars) {
+            if (vt.equals(NUMBER) || vt.equals(DATE)) {
                 return true;
             }
         }
         return false;
     }
 
-    static boolean needsTimeZone(List<VarType> vars) {
-        return vars.contains(VarType.DATE);
-    }
-
-    enum VarType {
-
-        STRING("java.lang.String"),
-        NUMBER("java.lang.Number"),
-        DATE("java.time.Instant");
-
-        final String type;
-
-        VarType(String type) {
-            this.type = type;
-        }
+    static boolean needsTimeZone(List<String> vars) {
+        return vars.contains(DATE);
     }
 
 }

@@ -316,7 +316,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        List<MessageParser.VarType> vars = MessageParser.parse(baseValue);
+        List<String> vars = MessageParser.parse(baseValue);
         if (vars.isEmpty()) {
             return;
         }
@@ -353,8 +353,8 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
             comma = true;
 
-            MessageParser.VarType vt = vars.get(i);
-            writer.append(vt.type).append(" v").append(Integer.toString(i));
+            String vt = vars.get(i);
+            writer.append(vt).append(" v").append(Integer.toString(i));
         }
         writer.append(") ").openBrace().nl();
         writer.indent().append("java.lang.String msg = ").append(method);
@@ -378,7 +378,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
         writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
         for (int i = 0; i < vars.size(); i++) {
-            boolean date = vars.get(i) == MessageParser.VarType.DATE;
+            boolean date = vars.get(i).equals(MessageParser.DATE);
             writer.indent();
             if (date) {
                 writer.append("java.util.Date.from(");
@@ -399,7 +399,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private boolean localizedMessagesMatchBase(Context ctxt,
                                                Resource resource,
-                                               List<MessageParser.VarType> vars,
+                                               List<String> vars,
                                                List<Localized> localizations, String key) {
         boolean ok = true;
         for (Localized l : localizations) {
@@ -407,7 +407,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             if (localizedValue == null) {
                 continue;
             }
-            List<MessageParser.VarType> locVars = MessageParser.parse(localizedValue);
+            List<String> locVars = MessageParser.parse(localizedValue);
             if (!locVars.equals(vars)) {
                 String msg = "Differing message variables in localization " + resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have " + locVars + " need " + vars;

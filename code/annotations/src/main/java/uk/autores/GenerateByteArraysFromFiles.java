@@ -382,7 +382,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         ModifiedUtf8Buffer utf8Buffer() {
             if (utf8Buffer == null) {
-                utf8Buffer = ModifiedUtf8Buffer.allocate();
+                utf8Buffer = new ModifiedUtf8Buffer();
             }
             return utf8Buffer;
         }

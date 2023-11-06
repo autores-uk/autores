@@ -26,6 +26,11 @@ final class UnicodeEscapeWriter extends Writer {
     }
 
     @Override
+    public void write(String str) throws IOException {
+        append(str);
+    }
+
+    @Override
     public Writer append(CharSequence csq) throws IOException {
         for (int i = 0, len = csq.length(); i < len; i++) {
             buffer(csq.charAt(i));

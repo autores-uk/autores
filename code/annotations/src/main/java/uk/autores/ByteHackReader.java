@@ -37,6 +37,11 @@ final class ByteHackReader extends Reader {
     }
 
     @Override
+    public int read(char[] cbuf) throws IOException {
+        return read(cbuf, 0, cbuf.length);
+    }
+
+    @Override
     public int read() throws IOException {
         if (closed) {
             throw new IOException("Stream closed");

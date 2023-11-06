@@ -22,9 +22,15 @@ final class ModifiedUtf8Buffer implements CharSequence {
     private int utf8Length = 0;
     private final int maxUtf8Length;
 
-    private ModifiedUtf8Buffer(int size) {
-        cbuf = new char[size];
-        maxUtf8Length = size;
+    ModifiedUtf8Buffer(int maxUtf8Length) {
+        assert maxUtf8Length >= 3;
+
+        cbuf = new char[maxUtf8Length];
+        this.maxUtf8Length = maxUtf8Length;
+    }
+
+    ModifiedUtf8Buffer() {
+        this(CONST_BYTE_LIMIT);
     }
 
     /**
@@ -98,20 +104,6 @@ final class ModifiedUtf8Buffer implements CharSequence {
         if (predicate) {
             throw new IndexOutOfBoundsException();
         }
-    }
-
-    /**
-     * @param maxUtf8Length must be at least three bytes
-     * @return the buffer
-     */
-    static ModifiedUtf8Buffer allocate(int maxUtf8Length) {
-        assert maxUtf8Length >= 3;
-
-        return new ModifiedUtf8Buffer(maxUtf8Length);
-    }
-
-    static ModifiedUtf8Buffer allocate() {
-        return allocate(CONST_BYTE_LIMIT);
     }
 
     /**
