@@ -7,12 +7,12 @@
  * </p>
  * <p>
  *     Modules that only use the <code>uk.autores</code> package should generally use
- *     the <code>requires static java.compiler;</code> directive.
+ *     the <code>requires static {@link uk.autores};</code> directive.
  *     This package is intended to be compile-time only.
  * </p>
  * <p>
- *     Modules that extend the API via the <code>uk.autores.processing</code> package
- *     should generally use the <code>requires transitive java.compiler;</code> directive.
+ *     Modules that extend the API via the <code>{@link uk.autores.handling}</code> package
+ *     should generally use the <code>requires {@link uk.autores};</code> directive.
  *  </p>
  */
 module uk.autores {
