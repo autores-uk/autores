@@ -6,7 +6,7 @@ import uk.autores.handling.Namer;
 
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IdiomaticNamerTest {
 
@@ -24,12 +24,12 @@ class IdiomaticNamerTest {
 
     @Test
     void nameStaticField() {
-        assertExpectation(n::nameStaticField, "FOO", "Foo");
-        assertExpectation(n::nameStaticField, "FOO", "foo");
-        assertExpectation(n::nameStaticField, "FOO_BAR_BAZ", "foo-bar-baz");
-        assertExpectation(n::nameStaticField, "FOO_123_BAR", "foo-123-bar");
-        assertExpectation(n::nameStaticField, "FOO123_BAR", "foo123-bar");
-        assertExpectation(n::nameStaticField, "FOO_BAR_BAZ", "FooBarBaz");
+        assertExpectation(n::nameConstant, "FOO", "Foo");
+        assertExpectation(n::nameConstant, "FOO", "foo");
+        assertExpectation(n::nameConstant, "FOO_BAR_BAZ", "foo-bar-baz");
+        assertExpectation(n::nameConstant, "FOO_123_BAR", "foo-123-bar");
+        assertExpectation(n::nameConstant, "FOO123_BAR", "foo123-bar");
+        assertExpectation(n::nameConstant, "FOO_BAR_BAZ", "FooBarBaz");
     }
 
     @Test

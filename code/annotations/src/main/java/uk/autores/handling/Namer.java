@@ -93,7 +93,7 @@ public class Namer {
      * @param src source string
      * @return source string as a field name if possible
      */
-    public String nameStaticField(String src) {
+    public String nameConstant(String src) {
         return replace(src);
     }
 

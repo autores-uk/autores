@@ -51,13 +51,15 @@ public final class Context {
     }
 
     /**
-     * @param key key name
+     * First {@link Config#value()} where {@link Config#value()} equals {@link ConfigDef#key()}.
+     *
+     * @param def name provider
      * @return the value if present
      * @see ResourceFiles.Cfg
      */
-    public Optional<String> option(ConfigDef key) {
+    public Optional<String> option(ConfigDef def) {
         return config.stream()
-                .filter(o -> key.key().equals(o.key()))
+                .filter(o -> def.key().equals(o.key()))
                 .map(Config::value)
                 .findFirst();
     }
@@ -109,7 +111,7 @@ public final class Context {
     }
 
     /**
-     * @return unmodifiable resources set
+     * @return unmodifiable resources list
      * @see ResourceFiles#value()
      */
     public List<Resource> resources() {
@@ -117,7 +119,7 @@ public final class Context {
     }
 
     /**
-     * @return unmodifiable configuration
+     * @return unmodifiable configuration list
      * @see ResourceFiles#config()
      */
     public List<Config> config() {
@@ -125,7 +127,7 @@ public final class Context {
     }
 
     /**
-     * @return  name resolver
+     * @return name resolver
      * @see ResourceFiles#namer()
      */
     public Namer namer() {

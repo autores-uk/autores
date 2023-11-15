@@ -63,7 +63,7 @@
  *         <tr>
  *             <td>{@link uk.autores.GenerateInputStreamsFromFiles}</td>
  *             <td>any files</td>
- *             <td>{@link uk.autores.cfg.Visibility}</td>
+ *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Name}</td>
  *             <td>Generates a single class with methods for opening resource {@link java.io.InputStream}s.</td>
  *         </tr>
  *         <tr>

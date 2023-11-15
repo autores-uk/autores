@@ -1,5 +1,6 @@
 package uk.autores.handling;
 
+import javax.tools.JavaFileManager;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,9 @@ public final class ResourceFiling {
     private ResourceFiling() {}
 
     /**
+     * Resolves the package string to be passed to
+     * {@link javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
+     *
      * @param annotationPackage the annotated package
      * @param resourcePath non-empty resource path
      * @return the package to use in the filer
@@ -29,6 +33,9 @@ public final class ResourceFiling {
     }
 
     /**
+     * Resolves the relative name to be passed to
+     * {@link javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
+     *
      * @param resourcePath non-empty resource path as specified in annotation
      * @return the resource name to use in the filer
      */

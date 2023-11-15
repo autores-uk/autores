@@ -3,6 +3,9 @@ package uk.autores.cfg;
 import uk.autores.ResourceFiles;
 import uk.autores.handling.ConfigDef;
 
+/**
+ * "format": whether to generate format methods. "true" or "false".
+ */
 public final class Format {
 
     /** Key */
