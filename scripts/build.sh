@@ -13,6 +13,6 @@ cd "${HERE}/../code"
 
 CODE="$(pwd)"
 # https://hub.docker.com/_/maven/
-IMAGE="docker.io/library/maven:3.9.4-eclipse-temurin-8"
+IMAGE="docker.io/library/maven:3.9.4-eclipse-temurin-11"
 
 podman run -v "${CODE}:/code" -w "/code" "${IMAGE}" mvn clean install javadoc:javadoc

@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 import java.util.Properties;
 
@@ -26,9 +26,7 @@ public final class MissingKey {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(MISSING_KEY,
-            s -> s.matches("error|warn|ignore"),
-            "Action when a base key is missing from localized file. Valid values: \"error\"; \"warn\"; \"ignore\".");
+    public static final ConfigDef DEF = new ConfigDef(MISSING_KEY, s -> s.matches("error|warn|ignore"));
 
     private MissingKey() {}
 }

@@ -25,7 +25,7 @@
  *         Set the resource file name in the {@link uk.autores.ResourceFiles#value()} array.
  *     </li>
  *     <li>
- *         Specify a {@link uk.autores.processing.Handler} for non-default behaviour.
+ *         Specify a {@link uk.autores.handling.Handler} for non-default behaviour.
  *     </li>
  * </ol>
  *
@@ -35,7 +35,7 @@
  *     <caption>provided handlers</caption>
  *     <thead>
  *         <tr>
- *             <th>{@link uk.autores.processing.Handler}</th>
+ *             <th>{@link uk.autores.handling.Handler}</th>
  *             <th>Resources</th>
  *             <th>Configuration</th>
  *             <th>Description</th>
@@ -46,7 +46,7 @@
  *             <td>{@link uk.autores.AssertResourceExists}</td>
  *             <td>any files</td>
  *             <td><em>(none)</em></td>
- *             <td>Default {@link uk.autores.processing.Handler} that validates resources exist.</td>
+ *             <td>Default {@link uk.autores.handling.Handler} that validates resources exist.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateByteArraysFromFiles}</td>
@@ -59,6 +59,12 @@
  *             <td>{@link java.util.Properties} files</td>
  *             <td>{@link uk.autores.cfg.Visibility}</td>
  *             <td>Generates classes containing String constants of the keys in a properties file.</td>
+ *         </tr>
+ *         <tr>
+ *             <td>{@link uk.autores.GenerateInputStreamsFromFiles}</td>
+ *             <td>any files</td>
+ *             <td>{@link uk.autores.cfg.Visibility}</td>
+ *             <td>Generates a single class with methods for opening resource {@link java.io.InputStream}s.</td>
  *         </tr>
  *         <tr>
  *             <td>{@link uk.autores.GenerateMessagesFromProperties}</td>

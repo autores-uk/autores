@@ -2,7 +2,7 @@ package uk.autores.test.cfg;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

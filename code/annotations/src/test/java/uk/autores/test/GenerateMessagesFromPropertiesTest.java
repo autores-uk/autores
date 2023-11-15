@@ -1,63 +1,58 @@
 package uk.autores.test;
 
-import org.joor.Reflect;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.GenerateMessagesFromProperties;
 import uk.autores.cfg.Format;
 import uk.autores.cfg.Localize;
 import uk.autores.cfg.MissingKey;
 import uk.autores.cfg.Visibility;
-import uk.autores.processing.*;
-import uk.autores.test.env.ResourceSets;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.handling.Config;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
+import uk.autores.test.testing.HandlerResults;
+import uk.autores.test.testing.HandlerTester;
 
-import javax.tools.Diagnostic;
-import javax.tools.StandardLocation;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GenerateMessagesFromPropertiesTest {
 
     private final Handler handler = new GenerateMessagesFromProperties();
     private final String filename = "Messages.properties";
-    private TestFileObject file;
     private final String filename_fr = "Messages_fr.properties";
-    private TestFileObject file_fr;
-    private TestProcessingEnvironment env;
 
-    @BeforeEach
-    void init() throws Exception {
-        env = new TestProcessingEnvironment();
+    private HandlerTester tester() {
+        return new HandlerTester(handler);
+    }
 
+    private byte[] messages() {
         String data = "today={0} said \"Today is {1,date}!\"\n";
         data += "foo=bar\n";
+        return data.getBytes(StandardCharsets.UTF_8);
+    }
 
-        file = new TestFileObject(true);
-        try(OutputStream out = file.openOutputStream()) {
-            out.write(data.getBytes(StandardCharsets.UTF_8));
-        }
-
+    private byte[] messages_fr() {
         String data_fr = "today=\"{0} a dit : \u00AB Aujourd'hui, c'est {1,date} ! \u00BB\n";
         data_fr += "foo=baz\n";
+        return data_fr.getBytes(StandardCharsets.UTF_8);
+    }
 
-        file_fr = new TestFileObject(true);
-        try(OutputStream out = file_fr.openOutputStream()) {
-            out.write(data_fr.getBytes(StandardCharsets.UTF_8));
-        }
+    private byte[] messages_fr_differentFormat() {
+        String data_fr = "today={0,number}\n";
+        data_fr += "foo=baz\n";
+        return data_fr.getBytes(StandardCharsets.UTF_8);
+    }
 
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename_fr, file_fr);
+    private byte[] messages_fr_empty() {
+        return new byte[0];
+    }
+
+    private byte[] messagesInvalidIdentifier() {
+        return "public=foo".getBytes(StandardCharsets.UTF_8);
     }
 
     @Test
@@ -70,129 +65,103 @@ class GenerateMessagesFromPropertiesTest {
     }
 
     @Test
-    void handleLocalized() throws Exception {
-        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
+    void generatesUnlocalizedMessages() throws Exception {
+        HandlerResults hr = tester().withResource(filename, messages())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test
-    void handleUnLocalized() throws Exception {
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).remove(filename_fr);
-
-        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
+    void generatesLocalizedMessages() throws Exception {
+        HandlerResults hr = tester()
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test
-    void handleNoLocalization() throws Exception {
-        List<Config> config = singletonList(new Config("localize", "false"));
-        testMessages(env, config, ResourceSets.of(env, filename, file));
+    void skipsLocalizedMessages() throws Exception {
+        List<Config> cfg = singletonList(new Config(Localize.LOCALIZE, Localize.FALSE));
+        HandlerResults hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test
-    void handleNoFormat() throws Exception {
-        List<Config> config = singletonList(new Config("format", "false"));
-        testMessages(env, config, ResourceSets.of(env, filename, file));
+    void skipsFormatMessages() throws Exception {
+        List<Config> cfg = singletonList(new Config(Format.FORMAT, Format.FALSE));
+        HandlerResults hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test
-    void handlePublicVisibility() throws Exception {
-        List<Config> config = singletonList(new Config("visibility", "public"));
-        testMessages(env, config, ResourceSets.of(env, filename, file));
+    void generatesPublicMessages() throws Exception {
+        List<Config> cfg = singletonList(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+        HandlerResults hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
+        String src = hr.generatedSource().values().iterator().next();
+        assertTrue(src.contains("public final class"));
     }
 
     @Test
-    void handleMissingKeys() throws Exception {
-        makeFrFileEmpty();
-
-        List<Config> config = singletonList(new Config("missing-key", "warn"));
-        testMessages(env, config, ResourceSets.of(env, filename, file));
+    void reportsMissingLocalizedKeys() throws Exception {
+        HandlerResults hr = tester()
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr_empty())
+                .test();
+        hr.assertErrorMessagesReported();
     }
 
     @Test
-    void failsOnMissingKeys() throws Exception {
-        makeFrFileEmpty();
-
-        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
-
-        assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
+    void allowsMissingLocalizedKeys() throws Exception {
+        List<Config> cfg = singletonList(new Config(MissingKey.MISSING_KEY, MissingKey.WARN));
+        HandlerResults hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr_empty())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test
-    void failsOnMismatchedFormats() throws Exception {
-        makeFrDifferentFormat();
-
-        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
-
-        assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
+    void reportsMismatchedFormatVariables() throws Exception {
+        HandlerResults hr = tester()
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr_differentFormat())
+                .test();
+        hr.assertErrorMessagesReported();
     }
 
     @Test
     void reportsBadFilename() throws Exception {
-        List<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(file, filename));
-        resources.add(new Resource(new TestFileObject(true), "wrongfile.dat"));
-
-        testMessages(env, emptyList(), resources);
-
-        assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
+        HandlerResults hr = tester()
+                .withResource("wrong.dat", messages())
+                .test();
+        hr.assertErrorMessagesReported();
     }
 
     @Test
     void reportsInvalidIdentifier() throws Exception {
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).remove(filename_fr);
-
-        String data = "public=foo";
-
-        file = new TestFileObject(true);
-        try(OutputStream out = file.openOutputStream()) {
-            out.write(data.getBytes(StandardCharsets.UTF_8));
-        }
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
-
-        testMessages(env, emptyList(), ResourceSets.of(env, filename, file));
-
-        assertFalse(env.getMessager().messages.get(Diagnostic.Kind.ERROR).isEmpty());
-    }
-
-    private void makeFrFileEmpty() throws Exception {
-        file_fr = new TestFileObject(true);
-        try(OutputStream out = file_fr.openOutputStream()) {
-            out.write(new byte[0]);
-        }
-
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename_fr, file_fr);
-    }
-
-    private void makeFrDifferentFormat() throws Exception {
-        file_fr = new TestFileObject(true);
-        try(OutputStream out = file_fr.openOutputStream()) {
-            out.write("today={0,number}\nfoo=baz\n".getBytes(StandardCharsets.UTF_8));
-        }
-
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename_fr, file_fr);
-    }
-
-    private void testMessages(TestProcessingEnvironment env,
-                              List<Config> config,
-                              List<Resource> files) throws Exception {
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                TestPkgs.P,
-                TestElement.INSTANCE,
-                files,
-                config,
-                new Namer()
-        );
-
-        handler.handle(context);
-
-        String qname = "Messages";
-        TestFileObject file = env.getFiler().files.get(StandardLocation.SOURCE_OUTPUT).get(qname);
-        String src = new String(file.data.toByteArray(), StandardCharsets.UTF_8);
-
-        Reflect.compile(
-                qname,
-                src
-        ).create().get();
+        HandlerResults hr = tester()
+                .withResource(filename, messagesInvalidIdentifier())
+                .test();
+        hr.assertErrorMessagesReported();
     }
 }

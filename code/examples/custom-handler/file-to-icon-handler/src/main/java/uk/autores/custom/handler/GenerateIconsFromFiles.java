@@ -5,7 +5,7 @@ import com.samskivert.mustache.Template;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.GenerateStringsFromText;
 import uk.autores.ResourceFiles;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
@@ -48,11 +48,11 @@ public class GenerateIconsFromFiles implements Handler {
 
         for (Resource resource : resources) {
             String simple = namer.simplifyResourceName(resource.toString());
-            String dataClassName = namer.nameClass(simple);
+            String dataClassName = namer.nameType(simple);
             String className = dataClassName + "Icon";
             String qualifiedName = pkg.qualifiedClassName(className);
 
-            if (!Namer.isJavaIdentifier(className)) {
+            if (!Namer.isIdentifier(className)) {
                 context.printError(className + " is not a valid class name");
                 continue;
             }

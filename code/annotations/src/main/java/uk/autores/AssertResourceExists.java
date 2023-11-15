@@ -1,7 +1,7 @@
 package uk.autores;
 
-import uk.autores.processing.Context;
-import uk.autores.processing.Handler;
+import uk.autores.handling.Context;
+import uk.autores.handling.Handler;
 import uk.autores.processors.ResourceFilesProcessor;
 
 /**

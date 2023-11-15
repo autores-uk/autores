@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 public final class Format {
 
@@ -18,9 +18,7 @@ public final class Format {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(FORMAT,
-            s -> s.matches("true|false"),
-            "Enables formatting. Valid values: \"true\"; \"false\".");
+    public static final ConfigDef DEF = new ConfigDef(FORMAT, s -> s.matches("true|false"));
 
     private Format() {}
 }

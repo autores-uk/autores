@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.8-alpha</version>
+        <version>11.0.18-alpha</version>
     </parent>
 
     <artifactId>assert-resources-exist</artifactId>
@@ -27,4 +27,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>uk.autores.exist.PrintResources</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

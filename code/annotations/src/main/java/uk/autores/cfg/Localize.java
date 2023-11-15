@@ -1,7 +1,7 @@
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
-import uk.autores.processing.ConfigDef;
+import uk.autores.handling.ConfigDef;
 
 /**
  * "localize": whether to search for localized resources. "true" or "false".
@@ -21,9 +21,7 @@ public final class Localize {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF = new ConfigDef(LOCALIZE,
-            s -> s.matches("true|false"),
-            "Enables searching for localized resources. Valid values: \"true\"; \"false\".");
+    public static final ConfigDef DEF = new ConfigDef(LOCALIZE, s -> s.matches("true|false"));
 
     private Localize() {}
 }

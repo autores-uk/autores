@@ -2,23 +2,19 @@ package uk.autores;
 
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
-import uk.autores.internal.Ints;
-import uk.autores.internal.JavaWriter;
-import uk.autores.internal.UnicodeEscapeWriter;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 /**
  * <p>
  *     {@link Handler} that, for each resource, generates a class with a name derived from the resource name
- *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameClass(String)}.
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}.
  *     The class will have a static method called <code>bytes</code> that returns the resource
  *     as a new byte array.
  * </p>
@@ -42,7 +38,6 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * See <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">u4 code_length</a>
      * in the Code attribute.
      * </p>
-     *
      * <p>
      * Setting a value in the byte array while steering clear of the constant pool might look like this:
      * <pre>
@@ -56,15 +51,29 @@ public final class GenerateByteArraysFromFiles implements Handler {
      */
     private static final int MAX_BYTES_PER_METHOD = 65535 / 8;
 
+    private static byte[] inlineBuffer() {
+        return new byte[MAX_BYTES_PER_METHOD];
+    }
+
     /**
      * <p>All configuration is optional.</p>
      *
      * Strategy:
      * <ul>
-     *     <li>"auto": "inline" for files up to 1kB; "lazy" otherwise</li>
+     *     <li>
+     *         "auto":
+     *         "inline" for files up to 128 bytes;
+     *         "encode" for files up to 65535 bytes;
+     *         "lazy" otherwise
+     *     </li>
      *     <li>"inline": files become bytecode instructions</li>
-     *     <li>"lazy": files are loaded using using the {@link ClassLoader}</li>
+     *     <li>"encode": files are encoded in string literals in the class constant pool</li>
+     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)}</li>
      * </ul>
+     *
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility strategy
      * @see Visibility
@@ -72,7 +81,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Strategy.DEF);
+        return Sets.of(Visibility.DEF, Strategy.DEF);
     }
 
     @Override
@@ -84,21 +93,22 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         ClassGenerator generator = generatorStrategy(context);
 
-        byte[] buf = new byte[MAX_BYTES_PER_METHOD];
+        String utilityTypeClassName = ClassNames.generateClassName(context.resources());
+        GenerationState gs = new GenerationState(utilityTypeClassName);
 
         for (Resource entry : resources) {
             String resource = entry.toString();
             String simple = namer.simplifyResourceName(resource);
-            String className = namer.nameClass(simple);
+            String className = namer.nameType(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
-            if (!Namer.isJavaIdentifier(className)) {
+            if (!Namer.isIdentifier(className)) {
                 String msg = "Cannot transform resource name '" + resource + "' to class name";
                 context.printError(msg);
                 continue;
             }
 
-            FileStats stats = stats(buf, entry);
+            FileStats stats = stats(gs, entry);
             if (stats.size > Integer.MAX_VALUE) {
                 String err = "Resource " + resource + " too big for byte array; max size is " + Integer.MAX_VALUE;
                 context.printError(err);
@@ -109,29 +119,100 @@ public final class GenerateByteArraysFromFiles implements Handler {
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, resource)) {
-                generator.generate(writer, buf, stats);
+                generator.generate(gs, writer, stats);
             }
+        }
+
+        if (gs.needsLoadMethod || gs.needDecodeMethod) {
+            writeUtilityType(context, gs);
         }
     }
 
     private ClassGenerator generatorStrategy(Context context) {
         String strategy = context.option(Strategy.DEF).orElse(Strategy.AUTO);
         switch (strategy) {
-            case "inline": return GenerateByteArraysFromFiles::writeInlineMethods;
-            case "lazy": return GenerateByteArraysFromFiles::writeLazyLoad;
+            case Strategy.ENCODE: return GenerateByteArraysFromFiles::writeStringMethods;
+            case Strategy.INLINE: return GenerateByteArraysFromFiles::writeInlineMethods;
+            case Strategy.LAZY: return GenerateByteArraysFromFiles::writeLazyLoad;
             default: return GenerateByteArraysFromFiles::writeAuto;
         }
     }
 
-    private static void writeAuto(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
-        if (stats.size > 1024) {
-            writeLazyLoad(writer, buf, stats);
-        } else {
-            writeInlineMethods(writer, buf, stats);
+    private void writeUtilityType(Context context, GenerationState gs) throws IOException {
+        Context copy = new Context(context.env(),
+                context.location(),
+                context.pkg(),
+                context.annotated(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                context.namer());
+
+        Pkg pkg = context.pkg();
+        String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
+        Filer filer = context.env().getFiler();
+        JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
+        try (Writer out = javaFile.openWriter();
+             Writer escaper = new UnicodeEscapeWriter(out);
+             JavaWriter writer = new JavaWriter(this, copy, escaper, gs.utilityTypeClassName, "")) {
+            if (gs.needDecodeMethod) {
+                writeUtilityDecode(writer);
+            }
+            if (gs.needsLoadMethod) {
+                writeUtilityLoad(writer);
+            }
         }
     }
 
-    private static void writeInlineMethods(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeUtilityLoad(JavaWriter writer) throws IOException {
+        writer.nl();
+        writer.indent()
+                .staticMember("byte[]", "load")
+                .append("(java.lang.String resource, int size) ")
+                .openBrace().nl();
+
+        writer.indent().append("byte[] barr = new byte[size];").nl();
+        writer.indent().append("try (java.io.InputStream in = ").openResource("resource", false).append(") ").openBrace().nl();
+        writer.indent().append("int offset = 0;").nl();
+        writer.indent().append("while(true) ").openBrace().nl();
+        writer.indent().append("int r = in.read(barr, offset, barr.length - offset);").nl();
+        writer.indent().append("if (r < 0) { break; }").nl();
+        writer.indent().append("offset += r;").nl();
+        writer.indent().append("if (offset == barr.length) { break; }").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
+        writer.closeBrace().nl();
+        writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(resource, e);").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return barr;").nl();
+
+        writer.closeBrace().nl();
+    }
+
+    private static void writeUtilityDecode(JavaWriter writer) throws IOException {
+        writer.indent().append("static int decode(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
+        writer.indent().append("for (int i = 0, len = s.length(); i < len; i++) ").openBrace().nl();
+        writer.indent().append("char c = s.charAt(i);").nl();
+        writer.indent().append("barr[off++] = (byte) (c >> 8);").nl();
+        writer.indent().append("barr[off++] = (byte) c;").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return off;").nl();
+        writer.closeBrace().nl();
+    }
+
+    private static void writeAuto(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+        if (stats.size <= 128) {
+            writeInlineMethods(gs, writer, stats);
+        } else if (stats.size <= 0xFFFF) {
+            writeStringMethods(gs, writer, stats);
+        } else {
+            writeLazyLoad(gs, writer, stats);
+        }
+    }
+
+    private static void writeInlineMethods(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+        byte[] buf = gs.buffer;
         int methodCount = 0;
 
         try (InputStream in = stats.resource.open()) {
@@ -195,24 +276,52 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private static void writeLazyLoad(JavaWriter writer, byte[] buf, FileStats stats) throws IOException {
+    private static void writeLazyLoad(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+        gs.needsLoadMethod = true;
+
         writeSignature(writer);
 
-        // TODO: avoid writing this logic for every resource
-        writer.indent().append("byte[] barr = new byte[").append(Ints.toString((int) stats.size)).append("];").nl();
-        writer.indent().append("try (java.io.InputStream in = ").openResource(stats.resource).append(") ").openBrace().nl();
-        writer.indent().append("int offset = 0;").nl();
-        writer.indent().append("while(true) ").openBrace().nl();
-        writer.indent().append("int r = in.read(barr, offset, barr.length - offset);").nl();
-        writer.indent().append("if (r < 0) { break; }").nl();
-        writer.indent().append("offset += r;").nl();
-        writer.indent().append("if (offset == barr.length) { break; }").nl();
-        writer.closeBrace().nl();
-        writer.throwOnModification("(offset != barr.length) || (in.read() >= 0)", stats.resource);
-        writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(").string(stats.resource).append(", e);").nl();
-        writer.closeBrace().nl();
+        writer.indent().append("byte[] barr = ")
+                .append(gs.utilityTypeClassName)
+                .append(".load(")
+                .string(stats.resource.toString())
+                .append(", ")
+                .append(Ints.toString((int) stats.size)).append(");").nl();
+
+        writeReturn(writer);
+    }
+
+    private static void writeStringMethods(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+        gs.needDecodeMethod = true;
+
+        writeSignature(writer);
+
+        int size = (int) stats.size;
+        writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
+        writer.indent().append("int off = 0;").nl();
+
+        ByteHackReader odd;
+        try (InputStream in = stats.resource.open();
+             ByteHackReader bhr = new ByteHackReader(in);
+             Reader br = new BufferedReader(bhr, 0xFFFF)) {
+            odd = bhr;
+
+            String util = gs.utilityTypeClassName;
+            ModifiedUtf8Buffer buf8 = gs.utf8Buffer();
+            while (buf8.receive(br)) {
+                writer.indent().append("off = ")
+                        .append(util)
+                        .append(".decode(")
+                        .string(buf8)
+                        .append(", barr, off);").nl();
+            }
+        }
+
+        if (odd.lastByteOdd()) {
+            String lastIndex = Ints.toString(size - 1);
+            String oddByte = Ints.toString(odd.getOddByte());
+            writer.indent().append("barr[").append(lastIndex).append("] = ").append(oddByte).append(";").nl();
+        }
 
         writeReturn(writer);
     }
@@ -224,10 +333,11 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     private static void writeReturn(JavaWriter writer) throws IOException {
         writer.indent().append("return barr;").nl();
-        writer.closeBrace().nl();
+        writer.closeBrace().nl().nl();
     }
 
-    private static FileStats stats(byte[] buf, Resource resource) throws IOException {
+    private static FileStats stats(GenerationState gs, Resource resource) throws IOException {
+        byte[] buf = gs.buffer;
         long size = 0;
         try (InputStream in = resource.open()) {
             while(true) {
@@ -256,6 +366,25 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     @FunctionalInterface
     private interface ClassGenerator {
-        void generate(JavaWriter writer, byte[] buf, FileStats stats) throws IOException;
+        void generate(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException;
+    }
+
+    private static class GenerationState {
+        final byte[] buffer = inlineBuffer();
+        boolean needsLoadMethod;
+        boolean needDecodeMethod;
+        ModifiedUtf8Buffer utf8Buffer;
+        final String utilityTypeClassName;
+
+        GenerationState(String utilityTypeClassName) {
+            this.utilityTypeClassName = utilityTypeClassName;
+        }
+
+        ModifiedUtf8Buffer utf8Buffer() {
+            if (utf8Buffer == null) {
+                utf8Buffer = new ModifiedUtf8Buffer();
+            }
+            return utf8Buffer;
+        }
     }
 }

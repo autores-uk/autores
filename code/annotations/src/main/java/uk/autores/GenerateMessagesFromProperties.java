@@ -4,8 +4,7 @@ import uk.autores.cfg.Format;
 import uk.autores.cfg.Localize;
 import uk.autores.cfg.MissingKey;
 import uk.autores.cfg.Visibility;
-import uk.autores.internal.*;
-import uk.autores.processing.*;
+import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
@@ -79,6 +78,9 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"localize" is "true" by default.</p>
      * <p>"missing-key" is "error" by default.</p>
      * <p>"format" is "true" by default.</p>
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
      *
      * @return visibility, localize, missing-key
      * @see Visibility
@@ -88,7 +90,7 @@ public final class GenerateMessagesFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return ConfigDefs.set(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
+        return Sets.of(Visibility.DEF, Localize.DEF, MissingKey.DEF, Format.DEF);
     }
 
     @Override
@@ -171,8 +173,8 @@ public final class GenerateMessagesFromProperties implements Handler {
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
         String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameClass(simple);
-        if (!Namer.isJavaIdentifier(name)) {
+        String name = namer.nameType(simple);
+        if (!Namer.isIdentifier(name)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);
             return;
@@ -263,8 +265,8 @@ public final class GenerateMessagesFromProperties implements Handler {
                                String key,
                                String baseValue) throws IOException {
         Resource resource = msgs.resource;
-        String method = ctxt.namer().nameMethod(key);
-        if (!Namer.isJavaIdentifier(method)) {
+        String method = ctxt.namer().nameMember(key);
+        if (!Namer.isIdentifier(method)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to method name";
             ctxt.printError(msg);
             return;
@@ -314,7 +316,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        List<MessageParser.VarType> vars = MessageParser.parse(baseValue);
+        List<String> vars = MessageParser.parse(baseValue);
         if (vars.isEmpty()) {
             return;
         }
@@ -351,8 +353,8 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
             comma = true;
 
-            MessageParser.VarType vt = vars.get(i);
-            writer.append(vt.type).append(" v").append(Integer.toString(i));
+            String vt = vars.get(i);
+            writer.append(vt).append(" v").append(Integer.toString(i));
         }
         writer.append(") ").openBrace().nl();
         writer.indent().append("java.lang.String msg = ").append(method);
@@ -376,7 +378,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
         writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
         for (int i = 0; i < vars.size(); i++) {
-            boolean date = vars.get(i) == MessageParser.VarType.DATE;
+            boolean date = vars.get(i).equals(MessageParser.DATE);
             writer.indent();
             if (date) {
                 writer.append("java.util.Date.from(");
@@ -397,7 +399,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private boolean localizedMessagesMatchBase(Context ctxt,
                                                Resource resource,
-                                               List<MessageParser.VarType> vars,
+                                               List<String> vars,
                                                List<Localized> localizations, String key) {
         boolean ok = true;
         for (Localized l : localizations) {
@@ -405,7 +407,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             if (localizedValue == null) {
                 continue;
             }
-            List<MessageParser.VarType> locVars = MessageParser.parse(localizedValue);
+            List<String> locVars = MessageParser.parse(localizedValue);
             if (!locVars.equals(vars)) {
                 String msg = "Differing message variables in localization " + resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have " + locVars + " need " + vars;

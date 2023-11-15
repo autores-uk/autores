@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>custom-handler</artifactId>
-        <version>11.0.8-alpha</version>
+        <version>11.0.18-alpha</version>
     </parent>
 
     <artifactId>file-to-icon-handler</artifactId>
@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>**/*.txt</exclude>

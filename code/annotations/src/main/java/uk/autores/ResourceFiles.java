@@ -1,8 +1,8 @@
 package uk.autores;
 
-import uk.autores.processing.ConfigDef;
-import uk.autores.processing.Handler;
-import uk.autores.processing.Namer;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
+import uk.autores.handling.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileManager;
@@ -79,7 +79,7 @@ public @interface ResourceFiles {
      *
      * @return configured options
      * @see Handler#config()
-     * @see ConfigDefs
+     * @see Sets
      */
     Cfg[] config() default {};
 
@@ -87,9 +87,7 @@ public @interface ResourceFiles {
      * Configuration option.
      *
      * @see Handler#config()
-     * @see Handler#validateConfig()
      * @see ConfigDef
-     * @see ConfigDefs
      */
     @interface Cfg {
         /**
