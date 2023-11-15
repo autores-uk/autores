@@ -42,7 +42,7 @@ mvn --file "${BASE}/code/annotations/pom.xml" clean package -P release
 
 echo "Releasing version ${CURRENT} on branch ${BRANCH}"
 
-upversion "${NEXT}"
+upversion "${CURRENT}"
 
 git add code
 git commit -m "Releasing version ${CURRENT}"
