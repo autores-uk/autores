@@ -75,14 +75,15 @@
     <pre><code>
       import uk.autores.*;
       @ResourceFiles(
-        // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
-        value = "Msgs.properties",
-        handler = GenerateMessagesFromProperties.class
+        value = "msgs.properties",
+        handler = GenerateMessagesFromProperties.class,
+        namer = IdiomaticNamer.class
       )
       public class PrintProperties {
         public static void main(String...args)  {
           TimeZone gmt = TimeZone.getTimeZone("GMT");
-          String msg = Msgs.planet_event(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack");
+          // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
+          String msg = Msgs.planetEvent(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack");
           System.out.println(msg);
         }
       }
@@ -107,7 +108,8 @@
 
     <p>
       Java 8 and Java 11 versions are published.
-      They are functionaly identical.
+      The Java 11 version supports modules natively.
+      The Java 8 version supports modules via MANIFEST.MF.
     </p>
 
     <a id="modules" href="#modules">&#x1f517;</a>
@@ -117,7 +119,6 @@
       Use <code>requires static uk.autores</code> in 
       <a href="https://dev.java/learn/modules/">module-info.java</a> to depend on this library at compile time only.
       Add <code>requires static java.compiler</code> to avoid warnings about unknown type <code>StandardLocation</code>.
-      All versions of the library support modules.
     </p>
 
     <pre><code>
