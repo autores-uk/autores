@@ -35,7 +35,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.consts.PrintLocalizations</mainClass>
+                    <mainClass>uk.autores.consts.PrintCincoLobitos</mainClass>
                 </configuration>
             </plugin>
         </plugins>
