@@ -16,8 +16,6 @@ import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 /**
  * <p>
  * {@link Handler} that generates message classes from {@link Properties} files using {@link Locale}s to match localized
@@ -73,6 +71,8 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private static final String EXTENSION = ".properties";
 
+    private final LocalePatterns locales = new LocalePatterns();
+
     /**
      * <p>All configuration is optional.</p>
      * <p>"localize" is "true" by default.</p>
@@ -109,7 +109,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
 
             Properties base = PropLoader.load(res);
-            List<Localized> localizations = localize
+            List<Localization> localizations = localize
                     ? loadLocalizations(context, res)
                     : Collections.emptyList();
 
@@ -117,29 +117,22 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
     }
 
-    private List<Localized> loadLocalizations(Context context, Resource resource) throws IOException {
+    private List<Localization> loadLocalizations(Context context, Resource resource) throws IOException {
         Filer filer = context.env().getFiler();
         JavaFileManager.Location location = context.location();
 
         CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
         CharSequence name = ResourceFiling.relativeName(resource);
 
-        List<Localized> localized = new ArrayList<>();
+        List<Localization> localized = new ArrayList<>();
 
         int end = name.length() - EXTENSION.length();
         CharSequence base = name.subSequence(0, end);
         StringBuilder props = new StringBuilder(base.length() + EXTENSION.length() + 6);
         props.append(base);
 
-        for (Map.Entry<String, Locale> entry : expandedLocales().entrySet()) {
+        for (String pattern : locales.patterns()) {
             props.setLength(base.length());
-
-            String pattern = entry.getKey();
-            Locale locale = entry.getValue();
-            if (locale.getLanguage().isEmpty()) {
-                continue;
-            }
-
             props.append(pattern).append(EXTENSION);
 
             final FileObject file;
@@ -156,7 +149,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
             Resource res = new Resource(file, props.toString());
             Properties properties = PropLoader.load(res);
-            localized.add(new Localized(pattern, properties));
+            localized.add(new Localization(pattern, properties));
         }
 
         return localized;
@@ -165,7 +158,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private void writeProperties(Context ctxt,
                                  Resource resource,
                                  Properties base,
-                                 List<Localized> localizations) throws IOException {
+                                 List<Localization> localizations) throws IOException {
         Namer namer = ctxt.namer();
         Pkg pkg = ctxt.pkg();
         Filer filer = ctxt.env().getFiler();
@@ -203,7 +196,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private void writeCache(JavaWriter writer,
                             String name,
                             String lookupName,
-                            List<Localized> localizations) throws IOException {
+                            List<Localization> localizations) throws IOException {
         String cacheName = "CACHE$" + lookupName.toUpperCase(Locale.ENGLISH);
         String computeName = "compute$" + lookupName;
 
@@ -227,7 +220,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
         writer.indent().append("java.lang.String pattern = ctrl.toBundleName(\"\", candidate).substring(1);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
-        for (Localized l : localizations) {
+        for (Localization l : localizations) {
             String p = l.pattern.substring(1);
             writer.indent().append("case \"")
                     .append(p)
@@ -273,7 +266,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         JavaWriter writer = msgs.writer;
-        List<Localized> localizations = msgs.localizations;
+        List<Localization> localizations = msgs.localizations;
 
         writer.nl().comment(key);
         if (localizations.isEmpty()) {
@@ -288,12 +281,12 @@ public final class GenerateMessagesFromProperties implements Handler {
                     .nl();
             writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
             writer.indent().append("switch (pattern) ").openBrace().nl();
-            for (Localized l : localizations) {
+            for (Localization l : localizations) {
                 String value = l.properties.getProperty(key);
                 if (value == null) {
                     String msg = resource + ": " + l.pattern + ": missing key " + key;
                     Reporting.reporter(ctxt, MissingKey.DEF).accept(msg);
-                    continue;
+                    value = substituteMissingValue(msgs, l.pattern, key, baseValue);
                 }
                 String pattern = l.pattern.substring(1);
                 writer.indent().append("case ").string(pattern).append(": return ").string(value).append(";").nl();
@@ -304,6 +297,17 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
 
         writeFormat(ctxt, msgs, writer, key, baseValue, method);
+    }
+
+    private String substituteMissingValue(Msgs msgs, String pattern, String key, String baseValue) {
+        List<Localization> candidates = locales.findCandidatesFor(pattern, l18n -> l18n.pattern, msgs.localizations);
+        for (Localization candidate : candidates) {
+            String result = candidate.properties.getProperty(key);
+            if (result != null) {
+                return result;
+            }
+        }
+        return baseValue;
     }
 
     private void writeFormat(Context ctxt,
@@ -322,7 +326,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         Resource resource = msgs.resource;
-        List<Localized> localizations = msgs.localizations;
+        List<Localization> localizations = msgs.localizations;
 
         if (!localizedMessagesMatchBase(ctxt, resource, vars, localizations, key)) {
             return;
@@ -400,9 +404,9 @@ public final class GenerateMessagesFromProperties implements Handler {
     private boolean localizedMessagesMatchBase(Context ctxt,
                                                Resource resource,
                                                List<String> vars,
-                                               List<Localized> localizations, String key) {
+                                               List<Localization> localizations, String key) {
         boolean ok = true;
-        for (Localized l : localizations) {
+        for (Localization l : localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
@@ -418,38 +422,12 @@ public final class GenerateMessagesFromProperties implements Handler {
         return ok;
     }
 
-    /**
-     * These locales are used to search for localized properties files.
-     * Default locales can vary by runtime implementation.
-     *
-     * @return the supported locales
-     * @see Locale#getAvailableLocales()
-     */
-    private List<Locale> locales() {
-        return asList(Locale.getAvailableLocales());
-    }
+    private static final class Localization {
 
-    private SortedMap<String, Locale> expandedLocales() {
-        ResourceBundle.Control ctrl = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
-
-        SortedMap<String, Locale> map = new TreeMap<>();
-        for (Locale base : locales()) {
-            if (base.getLanguage().isEmpty()) {
-                continue;
-            }
-            for (Locale locale : ctrl.getCandidateLocales("", base)) {
-                String pattern = ctrl.toBundleName("", locale);
-                map.put(pattern, locale);
-            }
-        }
-        return map;
-    }
-
-    private static class Localized {
         final String pattern;
         final Properties properties;
 
-        private Localized(String pattern, Properties properties) {
+        Localization(String pattern, Properties properties) {
             this.pattern = pattern;
             this.properties = properties;
         }
@@ -458,10 +436,10 @@ public final class GenerateMessagesFromProperties implements Handler {
     private static class Msgs {
         private final Resource resource;
         private final String lookupName;
-        private final List<Localized> localizations;
+        private final List<Localization> localizations;
         private final JavaWriter writer;
 
-        private Msgs(Resource resource, String lookupName, List<Localized> localizations, JavaWriter writer) {
+        private Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
             this.resource = resource;
             this.lookupName = lookupName;
             this.localizations = localizations;
