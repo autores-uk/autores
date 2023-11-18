@@ -11,6 +11,7 @@ public class PrintProperties {
                 Locale.US,
                 Locale.FRENCH,
                 Locale.CANADA_FRENCH,
+                Locale.forLanguageTag("ga"),
                 Locale.GERMANY,
         };
         // These MessagePrinter implementations use code generated from the properties
