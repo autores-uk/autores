@@ -1,10 +1,19 @@
 package uk.autores.messages;
 
+import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.IdiomaticNamer;
+import uk.autores.ResourceFiles;
+
 import java.io.PrintStream;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.TimeZone;
 
+@ResourceFiles(
+        value = "messages.properties",
+        handler = GenerateMessagesFromProperties.class,
+        namer = IdiomaticNamer.class
+)
 public class Translated implements MessagePrinter {
 
     @Override

@@ -1,10 +1,23 @@
 package uk.autores.messages;
 
+import uk.autores.GenerateMessagesFromProperties;
+import uk.autores.IdiomaticNamer;
+import uk.autores.ResourceFiles;
+import uk.autores.cfg.Localize;
+
 import java.io.PrintStream;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static uk.autores.cfg.Localize.LOCALIZE;
+
+@ResourceFiles(
+        value = "non-nls.properties",
+        handler = GenerateMessagesFromProperties.class,
+        config = @ResourceFiles.Cfg(key = LOCALIZE, value = Localize.FALSE),
+        namer = IdiomaticNamer.class
+)
 public class Untranslated implements MessagePrinter {
 
     @Override
