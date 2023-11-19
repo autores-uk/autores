@@ -1,8 +1,8 @@
 /** A package containing {@link javax.swing.ImageIcon}s. */
 @ResourceFiles(
         value = {
-                "Meow.png",
-                "Woof.png",
+                "Meow.png", // class MeowIcon
+                "Woof.png", // class WoofIcon
         },
         handler = GenerateIconsFromFiles.class
 )

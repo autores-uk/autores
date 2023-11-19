@@ -1,14 +1,14 @@
 package uk.autores.strong.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.strong.DumpResourceToStdout;
+import uk.autores.strong.DumpFillerTextToStdout;
 
 import java.io.IOException;
 
-class DumpResourceToStdoutTest {
+class DumpFillerTextToStdoutTest {
 
     @Test
     void run() throws IOException {
-        DumpResourceToStdout.main();
+        DumpFillerTextToStdout.main();
     }
 }

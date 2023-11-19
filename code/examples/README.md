@@ -10,7 +10,7 @@ navigating to the `target/generated-sources` directories.
 |-----------------------------------|---------------------------------------|--------------------------------------------------------------------------|
 | assert-resources-exist            | AssertResourceExists.class            | See also for non-relative paths                                          |
 | create-checked-resource           | GenerateInputStreamsFromFiles.class   |                                                                          |
-| custom-handler                    | custom                                | How to write your own handler                                            |
+| custom-handler                    | custom                                | How to write your own resource handler                                   |
 | embed-resources-as-bytes          | GenerateByteArraysFromFiles.class     |                                                                          |
 | embed-resources-as-strings        | GenerateStringsFromText.class         | Note the inline strategy and exclusion of resource files via the pom.xml |
 | transform-properties-to-constants | GenerateConstantsFromProperties.class |                                                                          |

@@ -12,6 +12,7 @@ import java.util.TimeZone;
 @ResourceFiles(
         value = "messages.properties",
         handler = GenerateMessagesFromProperties.class,
+        // generated names conform to Java norms
         namer = IdiomaticNamer.class
 )
 public class Translated implements MessagePrinter {
@@ -34,6 +35,7 @@ public class Translated implements MessagePrinter {
     }
 
     public void printTodayIs(PrintStream out, Locale l, TimeZone tz, Instant day) {
+        // needs a time zone because the format string includes DateFormat {N,date}
         String msg = Messages.todayIs(l, tz, day);
         out.println(msg);
     }
