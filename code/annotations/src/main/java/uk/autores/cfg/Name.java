@@ -4,7 +4,7 @@ import uk.autores.handling.ConfigDef;
 import uk.autores.handling.Namer;
 
 /**
- * Generated class name.
+ * "name": generated class name.
  */
 public final class Name {
 

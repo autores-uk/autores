@@ -25,6 +25,8 @@ public final class Resource implements CharSequence {
     }
 
     /**
+     * Calls {@link FileObject#openInputStream()}.
+     *
      * @return contents
      * @throws IOException on I/O error
      */
@@ -48,6 +50,9 @@ public final class Resource implements CharSequence {
         return path.subSequence(start, end);
     }
 
+    /**
+     * @return path passed to the constructor
+     */
     @Override
     public String toString() {
         return path;

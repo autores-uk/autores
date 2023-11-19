@@ -31,7 +31,7 @@ class NamerTest {
     void naming() {
         checkNaming(namer::nameType);
         checkNaming(namer::nameMember);
-        checkNaming(namer::nameStaticField);
+        checkNaming(namer::nameConstant);
     }
 
     private void checkNaming(Function<String, String> fn) {

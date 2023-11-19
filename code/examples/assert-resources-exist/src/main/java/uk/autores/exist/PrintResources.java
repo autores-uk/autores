@@ -10,6 +10,7 @@ import static java.util.Objects.requireNonNull;
 @ResourceFiles({PrintResources.RELATIVE, PrintResources.ABSOLUTE})
 public class PrintResources {
 
+    // change these strings to see compilation failure
     static final String RELATIVE = "relative.txt";
     static final String ABSOLUTE = "/uk/autores/exist/absolute.txt";
 

@@ -37,7 +37,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.strong.DumpResourceToStdout</mainClass>
+                    <mainClass>uk.autores.strong.DumpFillerTextToStdout</mainClass>
                 </configuration>
             </plugin>
         </plugins>

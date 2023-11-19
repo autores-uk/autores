@@ -5,7 +5,7 @@ import uk.autores.ResourceFiles;
 import java.util.Objects;
 
 /**
- * Config derived from {@link ResourceFiles#config()}.
+ * Config item derived from {@link ResourceFiles#config()}.
  */
 public final class Config {
 

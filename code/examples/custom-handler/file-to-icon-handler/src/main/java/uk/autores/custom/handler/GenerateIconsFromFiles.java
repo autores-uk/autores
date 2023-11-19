@@ -68,6 +68,9 @@ public class GenerateIconsFromFiles implements Handler {
         }
     }
 
+    /**
+     * This is passed to the template engine.
+     */
     public static class ImageTemplateContext {
         public final String pkg;
         public final String className;
