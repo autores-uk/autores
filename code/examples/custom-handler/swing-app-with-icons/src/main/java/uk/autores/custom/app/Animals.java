@@ -1,7 +1,7 @@
 package uk.autores.custom.app;
 
-import uk.autores.custom.app.icons.MeowIcon;
-import uk.autores.custom.app.icons.WoofIcon;
+import uk.autores.custom.app.icons.Meow;
+import uk.autores.custom.app.icons.Woof;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +18,8 @@ public class Animals {
         Container panel = frame.getContentPane();
         panel.setLayout(new FlowLayout());
         panel.add(new JLabel("Click a button:"));
-        panel.add(button(MeowIcon.load(), "Cat", "Meow!"));
-        panel.add(button(WoofIcon.load(), "Dog", "Woof!"));
+        panel.add(button(Meow.load(), "Cat", "Meow!"));
+        panel.add(button(Woof.load(), "Dog", "Woof!"));
         frame.pack();
         return frame;
     }

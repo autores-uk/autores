@@ -128,13 +128,9 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = new Context(context.env(),
-                context.location(),
-                context.pkg(),
-                context.annotated(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                context.namer());
+        Context copy = context.rebuild()
+                .setConfig(Collections.emptyList())
+                .build();
 
         Pkg pkg = context.pkg();
         String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
