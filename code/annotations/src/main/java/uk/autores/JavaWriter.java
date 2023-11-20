@@ -18,7 +18,6 @@ final class JavaWriter extends Writer {
     private final String className;
     private boolean closed = false;
     private int indentation = 2;
-    private String resourceLoadMethod = null;
 
     JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
         this.w = w;
@@ -71,10 +70,6 @@ final class JavaWriter extends Writer {
         }
         closed = true;
         try {
-            if (resourceLoadMethod != null) {
-                writeResourceLoadMethod();
-            }
-
             w.append("}").append(NL);
         } finally {
             w.close();
@@ -130,11 +125,15 @@ final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(CharSequence resource, boolean literal) throws IOException {
-        if (resourceLoadMethod == null) {
-            resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
+        append("java.util.Objects.requireNonNull(");
+        append(className);
+        append(".class.getResourceAsStream(");
+        if (literal) {
+            string(resource);
+        } else {
+            append(resource);
         }
-
-        append(resourceLoadMethod).append("(");
+        append("), ");
         if (literal) {
             string(resource);
         } else {
@@ -144,23 +143,4 @@ final class JavaWriter extends Writer {
         return this;
     }
 
-    private void writeResourceLoadMethod() throws IOException {
-        this.nl();
-        this.indent()
-                .append("private static java.io.InputStream ")
-                .append(resourceLoadMethod)
-                .append("(java.lang.String resource) throws java.io.IOException ")
-                .openBrace()
-                .nl();
-        this.indent()
-                .append("java.io.InputStream in = ")
-                .append(className)
-                .append(".class.getResourceAsStream(resource);")
-                .nl();
-        this.indent()
-                .append("if (in == null) { throw new java.io.FileNotFoundException(resource); }")
-                .nl();
-        this.indent().append("return in;").nl();
-        this.closeBrace().nl();
-    }
 }
