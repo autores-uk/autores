@@ -31,34 +31,31 @@ import java.util.Set;
  *     The {@link CharsetDecoder} is configured with {@link CodingErrorAction#REPORT}
  *     on malformed input or unmappable characters which will result in build failures.
  * </p>
- * <p>
- *     Inline files will be stored in the class constant pool.
- *     The class file format restricts constants to 65535 bytes.
- *     Strings over this limit will be split across multiple constants and concatenated at runtime.
- *     The size of inline files is limited by the class file format to ~500MB.
- * </p>
- * <p>
- *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)}.
- *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
- * </p>
  */
 public final class GenerateStringsFromText implements Handler {
 
     /**
      * <p>All configuration is optional.</p>
-     * Strategy:
-     * <ul>
-     *     <li>"auto": "inline" for files up to 65535B when encoded as UTF-8 - the limit for a String constant;
-     *     "lazy" otherwise</li>
-     *     <li>"inline": files become {@link String} literals</li>
-     *     <li>"encode": alias for "inline"</li>
-     *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
-     * </ul>
+     *
      * <p>
      *     "UTF-8" is assumed if "encoding" is not set and this is the recommended encoding.
      * </p>
      * <p>
      *     Use "visibility" to make the generated classes public.
+     * </p>
+     *
+     * Strategy:
+     * <ul>
+     *     <li>"auto": "inline" for files up to 65535B when encoded as modified UTF-8 - the limit for a String constant;
+     *     "lazy" otherwise</li>
+     *     <li>"inline": files become {@link String} literals</li>
+     *     <li>"encode": alias for "inline"</li>
+     *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
+     * </ul>
+     *
+     * <p>
+     *     The lazy strategy requires that the resource file be provided at runtime.
+     *     The inline strategy will break down as the resource file approaches 500MB due to class file limitations.
      * </p>
      *
      * @return visibility; encoding; strategy
@@ -131,13 +128,9 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = new Context(context.env(),
-                context.location(),
-                context.pkg(),
-                context.annotated(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                context.namer());
+        Context copy = context.rebuild()
+                .setConfig(Collections.emptyList())
+                .build();
 
         Pkg pkg = context.pkg();
         String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);

@@ -3,13 +3,11 @@
 package {{pkg}};
 {{/pkg}}
 
-import javax.swing.ImageIcon;
-
-public final class {{className}} {
+{{visibility}} final class {{className}} {
 
   private {{className}}() {}
 
-  public static ImageIcon load() {
-    return new ImageIcon({{dataClassName}}.bytes());
+  {{visibility}} static javax.swing.ImageIcon load() {
+    return new javax.swing.ImageIcon(Internal${{className}}.bytes());
   }
 }

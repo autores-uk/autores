@@ -6,6 +6,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,20 +35,28 @@ public final class Context {
      * @param config configuration defined in the annotation
      * @param namer name resolver
      */
-    public Context(ProcessingEnvironment env,
+    private Context(ProcessingEnvironment env,
                    JavaFileManager.Location location,
                    Pkg pkg,
                    Element annotated,
                    List<Resource> resources,
                    List<Config> config,
                    Namer namer) {
-        this.env = env;
+        this.env = requireNonNull(env, "env");
         this.location = requireNonNull(location, "location");
-        this.pkg = pkg;
+        this.pkg = requireNonNull(pkg, "pkg");
         this.annotated = requireNonNull(annotated, "annotatedElement");
         this.resources = unmodifiableList(requireNonNull(resources, "resources"));
         this.config = unmodifiableList(requireNonNull(config, "config"));
         this.namer = requireNonNull(namer, "namer");
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder rebuild() {
+        return new Builder(this);
     }
 
     /**
@@ -132,5 +141,68 @@ public final class Context {
      */
     public Namer namer() {
         return namer;
+    }
+
+    public static final class Builder {
+        private ProcessingEnvironment env;
+        private JavaFileManager.Location location;
+        private Pkg pkg;
+        private Element annotated;
+        private List<Resource> resources;
+        private List<Config> config;
+        private Namer namer;
+
+        Builder(Context ctxt) {
+            this.env = ctxt.env;
+            this.location = ctxt.location;
+            this.pkg = ctxt.pkg;
+            this.annotated = ctxt.annotated;
+            this.resources = ctxt.resources;
+            this.config = ctxt.config;
+            this.namer = ctxt.namer;
+        }
+
+        Builder() {}
+
+        public Context build() {
+            return new Context(env, location, pkg, annotated, resources, config, namer);
+        }
+
+        public Builder setAnnotated(Element annotated) {
+            this.annotated = annotated;
+            return this;
+        }
+
+        public Builder setConfig(List<Config> config) {
+            // TODO: efficiency
+            this.config = new ArrayList<>(config);
+            return this;
+        }
+
+        public Builder setEnv(ProcessingEnvironment env) {
+            this.env = env;
+            return this;
+        }
+
+        public Builder setLocation(JavaFileManager.Location location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder setNamer(Namer namer) {
+            this.namer = namer;
+            return this;
+        }
+
+        public Builder setPkg(Pkg pkg) {
+            this.pkg = pkg;
+            return this;
+        }
+
+        public Builder setResources(List<Resource> resources) {
+            // TODO: efficiency
+            this.resources = new ArrayList<>(resources);
+            return this;
+        }
     }
 }

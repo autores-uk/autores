@@ -74,15 +74,15 @@ public final class HandlerTester {
     }
 
     public HandlerResults test() throws Exception {
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                pkg,
-                TestElement.INSTANCE,
-                resources,
-                cfg,
-                NAMER
-        );
+        Context context = Context.builder()
+                .setAnnotated(TestElement.INSTANCE)
+                .setEnv(env)
+                .setConfig(cfg)
+                .setLocation(StandardLocation.CLASS_PATH)
+                .setNamer(NAMER)
+                .setPkg(pkg)
+                .setResources(resources)
+                .build();
 
         handler.handle(context);
 

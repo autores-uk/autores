@@ -103,7 +103,16 @@ class JavaWriterTest {
     private Context ctxt(Pkg pkg) {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
 
-        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptyList(), Collections.emptyList(), new Namer());
+        Context context = Context.builder()
+                .setAnnotated(TestElement.INSTANCE)
+                .setEnv(env)
+                .setConfig(Collections.emptyList())
+                .setLocation(StandardLocation.CLASS_PATH)
+                .setNamer(new Namer())
+                .setPkg(pkg)
+                .setResources(Collections.emptyList())
+                .build();
+        return context;
     }
 
     private JW instance(Object generator, Context ctxt, Writer writer, String className, String comment) {

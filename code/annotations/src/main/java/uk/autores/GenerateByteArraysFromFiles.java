@@ -21,14 +21,6 @@ import java.util.Set;
  * <p>
  *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
  * </p>
- * <p>
- *     Inline files will be stored as bytecode instructions.
- *     The size of inline files is limited by the class file format to ~500MB.
- * </p>
- * <p>
- *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)}.
- *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
- * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {
 
@@ -58,6 +50,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
     /**
      * <p>All configuration is optional.</p>
      *
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
+     *
      * Strategy:
      * <ul>
      *     <li>
@@ -72,7 +68,12 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * </ul>
      *
      * <p>
-     *     Use "visibility" to make the generated classes public.
+     *     The lazy strategy requires that the resource file be provided at runtime.
+     *     The inline strategy results in larger class files than the encode strategy by a factor of about 8.
+     *     The inline strategy uses the stack to fill the byte array.
+     *     The encode strategy copies from the heap to fill the byte array.
+     *     The inline and encode strategies will break down as the resource file approaches 500MB
+     *     due to class file limitations.
      * </p>
      *
      * @return visibility strategy
@@ -139,13 +140,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = new Context(context.env(),
-                context.location(),
-                context.pkg(),
-                context.annotated(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                context.namer());
+        Context copy = context.rebuild()
+                .setConfig(Collections.emptyList())
+                .build();
 
         Pkg pkg = context.pkg();
         String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);

@@ -165,15 +165,15 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     Pkg pkg = pkg(annotated);
     List<Resource> resources = resources(cpr, pkg, annotated);
 
-    return new Context(
-            processingEnv,
-            cpr.location(),
-            pkg(annotated),
-            annotated,
-            resources,
-            options,
-            namer
-    );
+    return Context.builder()
+            .setEnv(processingEnv)
+            .setResources(resources)
+            .setAnnotated(annotated)
+            .setConfig(options)
+            .setPkg(pkg(annotated))
+            .setNamer(namer)
+            .setLocation(cpr.location())
+            .build();
   }
 
   @SuppressWarnings("unchecked")
