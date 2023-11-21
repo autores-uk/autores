@@ -32,6 +32,7 @@ import static uk.autores.cfg.Strategy.STRATEGY;
 public class PrintMessages {
 
     public static void main(String...args) throws XPathExpressionException {
+        // These are the generated classes; the XML parser will infer the text encoding of the files
         parseAndPrint(Utf16LazyMessage.bytes());
         parseAndPrint(Utf16InlineMessage.bytes());
         parseAndPrint(Utf16EncodedMessage.bytes());
