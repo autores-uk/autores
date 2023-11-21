@@ -199,10 +199,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   private Pkg pkg(Element annotated) {
-    String qualified = processingEnv.getElementUtils()
+    Name qualified = processingEnv.getElementUtils()
             .getPackageOf(annotated)
-            .getQualifiedName()
-            .toString();
+            .getQualifiedName();
     return new Pkg(qualified);
   }
 }

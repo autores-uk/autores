@@ -8,12 +8,12 @@ import static java.util.Objects.requireNonNull;
 public final class Pkg implements CharSequence {
 
     /** The fully qualified package name of the annotated element. */
-    private final String name;
+    private final CharSequence name;
 
     /**
      * @param name package name of the annotated type or package
      */
-    public Pkg(String name) {
+    public Pkg(CharSequence name) {
         this.name = requireNonNull(name, "name");
     }
 
@@ -26,7 +26,7 @@ public final class Pkg implements CharSequence {
      * @see Class#getSimpleName()
      */
     public String qualifiedClassName(String simpleClassName) {
-        return name.isEmpty() ? simpleClassName : name + "." + simpleClassName;
+        return isUnnamed() ? simpleClassName : name + "." + simpleClassName;
     }
 
     /**
@@ -35,7 +35,7 @@ public final class Pkg implements CharSequence {
      * @return true if this is the unnamed package
      */
     public boolean isUnnamed() {
-        return name.isEmpty();
+        return name.length() == 0;
     }
 
     @Override
@@ -60,13 +60,22 @@ public final class Pkg implements CharSequence {
      * @return the last dotted segment
      */
     public String lastSegment() {
-        int idx = name.lastIndexOf('.') + 1;
+        int idx = lastIndexOf('.') + 1;
         int start = Math.max(idx, 0);
-        return name.substring(start);
+        return name.subSequence(start, name.length()).toString();
+    }
+
+    private int lastIndexOf(char ch) {
+        for (int i = name.length() - 1; i >= 0; i--) {
+            if (name.charAt(i) == ch) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     public String toString() {
-        return name;
+        return name.toString();
     }
 }

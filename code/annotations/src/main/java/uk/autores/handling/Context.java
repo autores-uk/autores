@@ -15,6 +15,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Context information for processing resource files.
+ * Instances are created by the annotation processor and passed to {@link Handler#handle(Context)}.
  */
 public final class Context {
 
@@ -51,10 +52,18 @@ public final class Context {
         this.namer = requireNonNull(namer, "namer");
     }
 
+    /**
+     * @return new builder
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * {@link Builder} initialized from current state.
+     *
+     * @return new builder
+     */
     public Builder rebuild() {
         return new Builder(this);
     }
@@ -143,6 +152,11 @@ public final class Context {
         return namer;
     }
 
+    /**
+     * Implementation of the
+     * <a href="https://en.wikipedia.org/wiki/Builder_pattern">builder pattern</a>
+     * for {@link Context}.
+     */
     public static final class Builder {
         private ProcessingEnvironment env;
         private JavaFileManager.Location location;
@@ -164,41 +178,79 @@ public final class Context {
 
         Builder() {}
 
+        /**
+         * @return new context
+         */
         public Context build() {
             return new Context(env, location, pkg, annotated, resources, config, namer);
         }
 
+        /**
+         * @param annotated element
+         * @return this
+         * @see Context#annotated()
+         */
         public Builder setAnnotated(Element annotated) {
             this.annotated = annotated;
             return this;
         }
 
+        /**
+         * @param config configuration options
+         * @return this
+         * @see Context#config()
+         */
         public Builder setConfig(List<Config> config) {
             // TODO: efficiency
             this.config = new ArrayList<>(config);
             return this;
         }
 
+        /**
+         * @param env processing environment
+         * @return this
+         * @see Context#env()
+         */
         public Builder setEnv(ProcessingEnvironment env) {
             this.env = env;
             return this;
         }
 
+        /**
+         * @param location resource location
+         * @return this
+         * @see Context#location()
+         */
         public Builder setLocation(JavaFileManager.Location location) {
             this.location = location;
             return this;
         }
 
+        /**
+         * @param namer generated code namer
+         * @return this
+         * @see Context#namer()
+         */
         public Builder setNamer(Namer namer) {
             this.namer = namer;
             return this;
         }
 
+        /**
+         * @param pkg annotated element package
+         * @return this
+         * @see Context#pkg()
+         */
         public Builder setPkg(Pkg pkg) {
             this.pkg = pkg;
             return this;
         }
 
+        /**
+         * @param resources resource files
+         * @return this
+         * @see Context#resources()
+         */
         public Builder setResources(List<Resource> resources) {
             // TODO: efficiency
             this.resources = new ArrayList<>(resources);
