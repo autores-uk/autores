@@ -31,8 +31,8 @@ class UntranslatedTest {
 
     @Test
     void printPlanetEvent() {
-        String expected = "At 00:00:00 on 01-Jan-1970, there was an attack on planet 4.";
-        Locale en = Locale.UK;
+        String expected = "At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4.";
+        Locale en = Locale.US;
         TimeZone gmt = TimeZone.getTimeZone("gmt");
         assertOutput(Untranslated::new, (ps, mp) -> mp.printPlanetEvent(ps, en, gmt), expected);
     }
