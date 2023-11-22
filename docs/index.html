@@ -51,8 +51,11 @@
     </p>
 
     <p>
-      Annotate a type or package with <code>@uk.autores.ResourceFiles</code>,
-      define the resource files, and choose a handler:
+      Annotate a type or package with <code>@ResourceFiles</code>, define the resource files, and choose a handler.
+    </p>
+
+    <p>
+      The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
     </p>
 
     <pre><code>
@@ -70,7 +73,7 @@
     </code></pre>
 
     <p>
-      The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
+      The <code>GenerateMessagesFromProperties</code> handler can generate typed methods that match on a locale and then format the string.
     </p>
 
     <pre><code>
@@ -89,10 +92,6 @@
         }
       }
     </code></pre>
-
-    <p>
-      The <code>GenerateMessagesFromProperties</code> handler can generate typed methods that match on a locale and then format the string.
-    </p>
 
     <p>
       Other handlers include

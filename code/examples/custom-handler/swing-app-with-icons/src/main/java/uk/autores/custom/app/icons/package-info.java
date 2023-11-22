@@ -1,3 +1,6 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
+
 /** A package containing {@link javax.swing.ImageIcon}s. */
 @ResourceFiles(
         value = {
