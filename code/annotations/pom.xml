@@ -106,6 +106,17 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <bottom>
+                        <![CDATA[
+                        Copyright 2023
+                        <a href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
+                        ]]>
+                    </bottom>
+                    <doclint>all</doclint>
+                    <failOnWarnings>true</failOnWarnings>
+                    <serialwarn>true</serialwarn>
+                </configuration>
             </plugin>
             <!-- coverage -->
             <plugin>

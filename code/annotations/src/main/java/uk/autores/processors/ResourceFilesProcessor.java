@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
@@ -199,10 +201,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   private Pkg pkg(Element annotated) {
-    String qualified = processingEnv.getElementUtils()
+    Name qualified = processingEnv.getElementUtils()
             .getPackageOf(annotated)
-            .getQualifiedName()
-            .toString();
+            .getQualifiedName();
     return new Pkg(qualified);
   }
 }

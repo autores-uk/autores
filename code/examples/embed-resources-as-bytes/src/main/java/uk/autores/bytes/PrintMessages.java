@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
@@ -32,6 +34,7 @@ import static uk.autores.cfg.Strategy.STRATEGY;
 public class PrintMessages {
 
     public static void main(String...args) throws XPathExpressionException {
+        // These are the generated classes; the XML parser will infer the text encoding of the files
         parseAndPrint(Utf16LazyMessage.bytes());
         parseAndPrint(Utf16InlineMessage.bytes());
         parseAndPrint(Utf16EncodedMessage.bytes());

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
 import uk.autores.ResourceFiles;
@@ -88,7 +90,7 @@ public class Namer {
     }
 
     /**
-     * Name a public static field.
+     * Name a public static final field.
      *
      * @param src source string
      * @return source string as a field name if possible
