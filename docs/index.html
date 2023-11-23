@@ -37,11 +37,6 @@
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
     </p>
 
-    <p>
-      Prior knowledge of how to package and deploy Java libraries and applications is assumed.
-      This library can affect compile time, jar sizes, and constant pools.
-    </p>
-
     <a id="usage" href="#usage">&#x1f517;</a>
     <h2>Usage</h2>
 
@@ -60,6 +55,7 @@
 
     <pre><code>
     import uk.autores.*;
+    
     @ResourceFiles(
       value = {"Poule.txt", "Roses.txt"},
       handler = GenerateStringsFromText.class
@@ -78,6 +74,9 @@
 
     <pre><code>
       import uk.autores.*;
+      import java.time.Instant;
+      import java.util.*;
+
       @ResourceFiles(
         value = "msgs.properties",
         handler = GenerateMessagesFromProperties.class,
@@ -87,7 +86,7 @@
         public static void main(String...args)  {
           TimeZone gmt = TimeZone.getTimeZone("GMT");
           // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
-          String msg = Msgs.planetEvent(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack");
+          String msg = Msgs.planetEvent(Locale.US, gmt, 4, Instant.EPOCH, "an attack");
           System.out.println(msg);
         }
       }
@@ -107,7 +106,7 @@
     <p>Versions are split into three integers: Java version; major version; minor version.</p>
 
     <p>
-      Java 8 and Java 11 versions are published.
+      Functionally identical Java 8 and Java 11 versions are published.
       The Java 11 version supports modules natively.
       The Java 8 version supports modules via MANIFEST.MF.
     </p>
