@@ -31,7 +31,6 @@ class NamerTest {
 
     @Test
     void isJavaPackage() {
-        assertTrue(Namer.isPackage(""));
         assertTrue(Namer.isPackage("True"));
         assertTrue(Namer.isPackage("R123"));
         assertTrue(Namer.isPackage("_foo"));
@@ -39,6 +38,7 @@ class NamerTest {
         assertTrue(Namer.isPackage("foo.bar"));
         assertTrue(Namer.isPackage("foo.bar.baz"));
 
+        assertFalse(Namer.isPackage(""));
         assertFalse(Namer.isPackage("_"));
         assertFalse(Namer.isPackage("if"));
         assertFalse(Namer.isPackage("false"));

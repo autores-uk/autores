@@ -3,7 +3,7 @@
 package uk.autores.handling;
 
 /**
- * Resource package information.
+ * Character representation of a Java package.
  */
 public final class Pkg implements CharSequence {
 
@@ -13,9 +13,6 @@ public final class Pkg implements CharSequence {
     private final CharSequence name;
 
     private Pkg(CharSequence name) {
-        if (!Namer.isPackage(name)) {
-            throw new AssertionError("Invalid name: " + name);
-        }
         this.name = name;
     }
 
@@ -23,11 +20,16 @@ public final class Pkg implements CharSequence {
      * Factory method.
      *
      * @param name package name of the annotated type or package
+     * @return instance
      */
     public static Pkg named(CharSequence name) {
-        return name.length() == 0
-                ? UNNAMED
-                : new Pkg(name);
+        if (name.length() == 0) {
+            return UNNAMED;
+        }
+        if (!Namer.isPackage(name)) {
+            throw new AssertionError("Invalid name: " + name);
+        }
+        return new Pkg(name);
     }
 
     /**

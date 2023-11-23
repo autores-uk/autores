@@ -76,15 +76,12 @@ public class Namer {
 
     /**
      * Tests for valid <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-7.html#jls-7.4.1">package names</a>.
+     * Returns false for the empty string.
      *
      * @param pkg package name
-     * @return true if valid package name or empty string
+     * @return true if valid package name
      */
     public static boolean isPackage(CharSequence pkg) {
-        if (pkg.length() == 0) {
-            // unnamed package
-            return true;
-        }
         int off = 0;
         final int len = pkg.length();
         for (int i = 0; i < len; i++) {
