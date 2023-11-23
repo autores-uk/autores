@@ -204,6 +204,6 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     Name qualified = processingEnv.getElementUtils()
             .getPackageOf(annotated)
             .getQualifiedName();
-    return new Pkg(qualified);
+    return Pkg.named(qualified);
   }
 }

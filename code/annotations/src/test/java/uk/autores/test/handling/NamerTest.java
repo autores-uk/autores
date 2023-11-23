@@ -30,6 +30,28 @@ class NamerTest {
     }
 
     @Test
+    void isJavaPackage() {
+        assertTrue(Namer.isPackage(""));
+        assertTrue(Namer.isPackage("True"));
+        assertTrue(Namer.isPackage("R123"));
+        assertTrue(Namer.isPackage("_foo"));
+        assertTrue(Namer.isPackage("String"));
+        assertTrue(Namer.isPackage("foo.bar"));
+        assertTrue(Namer.isPackage("foo.bar.baz"));
+
+        assertFalse(Namer.isPackage("_"));
+        assertFalse(Namer.isPackage("if"));
+        assertFalse(Namer.isPackage("false"));
+        assertFalse(Namer.isPackage("true"));
+        assertFalse(Namer.isPackage("8able"));
+        assertFalse(Namer.isPackage("foo bar"));
+        assertFalse(Namer.isPackage(".foo.bar"));
+        assertFalse(Namer.isPackage("foo.bar."));
+        assertFalse(Namer.isPackage("."));
+        assertFalse(Namer.isPackage("foo..bar"));
+    }
+
+    @Test
     void naming() {
         checkNaming(namer::nameType);
         checkNaming(namer::nameMember);

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResourceFilingTest {
     
-    private final Pkg pkg = new Pkg("foo.bar");
+    private final Pkg pkg = Pkg.named("foo.bar");
     
     @Test
     void returnsEmptyForAbsolute() {
