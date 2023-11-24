@@ -37,7 +37,7 @@ class GenerateInputStreamsFromFilesTest {
 
     @Test
     void canGenerateSourcesFromFiles() throws Exception {
-        Pkg foo = new Pkg("foo");
+        Pkg foo = Pkg.named("foo");
         HandlerResults hr = tester().withPkg(foo).withLargeAndSmallTextFiles(1).test();
         hr.assertNoErrorMessagesReported();
         hr.assertAllGeneratedFilesCompile(1);

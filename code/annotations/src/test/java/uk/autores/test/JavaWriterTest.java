@@ -25,7 +25,7 @@ class JavaWriterTest {
 
     @Test
     void canGenerateClass() throws IOException {
-        Pkg pkg = new Pkg("foo.bar");
+        Pkg pkg = Pkg.named("foo.bar");
         String actual = test(ctxt(pkg), jw -> {});
         // verify
         String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
@@ -99,7 +99,7 @@ class JavaWriterTest {
     }
 
     private Context ctxt() {
-        return ctxt(new Pkg(""));
+        return ctxt(Pkg.named(""));
     }
 
     private Context ctxt(Pkg pkg) {

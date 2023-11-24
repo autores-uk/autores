@@ -2,21 +2,34 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import static java.util.Objects.requireNonNull;
-
 /**
- * Resource package information.
+ * Character representation of a Java package.
  */
 public final class Pkg implements CharSequence {
+
+    private static final Pkg UNNAMED = new Pkg("");
 
     /** The fully qualified package name of the annotated element. */
     private final CharSequence name;
 
+    private Pkg(CharSequence name) {
+        this.name = name;
+    }
+
     /**
+     * Factory method.
+     *
      * @param name package name of the annotated type or package
+     * @return instance
      */
-    public Pkg(CharSequence name) {
-        this.name = requireNonNull(name, "name");
+    public static Pkg named(CharSequence name) {
+        if (name.length() == 0) {
+            return UNNAMED;
+        }
+        if (!Namer.isPackage(name)) {
+            throw new AssertionError("Invalid name: " + name);
+        }
+        return new Pkg(name);
     }
 
     /**

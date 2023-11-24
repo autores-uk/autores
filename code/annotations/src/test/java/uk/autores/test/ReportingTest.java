@@ -93,7 +93,7 @@ class ReportingTest {
                 .setConfig(cfg)
                 .setLocation(StandardLocation.CLASS_PATH)
                 .setNamer(new Namer())
-                .setPkg(new Pkg(""))
+                .setPkg(Pkg.named(""))
                 .setResources(Collections.emptyList())
                 .build();
     }

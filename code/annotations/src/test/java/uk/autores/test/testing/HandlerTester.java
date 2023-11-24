@@ -22,7 +22,7 @@ public final class HandlerTester {
     private List<Config> cfg = Collections.emptyList();
     private final TestProcessingEnvironment env = new TestProcessingEnvironment();
     private final List<Resource> resources = new ArrayList<>();
-    private Pkg pkg = new Pkg("");
+    private Pkg pkg = Pkg.named("");
 
     public HandlerTester(Handler handler) {
         this.handler = handler;

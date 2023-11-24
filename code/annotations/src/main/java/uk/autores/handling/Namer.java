@@ -4,11 +4,6 @@ package uk.autores.handling;
 
 import uk.autores.ResourceFiles;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
-
 /**
  * <p>
  *     Utilized in naming classes, methods and fields.
@@ -33,7 +28,7 @@ import static java.util.Arrays.asList;
  */
 public class Namer {
 
-    private static final Set<String> RESERVED = new HashSet<>(asList(
+    private static final CharSequenceSet RESERVED = new CharSequenceSet(
             // keywords
             "abstract", "continue", "for", "new", "switch",
             "assert", "default", "goto", "package", "synchronized",
@@ -49,34 +44,56 @@ public class Namer {
             "true", "false", "null",
             // keyword Java 9 onwards
             "_"
-    ));
+    );
 
-    /**
-     * Validates class, method or field names.
-     * A Java identifier is considered valid when:
-     * <ul>
-     *     <li>It has length &gt; 0</li>
-     *     <li>It is not a reserved word</li>
-     *     <li>The first codepoint satisfies {@link Character#isJavaIdentifierStart(int)}</li>
-     *     <li>All codepoints satisfy {@link Character#isJavaIdentifierPart(int)}</li>
-     * </ul>
-     *
-     * @param s the string to test
-     * @return true if this is a valid identifier
-     */
-    public static boolean isIdentifier(String s) {
-        if ("".equals(s) || RESERVED.contains(s)) {
+    private static boolean isIdentifier(CharSequence cs, int off, int len) {
+        if (len == 0 || RESERVED.contains(cs, off, len)) {
             return false;
         }
-        if (!Character.isJavaIdentifierStart(s.charAt(0))) {
+        // TODO: better codepoint handling
+        if (!Character.isJavaIdentifierStart(cs.charAt(off))) {
             return false;
         }
-        for (int i = 1; i < s.length(); i++) {
-            if (!Character.isJavaIdentifierPart(s.charAt(i))) {
+        for (int i = off + 1, max = off + len; i < max; i++) {
+            if (!Character.isJavaIdentifierPart(cs.charAt(i))) {
                 return false;
             }
         }
         return true;
+    }
+
+    /**
+     * Tests for valid
+     * <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-Identifier">identifiers</a>
+     *  - class, method or field names.
+     *
+     * @param cs sequence to test
+     * @return true if valid identifier
+     */
+    public static boolean isIdentifier(CharSequence cs) {
+        return isIdentifier(cs, 0, cs.length());
+    }
+
+    /**
+     * Tests for valid <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-7.html#jls-7.4.1">package names</a>.
+     * Returns false for the empty string.
+     *
+     * @param pkg package name
+     * @return true if valid package name
+     */
+    public static boolean isPackage(CharSequence pkg) {
+        int off = 0;
+        final int len = pkg.length();
+        for (int i = 0; i < len; i++) {
+            char ch = pkg.charAt(i);
+            if (ch == '.') {
+                if (!isIdentifier(pkg, off, i - off)) {
+                    return false;
+                }
+                off = i + 1;
+            }
+        }
+        return isIdentifier(pkg, off, len - off);
     }
 
     /**
