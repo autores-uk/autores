@@ -8,9 +8,8 @@ import uk.autores.ResourceFiles;
 import uk.autores.cfg.Localize;
 
 import java.io.PrintStream;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static uk.autores.cfg.Localize.LOCALIZE;
 
@@ -25,10 +24,10 @@ import static uk.autores.cfg.Localize.LOCALIZE;
 public class Untranslated implements MessagePrinter {
 
     @Override
-    public void print(PrintStream out, Locale l, TimeZone tz, Instant now) {
+    public void print(PrintStream out, Locale l, ZonedDateTime time) {
         printAppName(out);
         printFileCounts(out, l);
-        printPlanetEvent(out, l, tz);
+        printPlanetEvent(out, l, time);
     }
 
     public void printAppName(PrintStream out) {
@@ -46,9 +45,8 @@ public class Untranslated implements MessagePrinter {
         }
     }
 
-    public void printPlanetEvent(PrintStream out, Locale l, TimeZone tz) {
-        // needs locale (for formatting) and timezone (for date)
-        String event = NonNls.planetEvent(l, tz, 4, Instant.EPOCH, "an attack");
+    public void printPlanetEvent(PrintStream out, Locale l, ZonedDateTime time) {
+        String event = NonNls.planetEvent(l, 4, time, "an attack");
         out.println(event);
     }
 }

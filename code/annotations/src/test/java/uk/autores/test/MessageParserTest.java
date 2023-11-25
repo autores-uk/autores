@@ -5,7 +5,8 @@ package uk.autores.test;
 import org.junit.jupiter.api.Test;
 import uk.autores.test.testing.Proxies;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -16,7 +17,7 @@ class MessageParserTest {
 
     private static final String STRING = String.class.getName();
     private static final String NUMBER = Number.class.getName();
-    private static final String DATE = Instant.class.getName();
+    private static final String DATE = ZonedDateTime.class.getName();
 
     private final MP parser = Proxies.utility(MP.class, "uk.autores.MessageParser");
 
@@ -73,15 +74,16 @@ class MessageParserTest {
 
     @Test
     void detectsNeedsTimeZone() {
-        assertTrue(parser.needsTimeZone(singletonList(DATE)));
-        assertFalse(parser.needsTimeZone(singletonList(NUMBER)));
-        assertFalse(parser.needsTimeZone(singletonList(STRING)));
-        assertFalse(parser.needsTimeZone(emptyList()));
+        assertEquals(0, parser.firstDateIndex(singletonList(DATE)));
+        assertEquals(-1, parser.firstDateIndex(singletonList(NUMBER)));
+        assertEquals(-1, parser.firstDateIndex(singletonList(STRING)));
+        assertEquals(-1, parser.firstDateIndex(emptyList()));
+        assertEquals(1, parser.firstDateIndex(Arrays.asList(STRING, DATE, DATE, NUMBER)));
     }
 
     private interface MP {
         List<String> parse(String s);
-        boolean needsTimeZone(List<String> l);
-        boolean needsLocale(List<String> l);
+        int firstDateIndex(List<String> vars);
+        boolean needsLocale(List<String> vars);
     }
 }

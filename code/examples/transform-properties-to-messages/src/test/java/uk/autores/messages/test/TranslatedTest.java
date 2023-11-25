@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import uk.autores.messages.Translated;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -33,9 +35,11 @@ class TranslatedTest {
     void printTodayIs() {
         Instant now = Instant.EPOCH;
         TimeZone gmt = TimeZone.getTimeZone("gmt");
-        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.US, gmt, now), "Today is Thursday.");
-        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.FRANCE, gmt, now), "Aujourd'hui, c'est jeudi .");
-        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.CANADA_FRENCH, gmt, now), "Nous sommes jeudi aujourd'hui.");
-        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.GERMANY, gmt, now), "Today is Donnerstag.");
+        ZoneId zoneId = ZoneId.of("GMT");
+        ZonedDateTime epoch = ZonedDateTime.ofInstant(Instant.EPOCH, zoneId);
+        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.US, epoch), "Today is Thursday.");
+        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.FRANCE, epoch), "Aujourd'hui, c'est jeudi .");
+        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.CANADA_FRENCH, epoch), "Nous sommes jeudi aujourd'hui.");
+        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.GERMANY, epoch), "Today is Donnerstag.");
     }
 }

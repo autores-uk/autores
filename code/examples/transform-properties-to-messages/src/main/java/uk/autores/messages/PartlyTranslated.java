@@ -9,6 +9,7 @@ import uk.autores.cfg.MissingKey;
 
 import java.io.PrintStream;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -25,7 +26,7 @@ import static uk.autores.cfg.MissingKey.MISSING_KEY;
 public class PartlyTranslated implements MessagePrinter {
 
     @Override
-    public void print(PrintStream out, Locale l, TimeZone tz, Instant now) {
+    public void print(PrintStream out, Locale l, ZonedDateTime time) {
         printLibertyEqualityFraternity(out, l);
     }
 

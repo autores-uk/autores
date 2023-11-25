@@ -8,6 +8,7 @@ import uk.autores.ResourceFiles;
 
 import java.io.PrintStream;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -20,10 +21,10 @@ import java.util.TimeZone;
 public class Translated implements MessagePrinter {
 
     @Override
-    public void print(PrintStream out, Locale l, TimeZone tz, Instant now) {
+    public void print(PrintStream out, Locale l, ZonedDateTime time) {
         printHelloWorld(out, l);
         printHelloX(out, l);
-        printTodayIs(out, l, tz, now);
+        printTodayIs(out, l, time);
     }
 
     public void printHelloWorld(PrintStream out, Locale l) {
@@ -36,9 +37,9 @@ public class Translated implements MessagePrinter {
         out.println(hello);
     }
 
-    public void printTodayIs(PrintStream out, Locale l, TimeZone tz, Instant day) {
+    public void printTodayIs(PrintStream out, Locale l, ZonedDateTime time) {
         // needs a time zone because the format string includes DateFormat {N,date}
-        String msg = Messages.todayIs(l, tz, day);
+        String msg = Messages.todayIs(l, time);
         out.println(msg);
     }
 }

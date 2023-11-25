@@ -3,19 +3,20 @@
 package uk.autores.messages;
 
 import java.time.Instant;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 public class PrintProperties {
 
     public static void main(String...args)  {
-        Locale[] locales = {
-                Locale.US,
-                Locale.FRENCH,
-                Locale.CANADA_FRENCH,
-                Locale.forLanguageTag("ga"),
-                Locale.GERMANY,
-        };
+        Map<Locale, ZoneId> places = new LinkedHashMap<>();
+        places.put(Locale.getDefault(), ZoneId.systemDefault());
+        places.put(Locale.US, ZoneId.of("America/New_York"));
+        places.put(Locale.FRANCE, ZoneId.of("Europe/Paris"));
+        places.put(Locale.CANADA_FRENCH, ZoneId.of("America/Toronto"));
+        places.put(Locale.forLanguageTag("ga"), ZoneId.of("Europe/Dublin"));
+        places.put(Locale.GERMANY, ZoneId.of("Europe/Berlin"));
         // These MessagePrinter implementations use code generated from the properties
         MessagePrinter[] printers = {
                 new Translated(),
@@ -23,14 +24,18 @@ public class PrintProperties {
                 new Untranslated(),
         };
 
-        TimeZone tz = TimeZone.getDefault();
         Instant now = Instant.now();
 
-        for (Locale l : locales) {
+        for (Map.Entry<Locale, ZoneId> place : places.entrySet()) {
+            Locale l = place.getKey();
+            ZoneId zone = place.getValue();
+
+            ZonedDateTime time = ZonedDateTime.ofInstant(now, zone);
+
             System.out.println();
-            System.out.println(l.getDisplayName());
+            System.out.println(l.getDisplayName() + " " + zone);
             for (MessagePrinter printer : printers) {
-                printer.print(System.out, l, tz, now);
+                printer.print(System.out, l, time);
             }
         }
     }
