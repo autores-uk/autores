@@ -14,6 +14,8 @@ import java.util.List;
 /** Utility type for analysing {@link MessageFormat} strings */
 final class MessageParser {
 
+    // TODO: switch to ZonedDateTime
+
     static final String STRING = String.class.getName();
     static final String NUMBER = Number.class.getName();
     static final String DATE = Instant.class.getName();
