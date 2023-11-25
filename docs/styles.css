@@ -1,7 +1,8 @@
 body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
-code { font-weight: bolder; color: steelblue; }
-a { text-decoration: none; }
-nav { text-align: center; }
+code { font-weight: bolder; color: darkslategrey; }
+pre { border-radius: 10px; border-style: groove; border-color: gainsboro; }
+a.link-symbol { text-decoration: none; }
+nav { text-align: center; font-size: inherit; }
 nav ul { list-style-type: none; }
 nav ul li { display: inline-block; }
 nav ul li + li::before { content: ' - '; }
