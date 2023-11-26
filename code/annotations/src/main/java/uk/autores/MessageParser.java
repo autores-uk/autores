@@ -6,7 +6,7 @@ import java.text.DateFormat;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +14,9 @@ import java.util.List;
 /** Utility type for analysing {@link MessageFormat} strings */
 final class MessageParser {
 
-    // TODO: switch to ZonedDateTime
-
     static final String STRING = String.class.getName();
     static final String NUMBER = Number.class.getName();
-    static final String DATE = Instant.class.getName();
+    static final String DATE = ZonedDateTime.class.getName();
 
     private MessageParser() {}
 
@@ -54,8 +52,14 @@ final class MessageParser {
         return false;
     }
 
-    static boolean needsTimeZone(List<String> vars) {
-        return vars.contains(DATE);
+    static int firstDateIndex(List<String> vars) {
+        for (int i = 0, len = vars.size(); i < len; i++) {
+            String vt = vars.get(i);
+            if (vt.equals(DATE)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

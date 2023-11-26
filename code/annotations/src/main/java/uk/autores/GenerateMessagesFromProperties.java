@@ -334,7 +334,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        boolean needsTimeZone = MessageParser.needsTimeZone(vars);
+        int firstDateIndex = MessageParser.firstDateIndex(vars);
         boolean needsLocaleForFormat = MessageParser.needsLocale(vars);
         boolean hasLocalizedMsg = !localizations.isEmpty();
 
@@ -344,13 +344,6 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().staticMember("java.lang.String", method).append("(");
         if (needsLocaleForFormat || hasLocalizedMsg) {
             writer.append("java.util.Locale l");
-            comma = true;
-        }
-        if (needsTimeZone) {
-            if (comma) {
-                writer.append(", ");
-            }
-            writer.append("java.util.TimeZone tz");
             comma = true;
         }
         for (int i = 0; i < vars.size(); i++) {
@@ -374,7 +367,11 @@ public final class GenerateMessagesFromProperties implements Handler {
         } else {
             writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg);").nl();
         }
-        if (needsTimeZone) {
+        if (firstDateIndex >= 0) {
+            writer.append("java.util.TimeZone tz = java.util.TimeZone.getTimeZone(v")
+                    .append(Ints.toString(firstDateIndex))
+                    .append(".getZone());")
+                    .nl();
             writer.indent().append("java.lang.Object[] fmts = formatter.getFormats();").nl();
             writer.indent().append("for (int i = 0, len = fmts.length; i < len; i++) ").openBrace().nl();
             writer.indent().append("if (fmts[i] instanceof java.text.DateFormat) ").openBrace().nl();
@@ -392,7 +389,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.append("v");
             writer.append(Integer.toString(i));
             if (date) {
-                writer.append(")");
+                writer.append(".toInstant())");
             }
             writer.append(",").nl();
         }
