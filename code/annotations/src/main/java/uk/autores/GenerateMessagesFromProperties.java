@@ -41,17 +41,16 @@ import java.util.*;
  *         <li>If "localize" is true and localized files have been detected the method requires a {@link Locale} argument.</li>
  *     </ul>
  *     </li>
- *     <li>
+ *     <li>q
  *         A second method is generated if "format" is true and format expressions have been detected in the value.
  *         <ul>
  *             <li>{@link Locale} is the first argument if "localize" is true and localized files have been detected and number/choice/date us used.</li>
- *             <li>If any of the format expressions are of type <code>date</code> {@link TimeZone} is the next argument.</li>
  *             <li>
  *                 Format expressions form the remaining arguments in index order.
  *                 {@link MessageFormat} expressions are mapped as follows.
  *                 <ul>
  *                     <li>number or choice: {@link Number}</li>
- *                     <li>date: {@link java.time.Instant}</li>
+ *                     <li>date: {@link java.time.ZonedDateTime}</li>
  *                     <li>none: {@link String}</li>
  *                 </ul>
  *             </li>
@@ -62,12 +61,9 @@ import java.util.*;
  * <p>Example file <code>Cosmic.properties</code>:</p>
  * <pre>planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</pre>
  * <p>This will generate a class <code>Cosmic</code> with the method signature:</p>
- * <pre>static String planet_event(Locale l, TimeZone tz, Number v0, Instant v1, String v2)</pre>
+ * <pre>static String planet_event(Locale l, Number v0, ZonedDateTime v1, String v2)</pre>
  * <p>Usage:</p>
- * <pre>Cosmic.planet_event(Locale.ENGLISH, TimeZone.getTimeZone("GMT"), 4, Instant.EPOCH, "an attack")</pre>
- * <p>
- *     This will return the string <code>"At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4."</code>.
- * </p>
+ * <pre>Cosmic.planet_event(Locale.US, 4, ZonedDateTime.now(), "an attack")</pre>
  */
 public final class GenerateMessagesFromProperties implements Handler {
 
@@ -368,6 +364,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg);").nl();
         }
         if (firstDateIndex >= 0) {
+            // TODO: this is a bug because it uses same time zone for all dates
             writer.append("java.util.TimeZone tz = java.util.TimeZone.getTimeZone(v")
                     .append(Ints.toString(firstDateIndex))
                     .append(".getZone());")
