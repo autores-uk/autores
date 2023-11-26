@@ -3,7 +3,7 @@
     <title>Automated Resource Handling for Java - AutoRes.uk</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <meta name="description" content="Open source library for automating embedded Java resource file handling">
-    <link rel="icon" href="favicon.png">
+    <link rel="icon" href="icons/favicon.png">
   </head>
   <body>
 
@@ -37,8 +37,7 @@
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
     </p>
 
-    <a id="usage" href="#usage">&#x1f517;</a>
-    <h2>Usage</h2>
+    <h2>Usage <a id="usage" href="#usage" class="link-symbol">&#x1f517;</a></h2>
 
     <p>
       Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
@@ -48,6 +47,18 @@
     <p>
       Annotate a type or package with <code>@ResourceFiles</code>, define the resource files, and choose a handler.
     </p>
+
+    <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
+
+    <p>Versions are split into three integers: Java version; major version; minor version.</p>
+
+    <p>
+      Functionally identical Java 8 and Java 11 versions are published.
+      The Java 11 version supports modules natively.
+      The Java 8 version supports modules via MANIFEST.MF.
+    </p>
+
+    <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
@@ -100,19 +111,7 @@
       <code>GenerateInputStreamsFromFiles</code>.
     </p>
 
-    <a id="compat" href="#compat">&#x1f517;</a>
-    <h3>Versioning &amp; Compatibility</h3>
-
-    <p>Versions are split into three integers: Java version; major version; minor version.</p>
-
-    <p>
-      Functionally identical Java 8 and Java 11 versions are published.
-      The Java 11 version supports modules natively.
-      The Java 8 version supports modules via MANIFEST.MF.
-    </p>
-
-    <a id="modules" href="#modules">&#x1f517;</a>
-    <h3>Modules</h3>
+    <h3>Modules <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       Use <code>requires static uk.autores</code> in 
@@ -127,8 +126,7 @@
     }
     </code></pre>
 
-    <a id="maven" href="#maven">&#x1f517;</a>
-    <h3>Apache Maven</h3>
+    <h3>Apache Maven <a id="maven" href="#maven" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       <a href="https://maven.apache.org/">Apache Maven</a> projects should use the 
@@ -172,12 +170,12 @@
     &lt;/build>
     </code></pre>
 
-    <a id="gradle" href="#gradle">&#x1f517;</a>
-    <h3>Gradle</h3>
+    <h3>Gradle <a id="gradle" href="#gradle" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       <a href="https://gradle.org/">Gradle</a> projects must add resource files to the classpath.
-      The library must be exposed to the annotation processor.
+      The library must be exposed to the
+      <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">annotation processor</a>.
     </p>
 
     <pre><code>

@@ -380,7 +380,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.indent().append("if (fmts[i] instanceof java.text.DateFormat) ").openBrace().nl();
             writer.indent().append("((java.text.DateFormat) fmts[i]).setTimeZone(tz);").nl();
             writer.closeBrace().nl();
-            writer.closeBrace();
+            writer.closeBrace().nl();
         }
         writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
         for (int i = 0; i < vars.size(); i++) {
