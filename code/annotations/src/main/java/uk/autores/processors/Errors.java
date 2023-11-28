@@ -13,6 +13,6 @@ final class Errors {
         if (missing) {
             return resource + " not found in package '" + pkg + "'";
         }
-        return "Could not process " + resource + " in package '" + pkg + "': " + e.toString();
+        return "Could not process " + resource + " in package '" + pkg + "': " + e;
     }
 }

@@ -145,7 +145,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
 
-            Resource res = new Resource(file, props.toString());
+            Resource res = new Resource(file::openInputStream, props.toString());
             Properties properties = PropLoader.load(res);
             localized.add(new Localization(pattern, properties));
         }

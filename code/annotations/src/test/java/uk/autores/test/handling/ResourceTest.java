@@ -17,7 +17,7 @@ class ResourceTest {
     @Test
     void implementsCharSequence() {
         TestFileObject data = new TestFileObject(true);
-        CharSequenceTests.check("foo.txt", new Resource(data, "foo.txt"));
+        CharSequenceTests.check("foo.txt", new Resource(data::openInputStream, "foo.txt"));
     }
 
     @Test
@@ -27,7 +27,7 @@ class ResourceTest {
         TestFileObject data = new TestFileObject(true);
         data.data.out().write(bytes);
 
-        Resource resource = new Resource(data, "bar");
+        Resource resource = new Resource(data::openInputStream, "bar");
         try (InputStream in = resource.open()) {
             for (byte b : bytes) {
                 assertEquals(b, in.read());
