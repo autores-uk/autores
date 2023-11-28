@@ -9,7 +9,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static uk.autores.messages.test.PrintPropertiesTester.assertOutput;
 
