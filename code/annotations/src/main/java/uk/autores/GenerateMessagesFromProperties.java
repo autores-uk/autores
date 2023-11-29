@@ -179,6 +179,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                     // NOOP; if file can be opened it exists
                     assert is != null;
                 }
+                return fo;
             } catch (IOException e) {
                 if (first == null) {
                     first = e;

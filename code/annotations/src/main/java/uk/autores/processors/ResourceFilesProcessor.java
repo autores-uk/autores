@@ -170,6 +170,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
+        return fo;
       } catch (Exception e) {
         if (first == null) {
           first = e;
