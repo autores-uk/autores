@@ -143,7 +143,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
-        resources.add(new Resource(fo, resource));
+        resources.add(new Resource(fo::openInputStream, resource));
       }
 
     } catch (Exception e) {

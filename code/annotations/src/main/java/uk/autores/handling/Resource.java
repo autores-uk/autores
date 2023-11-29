@@ -14,28 +14,28 @@ import java.util.Objects;
  */
 public final class Resource implements CharSequence {
 
-    private final FileObject file;
+    private final ResourceOpener file;
     private final String path;
 
     /**
-     * @param file file
+     * @param file resource bytes
      * @param path as defined in {@link ResourceFiles#value()}
      */
-    public Resource(FileObject file, String path) {
+    public Resource(ResourceOpener file, String path) {
         this.file = Objects.requireNonNull(file, "file");
         this.path = Objects.requireNonNull(path, "path");
     }
 
     /**
-     * Calls {@link FileObject#openInputStream()}.
+     * Opens resource for reading.
      *
      * @return contents
      * @throws IOException on I/O error
+     * @see FileObject#openInputStream()
      */
     public InputStream open() throws IOException {
-        return file.openInputStream();
+        return file.open();
     }
-
 
     @Override
     public int length() {
@@ -58,5 +58,19 @@ public final class Resource implements CharSequence {
     @Override
     public String toString() {
         return path;
+    }
+
+    /**
+     *
+     */
+    @FunctionalInterface
+    public interface ResourceOpener {
+        /**
+         * Opens resource for reading.
+         *
+         * @return resource bytes
+         * @throws IOException on error
+         */
+        InputStream open() throws IOException;
     }
 }

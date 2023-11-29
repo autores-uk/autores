@@ -64,7 +64,7 @@ public @interface ResourceFiles {
      * Enables non-default resource handling.
      *
      * @return the Handler for these resources
-     * @see Handler for provided implementations
+     * @see Handler Handler for provided implementations
      */
     Class<? extends Handler> handler() default AssertResourceExists.class;
 
@@ -72,7 +72,7 @@ public @interface ResourceFiles {
      * Set this value to provide alternative class/member naming strategy.
      *
      * @return name generator type
-     * @see Namer for provided implementations
+     * @see Namer Namer for provided implementations
      */
     Class<? extends Namer> namer() default Namer.class;
 

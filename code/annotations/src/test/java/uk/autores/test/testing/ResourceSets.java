@@ -27,7 +27,7 @@ final class ResourceSets {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(name, text);
-        return new Resource(text, name);
+        return new Resource(text::openInputStream, name);
     }
 
     public static List<Resource> largeAndSmallTextFile(TestProcessingEnvironment env, int multiplier) throws IOException {
@@ -42,7 +42,7 @@ final class ResourceSets {
         TestInfiniteFileObject infinite = new TestInfiniteFileObject();
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, infinite);
         List<Resource> files = new ArrayList<>();
-        files.add(new Resource(infinite, filename));
+        files.add(new Resource(infinite::openInputStream, filename));
         return files;
     }
 
@@ -55,7 +55,7 @@ final class ResourceSets {
     public static List<Resource> of(TestProcessingEnvironment env, String filename, TestFileObject file) {
         env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
         List<Resource> files = new ArrayList<>();
-        files.add(new Resource(file, filename));
+        files.add(new Resource(file::openInputStream, filename));
         return files;
     }
 }

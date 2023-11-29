@@ -35,14 +35,14 @@ class GenerateMessagesFromPropertiesTest {
     private byte[] messages() {
         String data = "today={0} said \"Today is {1,date}!\"\n";
         data += "foo=bar\n";
-        data += "planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.\n";
+        data += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
         return data.getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] messages_fr() {
         String data_fr = "today=\"{0} a dit : \u00AB Aujourd'hui, c'est {1,date} ! \u00BB\n";
         data_fr += "foo=baz\n";
-        data_fr += "planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.\n";
+        data_fr += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
         return data_fr.getBytes(StandardCharsets.UTF_8);
     }
 

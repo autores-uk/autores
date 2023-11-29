@@ -8,7 +8,9 @@ import uk.autores.ResourceFiles;
 import uk.autores.cfg.Localize;
 
 import java.io.PrintStream;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.TextStyle;
 import java.util.Locale;
 
 import static uk.autores.cfg.Localize.LOCALIZE;
@@ -28,6 +30,8 @@ public class Untranslated implements MessagePrinter {
         printAppName(out);
         printFileCounts(out, l);
         printPlanetEvent(out, l, time);
+        printYouSay(out);
+        printTimeInTokyo(out, l, time);
     }
 
     public void printAppName(PrintStream out) {
@@ -46,7 +50,19 @@ public class Untranslated implements MessagePrinter {
     }
 
     public void printPlanetEvent(PrintStream out, Locale l, ZonedDateTime time) {
-        String event = NonNls.planetEvent(l, 4, time, "an attack");
+        String event = NonNls.planetEvent(l, 4, time, time, "an attack");
         out.println(event);
+    }
+
+    public void printYouSay(PrintStream out) {
+        String saying = NonNls.youSay("tomato");
+        out.println(saying);
+    }
+
+    public void printTimeInTokyo(PrintStream out, Locale l, ZonedDateTime time) {
+        ZoneId tokyo = ZoneId.of("Asia/Tokyo");
+        ZonedDateTime timeInTokyo = time.withZoneSameInstant(tokyo);
+        String msg = NonNls.timeInTokyo(l, timeInTokyo, time, time.getZone().getDisplayName(TextStyle.FULL, l));
+        out.println(msg);
     }
 }

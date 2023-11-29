@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Specialized {@link Reader} for putting bytes into <code>char</code> arrays.
  * Each pair of <code>byte</code>s becomes one <code>char</code>.
- * @see #lastByteOdd() for byte streams that are odd numbers
+ * See {@link #lastByteOdd()} for byte streams that are odd numbers
  */
 final class ByteHackReader extends Reader {
 

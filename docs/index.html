@@ -54,8 +54,7 @@
 
     <p>
       Functionally identical Java 8 and Java 11 versions are published.
-      The Java 11 version supports modules natively.
-      The Java 8 version supports modules via MANIFEST.MF.
+      <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
     </p>
 
     <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
@@ -67,14 +66,14 @@
     <pre><code>
     import uk.autores.*;
     
-    @ResourceFiles(
+    <code>@ResourceFiles(
       value = {"Poule.txt", "Roses.txt"},
       handler = GenerateStringsFromText.class
-    )
+    )</code>
     public class PrintRhymes {
       public static void main(String...args)  {
-        System.out.println(Poule.text());
-        System.out.println(Roses.text());
+        System.out.println(<code>Poule.text()</code>);
+        System.out.println(<code>Roses.text()</code>);
       }
     }
     </code></pre>
@@ -84,23 +83,26 @@
     </p>
 
     <pre><code>
-      import uk.autores.*;
-      import java.time.Instant;
-      import java.util.*;
+    import uk.autores.*;
+    import java.time.ZonedDateTime;
+    import java.util.Locale;
 
-      @ResourceFiles(
-        value = "msgs.properties",
-        handler = GenerateMessagesFromProperties.class,
-        namer = IdiomaticNamer.class
-      )
-      public class PrintProperties {
-        public static void main(String...args)  {
-          TimeZone gmt = TimeZone.getTimeZone("GMT");
-          // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
-          String msg = Msgs.planetEvent(Locale.US, gmt, 4, Instant.EPOCH, "an attack");
-          System.out.println(msg);
-        }
+    <code>@ResourceFiles(
+      value = "messages.properties",
+      handler = GenerateMessagesFromProperties.class,
+      namer = IdiomaticNamer.class
+    )</code>
+    public class PrintMessage {
+      public static void main(String[] args) {
+        var locale = Locale.getDefault();
+        int planet = 4;
+        var time = ZonedDateTime.now();
+        var event = "a meteor strike";
+        <em>/* planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}. */</em>
+        String msg = <code>Messages.planetEvent(locale, planet, time, time, event)</code>;
+        System.out.println(msg);
       }
+    }
     </code></pre>
 
     <p>
