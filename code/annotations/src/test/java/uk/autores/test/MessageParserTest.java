@@ -81,9 +81,17 @@ class MessageParserTest {
         assertEquals(1, parser.firstDateIndex(Arrays.asList(STRING, DATE, DATE, NUMBER)));
     }
 
+    @Test
+    void detectsVariableReuse() {
+        assertTrue(parser.variableReuse("{0} {0}"));
+        assertFalse(parser.variableReuse("{0}"));
+        assertFalse(parser.variableReuse(""));
+    }
+
     private interface MP {
         List<String> parse(String s);
         int firstDateIndex(List<String> vars);
         boolean needsLocale(List<String> vars);
+        boolean variableReuse(String pattern);
     }
 }

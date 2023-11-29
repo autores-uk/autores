@@ -54,9 +54,7 @@
 
     <p>
       Functionally identical Java 8 and Java 11 versions are published.
-      The Java 11 version supports modules natively.
-      The Java 8 version supports modules using <a href="https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html">MANIFEST.MF</a>
-      via <a href="https://dev.java/learn/modules/automatic-module/">Automatic-Module-Name</a>.
+      <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
     </p>
 
     <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
@@ -100,8 +98,8 @@
         int planet = 4;
         var time = ZonedDateTime.now();
         var event = "a meteor strike";
-        <em>/* planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}. */</em>
-        String msg = <code>Messages.planetEvent(locale, planet, time, event)</code>;
+        <em>/* planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}. */</em>
+        String msg = <code>Messages.planetEvent(locale, planet, time, time, event)</code>;
         System.out.println(msg);
       }
     }

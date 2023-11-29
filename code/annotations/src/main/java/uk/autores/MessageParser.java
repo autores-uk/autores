@@ -62,4 +62,8 @@ final class MessageParser {
         return -1;
     }
 
+    static boolean variableReuse(String pattern) {
+        MessageFormat mf = new MessageFormat(pattern);
+        return mf.getFormats().length != mf.getFormatsByArgumentIndex().length;
+    }
 }

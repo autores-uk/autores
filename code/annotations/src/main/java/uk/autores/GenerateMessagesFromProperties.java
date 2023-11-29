@@ -50,7 +50,7 @@ import java.util.*;
  *                 {@link MessageFormat} expressions are mapped as follows.
  *                 <ul>
  *                     <li>number or choice: {@link Number}</li>
- *                     <li>date: {@link java.time.ZonedDateTime}</li>
+ *                     <li>date or time: {@link java.time.ZonedDateTime}</li>
  *                     <li>none: {@link String}</li>
  *                 </ul>
  *             </li>
@@ -58,12 +58,31 @@ import java.util.*;
  *     </li>
  * </ul>
  * <h2>Example</h2>
- * <p>Example file <code>Cosmic.properties</code>:</p>
- * <pre>planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</pre>
- * <p>This will generate a class <code>Cosmic</code> with the method signature:</p>
- * <pre>static String planet_event(Locale l, Number v0, ZonedDateTime v1, String v2)</pre>
- * <p>Usage:</p>
- * <pre>Cosmic.planet_event(Locale.US, 4, ZonedDateTime.now(), "an attack")</pre>
+ * <p>
+ *     Example file <code>Cosmic.properties</code>:
+ * </p>
+ *
+ * <pre>planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.</pre>
+ *
+ * <p>
+ *     This will generate a class <code>Cosmic</code> with the method signature:
+ * </p>
+ *
+ * <pre>static String planet_event(Locale l, Number v0, ZonedDateTime v1, ZonedDateTime v2, String v3)</pre>
+ *
+ * <p>
+ *     Usage:
+ * </p>
+ *
+ * <pre>
+ *     var now = ZonedDateTime.now();
+ *     Cosmic.planet_event(Locale.US, 4, now, "an attack")
+ * </pre>
+ *
+ * <p>
+ *     Generally variables can be reused in {@link MessageFormat} patterns but this is unsupported
+ *     when dates are present due to implementation limitations in time zone handling.
+ * </p>
  */
 public final class GenerateMessagesFromProperties implements Handler {
 
@@ -364,17 +383,11 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg);").nl();
         }
         if (firstDateIndex >= 0) {
-            // TODO: this is a bug because it uses same time zone for all dates
-            writer.append("java.util.TimeZone tz = java.util.TimeZone.getTimeZone(v")
-                    .append(Ints.toString(firstDateIndex))
-                    .append(".getZone());")
-                    .nl();
-            writer.indent().append("java.lang.Object[] fmts = formatter.getFormats();").nl();
-            writer.indent().append("for (int i = 0, len = fmts.length; i < len; i++) ").openBrace().nl();
-            writer.indent().append("if (fmts[i] instanceof java.text.DateFormat) ").openBrace().nl();
-            writer.indent().append("((java.text.DateFormat) fmts[i]).setTimeZone(tz);").nl();
-            writer.closeBrace().nl();
-            writer.closeBrace().nl();
+            if (MessageParser.variableReuse(baseValue)) {
+                reportVariableReuseError(ctxt, resource.toString(), baseValue);
+            } else {
+                printTimeZoneFormat(writer, vars);
+            }
         }
         writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
         for (int i = 0; i < vars.size(); i++) {
@@ -393,8 +406,31 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().append(";").nl();
         writer.indent().append("return formatter.format(args, new java.lang.StringBuffer(), null).toString();").nl();
         writer.closeBrace().nl();
+    }
 
-        // TODO: efficiency
+    private void printTimeZoneFormat(JavaWriter writer, List<String> patternVariables) throws IOException {
+        writer.indent().append("java.util.TimeZone tz;").nl();
+        writer.indent().append("java.text.Format[] fmts = formatter.getFormatsByArgumentIndex();").nl();
+        for (int i = 0; i < patternVariables.size(); i++) {
+            if (MessageParser.DATE.equals(patternVariables.get(i))) {
+                writer.indent()
+                        .append("tz = java.util.TimeZone.getTimeZone(v")
+                        .append(Ints.toString(i))
+                        .append(".getZone());")
+                        .nl();
+                writer.indent()
+                        .append("((java.text.DateFormat) fmts[")
+                        .append(Ints.toString(i))
+                        .append("]).setTimeZone(tz);")
+                        .nl();
+            }
+        }
+    }
+
+    private void reportVariableReuseError(Context ctxt, String resource, String pattern) {
+        String msg = "Unsupported variable reuse in " + resource + ": " + pattern + ": ";
+        msg += "variable reuse is not supported when dates are present";
+        ctxt.printError(msg);
     }
 
     private boolean localizedMessagesMatchBase(Context ctxt,
@@ -412,6 +448,10 @@ public final class GenerateMessagesFromProperties implements Handler {
                 String msg = "Differing message variables in localization " + resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have " + locVars + " need " + vars;
                 ctxt.printError(msg);
+                ok = false;
+            }
+            if (MessageParser.firstDateIndex(locVars) >=0 && MessageParser.variableReuse(localizedValue)) {
+                reportVariableReuseError(ctxt, resource + " " + l.pattern, localizedValue);
                 ok = false;
             }
         }

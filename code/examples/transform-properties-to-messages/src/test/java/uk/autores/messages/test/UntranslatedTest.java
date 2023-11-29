@@ -56,4 +56,18 @@ class UntranslatedTest {
         ZonedDateTime june2023Paris = ZonedDateTime.ofInstant(eightPmParisSummerTime, paris);
         assertOutput(Untranslated::new, (ps, mp) -> mp.printPlanetEvent(ps, fr_FR, june2023Paris), expected);
     }
+
+    @Test
+    void printTimeInTokyo() {
+        String expected = "It is 9:00:00 AM in Tokyo when it is 12:00:00 AM in Coordinated Universal Time.";
+        Locale en = Locale.US;
+        assertOutput(Untranslated::new, (ps, mp) -> mp.printTimeInTokyo(ps, en, epochUtc), expected);
+    }
+
+    @Test
+    void printYouSay() {
+        String expected = "You say tomato, I say tomato.";
+        Locale en = Locale.US;
+        assertOutput(Untranslated::new, (ps, mp) -> mp.printYouSay(ps), expected);
+    }
 }
