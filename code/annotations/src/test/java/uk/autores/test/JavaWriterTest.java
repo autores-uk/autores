@@ -15,8 +15,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Collections;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JavaWriterTest {
@@ -108,11 +109,11 @@ class JavaWriterTest {
         Context context = Context.builder()
                 .setAnnotated(TestElement.INSTANCE)
                 .setEnv(env)
-                .setConfig(Collections.emptyList())
-                .setLocation(StandardLocation.CLASS_PATH)
+                .setConfig(emptyList())
+                .setLocation(singletonList(StandardLocation.CLASS_PATH))
                 .setNamer(new Namer())
                 .setPkg(pkg)
-                .setResources(Collections.emptyList())
+                .setResources(emptyList())
                 .build();
         return context;
     }

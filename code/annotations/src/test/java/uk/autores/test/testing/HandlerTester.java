@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+
 public final class HandlerTester {
 
     private static final Namer NAMER = new Namer();
@@ -80,7 +82,7 @@ public final class HandlerTester {
                 .setAnnotated(TestElement.INSTANCE)
                 .setEnv(env)
                 .setConfig(cfg)
-                .setLocation(StandardLocation.CLASS_PATH)
+                .setLocation(singletonList(StandardLocation.CLASS_PATH))
                 .setNamer(NAMER)
                 .setPkg(pkg)
                 .setResources(resources)
