@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 public final class Context {
 
     private final ProcessingEnvironment env;
-    private final JavaFileManager.Location location;
+    private final List<JavaFileManager.Location> locations;
     private final Pkg pkg;
     private final Element annotated;
     private final List<Resource> resources;
@@ -31,7 +31,7 @@ public final class Context {
 
     /**
      * @param env annotation processing environment
-     * @param location where to search for resources
+     * @param locations where to search for resources
      * @param pkg package of the annotated type
      * @param annotated the annotated element
      * @param resources the resources defined in the annotation
@@ -39,14 +39,14 @@ public final class Context {
      * @param namer name resolver
      */
     private Context(ProcessingEnvironment env,
-                   JavaFileManager.Location location,
+                   List<JavaFileManager.Location> locations,
                    Pkg pkg,
                    Element annotated,
                    List<Resource> resources,
                    List<Config> config,
                    Namer namer) {
         this.env = requireNonNull(env, "env");
-        this.location = requireNonNull(location, "location");
+        this.locations = unmodifiableList(requireNonNull(locations, "locations"));
         this.pkg = requireNonNull(pkg, "pkg");
         this.annotated = requireNonNull(annotated, "annotatedElement");
         this.resources = unmodifiableList(requireNonNull(resources, "resources"));
@@ -104,12 +104,12 @@ public final class Context {
 
     /**
      * @return where resources are to be loaded from
-     * @see ResourceFiles#location()
+     * @see ResourceFiles#locations()
      * @see ProcessingEnvironment#getFiler()
      * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
      */
-    public JavaFileManager.Location location() {
-        return location;
+    public List<JavaFileManager.Location> locations() {
+        return locations;
     }
 
     /**
@@ -161,7 +161,7 @@ public final class Context {
      */
     public static final class Builder {
         private ProcessingEnvironment env;
-        private JavaFileManager.Location location;
+        private List<JavaFileManager.Location> locations;
         private Pkg pkg;
         private Element annotated;
         private List<Resource> resources;
@@ -170,7 +170,7 @@ public final class Context {
 
         Builder(Context ctxt) {
             this.env = ctxt.env;
-            this.location = ctxt.location;
+            this.locations = ctxt.locations;
             this.pkg = ctxt.pkg;
             this.annotated = ctxt.annotated;
             this.resources = ctxt.resources;
@@ -184,7 +184,7 @@ public final class Context {
          * @return new context
          */
         public Context build() {
-            return new Context(env, location, pkg, annotated, resources, config, namer);
+            return new Context(env, locations, pkg, annotated, resources, config, namer);
         }
 
         /**
@@ -203,7 +203,6 @@ public final class Context {
          * @see Context#config()
          */
         public Builder setConfig(List<Config> config) {
-            // TODO: efficiency
             this.config = new ArrayList<>(config);
             return this;
         }
@@ -219,12 +218,12 @@ public final class Context {
         }
 
         /**
-         * @param location resource location
+         * @param locations resource location
          * @return this
-         * @see Context#location()
+         * @see Context#locations()
          */
-        public Builder setLocation(JavaFileManager.Location location) {
-            this.location = location;
+        public Builder setLocation(List<JavaFileManager.Location> locations) {
+            this.locations = new ArrayList<>(locations);
             return this;
         }
 
@@ -254,7 +253,6 @@ public final class Context {
          * @see Context#resources()
          */
         public Builder setResources(List<Resource> resources) {
-            // TODO: efficiency
             this.resources = new ArrayList<>(resources);
             return this;
         }

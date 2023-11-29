@@ -91,7 +91,7 @@ class ReportingTest {
                 .setAnnotated(TestElement.INSTANCE)
                 .setEnv(env)
                 .setConfig(cfg)
-                .setLocation(StandardLocation.CLASS_PATH)
+                .setLocation(singletonList(StandardLocation.CLASS_PATH))
                 .setNamer(new Namer())
                 .setPkg(Pkg.named(""))
                 .setResources(Collections.emptyList())

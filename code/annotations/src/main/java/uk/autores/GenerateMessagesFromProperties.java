@@ -136,7 +136,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private List<Localization> loadLocalizations(Context context, Resource resource) throws IOException {
         Filer filer = context.env().getFiler();
-        JavaFileManager.Location location = context.location();
+        List<JavaFileManager.Location> locations = context.locations();
 
         CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
         CharSequence name = ResourceFiling.relativeName(resource);
@@ -154,10 +154,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
             final FileObject file;
             try {
-                file = filer.getResource(location, resourcePackage, props);
-                try (InputStream in = file.openInputStream()) {
-                    Objects.requireNonNull(in);
-                }
+                file = getResource(filer, locations, resourcePackage, props);
             } catch (IOException e) {
                 // probably doesn't exist
                 // env.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
@@ -170,6 +167,30 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         return localized;
+    }
+
+    private FileObject getResource(Filer filer, List<JavaFileManager.Location> locations, CharSequence pkg, CharSequence value) throws IOException {
+        IOException first = null;
+        FileObject fo = null;
+        for (JavaFileManager.Location location : locations) {
+            try {
+                fo = filer.getResource(location, pkg, value);
+                try (InputStream is = fo.openInputStream()) {
+                    // NOOP; if file can be opened it exists
+                    assert is != null;
+                }
+            } catch (IOException e) {
+                if (first == null) {
+                    first = e;
+                } else {
+                    first.addSuppressed(e);
+                }
+            }
+        }
+        if (first != null) {
+            throw first;
+        }
+        return fo;
     }
 
     private void writeProperties(Context ctxt,

@@ -49,8 +49,9 @@ public @interface ResourceFiles {
      * The default is {@link StandardLocation#CLASS_PATH}.
      *
      * @return where to search for resources
+     * @see StandardLocation#locationFor(String) 
      */
-    StandardLocation location() default StandardLocation.CLASS_PATH;
+    String[] locations() default "CLASS_PATH";
 
     /**
      * Defines the resource files to be processed.
