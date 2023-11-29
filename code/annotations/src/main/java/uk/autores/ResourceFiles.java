@@ -46,12 +46,17 @@ public @interface ResourceFiles {
 
     /**
      * This value is passed as location (1st arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
-     * The default is {@link StandardLocation#CLASS_PATH}.
+     * Tools are inconsistent in how they locate resources.
+     * The defaults are {@link StandardLocation#CLASS_PATH} and {@link StandardLocation#CLASS_OUTPUT} names.
      *
      * @return where to search for resources
-     * @see StandardLocation#locationFor(String) 
+     * @see StandardLocation#locationFor(String)
+     * @see StandardLocation#getName()
      */
-    String[] locations() default "CLASS_PATH";
+    String[] locations() default {
+            "CLASS_PATH", // Maven likes this
+            "CLASS_OUTPUT", // IntelliJ likes this
+    };
 
     /**
      * Defines the resource files to be processed.
