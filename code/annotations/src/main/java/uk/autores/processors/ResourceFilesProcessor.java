@@ -20,11 +20,10 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -159,30 +158,23 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     return resources;
   }
 
-  private FileObject getResource(Filer filer, String[] locations, CharSequence pkg, CharSequence value) throws Exception {
-    Exception first = null;
-    FileObject fo = null;
+  private FileObject getResource(Filer filer, String[] locations, CharSequence pkg, CharSequence value) throws IOException {
+    Set<String> errors = new LinkedHashSet<>();
     for (String location : locations) {
       JavaFileManager.Location jfml = StandardLocation.locationFor(location);
       try {
-        fo = filer.getResource(jfml, pkg, value);
+        FileObject fo = filer.getResource(jfml, pkg, value);
         try (InputStream is = fo.openInputStream()) {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
         return fo;
       } catch (Exception e) {
-        if (first == null) {
-          first = e;
-        } else {
-          first.addSuppressed(e);
-        }
+        errors.add(e.toString());
       }
     }
-    if (first != null) {
-      throw first;
-    }
-    return fo;
+    String reason = String.join("; ", errors);
+    throw new IOException(reason);
   }
 
   private Context ctxt(ResourceFiles cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {

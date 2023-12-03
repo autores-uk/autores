@@ -26,7 +26,7 @@ final class ResourceSets {
         try (OutputStream out = text.openOutputStream()) {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(name, text);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(name, text);
         return new Resource(text::openInputStream, name);
     }
 
@@ -40,7 +40,7 @@ final class ResourceSets {
     public static List<Resource> infinitelyLargeFile(TestProcessingEnvironment env) {
         String filename = "infinite.txt";
         TestInfiniteFileObject infinite = new TestInfiniteFileObject();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, infinite);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(filename, infinite);
         List<Resource> files = new ArrayList<>();
         files.add(new Resource(infinite::openInputStream, filename));
         return files;
@@ -53,7 +53,7 @@ final class ResourceSets {
     }
 
     public static List<Resource> of(TestProcessingEnvironment env, String filename, TestFileObject file) {
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(filename, file);
         List<Resource> files = new ArrayList<>();
         files.add(new Resource(file::openInputStream, filename));
         return files;

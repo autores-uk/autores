@@ -151,7 +151,6 @@ public final class GenerateMessagesFromProperties implements Handler {
         for (String pattern : locales.patterns()) {
             props.setLength(base.length());
             props.append(pattern).append(EXTENSION);
-
             final FileObject file;
             try {
                 file = getResource(filer, locations, resourcePackage, props);
@@ -174,7 +173,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         FileObject fo = null;
         for (JavaFileManager.Location location : locations) {
             try {
-                fo = filer.getResource(location, pkg, value);
+                fo = getResource(filer, location, pkg, value);
                 try (InputStream is = fo.openInputStream()) {
                     // NOOP; if file can be opened it exists
                     assert is != null;
@@ -192,6 +191,15 @@ public final class GenerateMessagesFromProperties implements Handler {
             throw first;
         }
         return fo;
+    }
+
+    private FileObject getResource(Filer filer, JavaFileManager.Location location, CharSequence pkg, CharSequence value) throws IOException {
+        try {
+            return filer.getResource(location, pkg, value);
+        } catch (IllegalArgumentException e) {
+            // Eclipse compiler doesn't like CLASS_PATH as a location
+            throw new IOException(e);
+        }
     }
 
     private void writeProperties(Context ctxt,
