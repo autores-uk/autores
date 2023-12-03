@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import uk.autores.handling.Context;
 import uk.autores.handling.Namer;
 import uk.autores.handling.Pkg;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 import uk.autores.test.testing.Proxies;
 
 import javax.tools.StandardLocation;

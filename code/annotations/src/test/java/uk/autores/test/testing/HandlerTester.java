@@ -3,9 +3,9 @@
 package uk.autores.test.testing;
 
 import uk.autores.handling.*;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.StandardLocation;
 import java.io.IOException;

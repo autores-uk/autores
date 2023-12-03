@@ -3,8 +3,8 @@
 package uk.autores.test.testing;
 
 import org.joor.Reflect;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
