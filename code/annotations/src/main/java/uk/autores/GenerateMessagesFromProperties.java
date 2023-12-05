@@ -434,7 +434,12 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.append(",").nl();
         }
         writer.closeBrace().append(";").nl();
-        writer.indent().append("return formatter.format(args, new java.lang.StringBuffer(), null).toString();").nl();
+        // capacity is just a guess
+        String capacity = Ints.toString(baseValue.length() * 2 + vars.size() * 8);
+        writer.indent()
+                .append("return formatter.format(args, new java.lang.StringBuffer(")
+                .append(capacity)
+                .append("), null).toString();").nl();
         writer.closeBrace().nl();
     }
 
