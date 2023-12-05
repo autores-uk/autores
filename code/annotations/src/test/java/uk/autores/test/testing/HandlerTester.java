@@ -3,9 +3,9 @@
 package uk.autores.test.testing;
 
 import uk.autores.handling.*;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 
 public final class HandlerTester {
 
@@ -82,7 +82,7 @@ public final class HandlerTester {
                 .setAnnotated(TestElement.INSTANCE)
                 .setEnv(env)
                 .setConfig(cfg)
-                .setLocation(singletonList(StandardLocation.CLASS_PATH))
+                .setLocation(asList(StandardLocation.CLASS_PATH, StandardLocation.CLASS_OUTPUT))
                 .setNamer(NAMER)
                 .setPkg(pkg)
                 .setResources(resources)

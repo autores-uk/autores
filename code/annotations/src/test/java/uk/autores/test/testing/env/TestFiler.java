@@ -1,6 +1,6 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores.test.env;
+package uk.autores.test.testing.env;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
@@ -46,6 +46,9 @@ public class TestFiler implements Filer {
 
     @Override
     public FileObject getResource(JavaFileManager.Location location, CharSequence pkg, CharSequence relativeName) throws IOException {
+        if (location == StandardLocation.CLASS_PATH) {
+            throw new IllegalArgumentException(StandardLocation.CLASS_PATH.getName());
+        }
         Map<String, TestFileObject> map = files.get(location);
         String path = (pkg.length() == 0) ? relativeName.toString() : pkg.toString().replace('.', '/') + '/' + relativeName;
         return map.getOrDefault(path, new TestFileObject());
