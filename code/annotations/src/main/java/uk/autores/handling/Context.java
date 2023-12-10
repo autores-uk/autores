@@ -8,11 +8,9 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,11 +44,11 @@ public final class Context {
                    List<Config> config,
                    Namer namer) {
         this.env = requireNonNull(env, "env");
-        this.locations = unmodifiableList(requireNonNull(locations, "locations"));
+        this.locations = locations;
         this.pkg = requireNonNull(pkg, "pkg");
         this.annotated = requireNonNull(annotated, "annotatedElement");
-        this.resources = unmodifiableList(requireNonNull(resources, "resources"));
-        this.config = unmodifiableList(requireNonNull(config, "config"));
+        this.resources = resources;
+        this.config = config;
         this.namer = requireNonNull(namer, "namer");
     }
 
@@ -203,7 +201,7 @@ public final class Context {
          * @see Context#config()
          */
         public Builder setConfig(List<Config> config) {
-            this.config = new ArrayList<>(config);
+            this.config = Lists.copy(config);
             return this;
         }
 
@@ -223,7 +221,7 @@ public final class Context {
          * @see Context#locations()
          */
         public Builder setLocation(List<JavaFileManager.Location> locations) {
-            this.locations = new ArrayList<>(locations);
+            this.locations = Lists.copy(locations);
             return this;
         }
 
@@ -253,7 +251,7 @@ public final class Context {
          * @see Context#resources()
          */
         public Builder setResources(List<Resource> resources) {
-            this.resources = new ArrayList<>(resources);
+            this.resources = Lists.copy(resources);
             return this;
         }
     }

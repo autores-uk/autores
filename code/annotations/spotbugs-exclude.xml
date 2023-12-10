@@ -7,4 +7,12 @@
         <Class name="uk.autores.processors.ResourceFilesProcessor" />
         <Bug pattern="REC_CATCH_EXCEPTION" />
     </Match>
+    <Match>
+        <Class name="uk.autores.handling.Context" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
+        <Class name="uk.autores.handling.Context" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
 </FindBugsFilter>
