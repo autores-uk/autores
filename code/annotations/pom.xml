@@ -189,7 +189,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.3.6</version>
+                <version>4.8.2.0</version>
                 <configuration>
                     <fork>false</fork>
                     <effort>Max</effort>
@@ -218,7 +218,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.7.3</version>
+                        <version>4.8.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
