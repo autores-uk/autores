@@ -29,7 +29,7 @@ Pull requests will NOT be accepted.
 | dev8      | Primary development branch targeting Java 8 | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev8)         |
 | dev11     | Java 11 fork with native module support     | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=dev11)        |
 | main      | Most recent release for Java 11             | ![ci.yaml](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg?branch=main) ![docs.yaml](https://github.com/autores-uk/autores/actions/workflows/docs.yaml/badge.svg?branch=main)  |
-| release/* | Frozen branches for released versions| n/a  |
+| release/* | Frozen branches for released versions       | n/a  |
 
 ## Releases
 
