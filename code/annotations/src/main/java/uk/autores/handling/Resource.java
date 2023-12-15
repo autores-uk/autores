@@ -11,6 +11,7 @@ import java.util.Objects;
 
 /**
  * A representation of the annotated resource.
+ * The {@link CharSequence} implementation is the path.
  */
 public final class Resource implements CharSequence {
 
@@ -61,7 +62,7 @@ public final class Resource implements CharSequence {
     }
 
     /**
-     *
+     * For retrieving resource contents.
      */
     @FunctionalInterface
     public interface ResourceOpener {

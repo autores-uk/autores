@@ -52,9 +52,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   /**
-   * @return ResourceFiles and ResourceFilesRepeater
-   * @see ResourceFiles
-   * @see ResourceFilesRepeater
+   * Supported annotations.
+   *
+   * @return {@link ResourceFiles} and {@link ResourceFilesRepeater}
    */
   @Override
   public Set<String> getSupportedAnnotationTypes() {

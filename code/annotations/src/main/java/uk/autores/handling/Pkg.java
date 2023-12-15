@@ -3,7 +3,8 @@
 package uk.autores.handling;
 
 /**
- * Character representation of a Java package.
+ * Character representation of a
+ * <a href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">Java package</a>.
  */
 public final class Pkg implements CharSequence {
 
@@ -17,7 +18,8 @@ public final class Pkg implements CharSequence {
     }
 
     /**
-     * Factory method.
+     * Instantiates an instance, decorating the given sequence.
+     * The argument is typically a {@link javax.lang.model.element.Name}.
      *
      * @param name package name of the annotated type or package
      * @return instance
