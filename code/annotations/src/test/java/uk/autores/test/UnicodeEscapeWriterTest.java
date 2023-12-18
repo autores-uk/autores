@@ -98,9 +98,8 @@ class UnicodeEscapeWriterTest {
     }
 
     private UEW instance(Writer w) {
-        Class<?>[] types = {Writer.class};
-        Object[] args = {w};
-        return Proxies.instance(UEW.class, "uk.autores.UnicodeEscapeWriter", types, args);
+        return Proxies.instance(UEW.class, "uk.autores.UnicodeEscapeWriter")
+                .params(Writer.class).args(w);
     }
 
     private interface UEW extends Closeable, Appendable {

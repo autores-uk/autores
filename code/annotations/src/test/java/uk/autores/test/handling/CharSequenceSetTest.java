@@ -32,9 +32,8 @@ class CharSequenceSetTest {
     }
 
     private CSS instance(CharSequence...cs) {
-        Class<?>[] types = {CharSequence[].class};
-        Object[] args = {cs};
-        return Proxies.instance(CSS.class, "uk.autores.handling.CharSequenceSet", types, args);
+        return Proxies.instance(CSS.class, "uk.autores.handling.CharSequenceSet")
+                .params(CharSequence[].class).args(new Object[] {cs});
     }
 
     private interface CSS {
