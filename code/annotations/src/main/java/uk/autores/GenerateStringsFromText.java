@@ -214,7 +214,7 @@ public final class GenerateStringsFromText implements Handler {
 
         gs.needsCopyMethod = true;
 
-        String len = Ints.toString((int) stats.utf16Size);
+        int len = (int) stats.utf16Size;
         ModifiedUtf8Buffer buf = gs.buffer;
 
         writeMethodDeclaration(writer);
@@ -262,7 +262,7 @@ public final class GenerateStringsFromText implements Handler {
                 .append(".load(")
                 .string(stats.resource)
                 .append(", ")
-                .append(Ints.toString(size))
+                .append(size)
                 .append(");").nl();
 
         writeMethodClose(writer);
