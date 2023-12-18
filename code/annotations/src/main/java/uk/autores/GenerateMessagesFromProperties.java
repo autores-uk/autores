@@ -435,7 +435,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
         writer.closeBrace().append(";").nl();
         // capacity is just a guess
-        String capacity = Ints.toString(baseValue.length() * 2 + vars.size() * 8);
+        int capacity = baseValue.length() * 2 + vars.size() * 8;
         writer.indent()
                 .append("return formatter.format(args, new java.lang.StringBuffer(")
                 .append(capacity)
@@ -450,12 +450,12 @@ public final class GenerateMessagesFromProperties implements Handler {
             if (MessageParser.DATE.equals(patternVariables.get(i))) {
                 writer.indent()
                         .append("tz = java.util.TimeZone.getTimeZone(v")
-                        .append(Ints.toString(i))
+                        .append(i)
                         .append(".getZone());")
                         .nl();
                 writer.indent()
                         .append("((java.text.DateFormat) fmts[")
-                        .append(Ints.toString(i))
+                        .append(i)
                         .append("]).setTimeZone(tz);")
                         .nl();
             }
