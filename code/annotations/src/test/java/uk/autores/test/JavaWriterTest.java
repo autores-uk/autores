@@ -119,21 +119,17 @@ class JavaWriterTest {
     }
 
     private JW instance(Object generator, Context ctxt, Writer writer, String className, String comment) {
-        Class<?>[] types = {
-                Object.class,
-                Context.class,
-                Writer.class,
-                String.class,
-                CharSequence.class,
-        };
-        Object[] args = {
-                generator,
-                ctxt,
-                writer,
-                className,
-                comment,
-        };
-        return Proxies.instance(JW.class, "uk.autores.JavaWriter", types, args);
+        return Proxies.instance(JW.class, "uk.autores.JavaWriter")
+                .params(Object.class,
+                        Context.class,
+                        Writer.class,
+                        String.class,
+                        CharSequence.class)
+                .args(generator,
+                        ctxt,
+                        writer,
+                        className,
+                        comment);
     }
 
     private interface JW extends Closeable {

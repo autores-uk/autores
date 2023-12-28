@@ -98,9 +98,8 @@ class ByteHackReaderTest {
     }
 
     private BHR instance(InputStream in) {
-        Class<?>[] ctorTypes = {InputStream.class};
-        Object[] args = {in};
-        return Proxies.instance(BHR.class, "uk.autores.ByteHackReader", ctorTypes, args);
+        return Proxies.instance(BHR.class, "uk.autores.ByteHackReader")
+                .params(InputStream.class).args(in);
     }
 
     private interface BHR extends Closeable {

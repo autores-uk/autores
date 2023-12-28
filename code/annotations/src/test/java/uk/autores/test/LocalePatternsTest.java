@@ -42,9 +42,8 @@ class LocalePatternsTest {
     }
 
     private LP instance() {
-        Class<?>[] types = {};
-        Object[] args = {};
-        return Proxies.instance(LP.class, "uk.autores.LocalePatterns", types, args);
+        return Proxies.instance(LP.class, "uk.autores.LocalePatterns")
+                .params().args();
     }
 
     private interface LP {

@@ -96,9 +96,8 @@ class ModifiedUtf8BufferTest {
     }
 
     private MUB instance(int n) {
-        Class<?>[] types = {Integer.TYPE};
-        Object[] args = {n};
-        return Proxies.instance(MUB.class, "uk.autores.ModifiedUtf8Buffer", types, args);
+        return Proxies.instance(MUB.class, "uk.autores.ModifiedUtf8Buffer")
+                .params(Integer.TYPE).args(n);
     }
 
     private interface MUB {
