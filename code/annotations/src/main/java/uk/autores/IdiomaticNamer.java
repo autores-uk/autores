@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.handling.Namer;
@@ -8,12 +10,15 @@ import java.util.function.Function;
 // TODO: look at codepoint handling
 
 /**
- * Generates names that conform to english language Java naming conventions.
+ * Generates names that conform to Java naming conventions.
  * This type can generate more name collisions than the base type.
+ * Case handling uses {@link Locale#ENGLISH}.
  */
 public final class IdiomaticNamer extends Namer {
 
     /**
+     * For input "foo-bar-baz" returns "fooBarBaz".
+     *
      * @param src source string
      * @return lower snake case
      */
@@ -24,16 +29,20 @@ public final class IdiomaticNamer extends Namer {
     }
 
     /**
+     * For input "foo-bar-baz" returns "FOO_BAR_BAZ".
+     *
      * @param src source string
      * @return upper snake case
      */
     @Override
-    public String nameStaticField(String src) {
-        String name = super.nameStaticField(src);
+    public String nameConstant(String src) {
+        String name = super.nameConstant(src);
         return transform(name, IdiomaticNamer::allUpper, "_");
     }
 
     /**
+     * For input "foo-bar-baz" returns "FooBarBaz".
+     *
      * @param src source string
      * @return upper camel case
      */

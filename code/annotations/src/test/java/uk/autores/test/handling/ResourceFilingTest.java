@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
@@ -8,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResourceFilingTest {
     
-    private final Pkg pkg = new Pkg("foo.bar");
+    private final Pkg pkg = Pkg.named("foo.bar");
     
     @Test
     void returnsEmptyForAbsolute() {

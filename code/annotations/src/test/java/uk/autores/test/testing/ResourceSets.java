@@ -1,9 +1,11 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.testing;
 
 import uk.autores.handling.Resource;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestInfiniteFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestInfiniteFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -24,8 +26,8 @@ final class ResourceSets {
         try (OutputStream out = text.openOutputStream()) {
             out.write(data.getBytes(StandardCharsets.UTF_8));
         }
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(name, text);
-        return new Resource(text, name);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(name, text);
+        return new Resource(text::openInputStream, name);
     }
 
     public static List<Resource> largeAndSmallTextFile(TestProcessingEnvironment env, int multiplier) throws IOException {
@@ -38,9 +40,9 @@ final class ResourceSets {
     public static List<Resource> infinitelyLargeFile(TestProcessingEnvironment env) {
         String filename = "infinite.txt";
         TestInfiniteFileObject infinite = new TestInfiniteFileObject();
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, infinite);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(filename, infinite);
         List<Resource> files = new ArrayList<>();
-        files.add(new Resource(infinite, filename));
+        files.add(new Resource(infinite::openInputStream, filename));
         return files;
     }
 
@@ -51,9 +53,9 @@ final class ResourceSets {
     }
 
     public static List<Resource> of(TestProcessingEnvironment env, String filename, TestFileObject file) {
-        env.getFiler().files.get(StandardLocation.CLASS_PATH).put(filename, file);
+        env.getFiler().files.get(StandardLocation.CLASS_OUTPUT).put(filename, file);
         List<Resource> files = new ArrayList<>();
-        files.add(new Resource(file, filename));
+        files.add(new Resource(file::openInputStream, filename));
         return files;
     }
 }

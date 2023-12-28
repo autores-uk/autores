@@ -1,9 +1,11 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.testing;
 
 import uk.autores.handling.*;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.StandardLocation;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public final class HandlerTester {
 
@@ -20,7 +24,7 @@ public final class HandlerTester {
     private List<Config> cfg = Collections.emptyList();
     private final TestProcessingEnvironment env = new TestProcessingEnvironment();
     private final List<Resource> resources = new ArrayList<>();
-    private Pkg pkg = new Pkg("");
+    private Pkg pkg = Pkg.named("");
 
     public HandlerTester(Handler handler) {
         this.handler = handler;
@@ -74,15 +78,15 @@ public final class HandlerTester {
     }
 
     public HandlerResults test() throws Exception {
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                pkg,
-                TestElement.INSTANCE,
-                resources,
-                cfg,
-                NAMER
-        );
+        Context context = Context.builder()
+                .setAnnotated(TestElement.INSTANCE)
+                .setEnv(env)
+                .setConfig(cfg)
+                .setLocation(asList(StandardLocation.CLASS_PATH, StandardLocation.CLASS_OUTPUT))
+                .setNamer(NAMER)
+                .setPkg(pkg)
+                .setResources(resources)
+                .build();
 
         handler.handle(context);
 

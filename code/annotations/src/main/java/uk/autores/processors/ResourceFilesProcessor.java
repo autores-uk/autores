@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
@@ -16,12 +18,14 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
+import javax.tools.JavaFileManager;
+import javax.tools.StandardLocation;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
@@ -48,9 +52,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   /**
-   * @return ResourceFiles and ResourceFilesRepeater
-   * @see ResourceFiles
-   * @see ResourceFilesRepeater
+   * Supported annotations.
+   *
+   * @return {@link ResourceFiles} and {@link ResourceFilesRepeater}
    */
   @Override
   public Set<String> getSupportedAnnotationTypes() {
@@ -136,12 +140,12 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
 
         pkg = ResourceFiling.pkg(annotationPackage, resource);
         value = ResourceFiling.relativeName(resource);
-        FileObject fo = filer.getResource(cpr.location(), pkg, value);
+        FileObject fo = getResource(filer, cpr.locations(), pkg, value);
         try (InputStream is = fo.openInputStream()) {
           // NOOP; if file can be opened it exists
           assert is != null;
         }
-        resources.add(new Resource(fo, resource));
+        resources.add(new Resource(fo::openInputStream, resource));
       }
 
     } catch (Exception e) {
@@ -152,6 +156,25 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     }
 
     return resources;
+  }
+
+  private FileObject getResource(Filer filer, String[] locations, CharSequence pkg, CharSequence value) throws IOException {
+    Set<String> errors = new LinkedHashSet<>();
+    for (String location : locations) {
+      JavaFileManager.Location jfml = StandardLocation.locationFor(location);
+      try {
+        FileObject fo = filer.getResource(jfml, pkg, value);
+        try (InputStream is = fo.openInputStream()) {
+          // NOOP; if file can be opened it exists
+          assert is != null;
+        }
+        return fo;
+      } catch (Exception e) {
+        errors.add(e.toString());
+      }
+    }
+    String reason = String.join("; ", errors);
+    throw new IOException(reason);
   }
 
   private Context ctxt(ResourceFiles cpr, Element annotated) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -165,15 +188,21 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
     Pkg pkg = pkg(annotated);
     List<Resource> resources = resources(cpr, pkg, annotated);
 
-    return new Context(
-            processingEnv,
-            cpr.location(),
-            pkg(annotated),
-            annotated,
-            resources,
-            options,
-            namer
-    );
+    return Context.builder()
+            .setEnv(processingEnv)
+            .setResources(resources)
+            .setAnnotated(annotated)
+            .setConfig(options)
+            .setPkg(pkg(annotated))
+            .setNamer(namer)
+            .setLocation(locationList(cpr.locations()))
+            .build();
+  }
+
+  private List<JavaFileManager.Location> locationList(String[] locations) {
+    return Stream.of(locations)
+            .map(StandardLocation::locationFor)
+            .collect(Collectors.toList());
   }
 
   @SuppressWarnings("unchecked")
@@ -199,10 +228,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   private Pkg pkg(Element annotated) {
-    String qualified = processingEnv.getElementUtils()
+    Name qualified = processingEnv.getElementUtils()
             .getPackageOf(annotated)
-            .getQualifiedName()
-            .toString();
-    return new Pkg(qualified);
+            .getQualifiedName();
+    return Pkg.named(qualified);
   }
 }

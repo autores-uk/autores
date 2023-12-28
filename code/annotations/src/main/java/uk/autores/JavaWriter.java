@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.cfg.Visibility;
@@ -18,7 +20,7 @@ final class JavaWriter extends Writer {
     private final String className;
     private boolean closed = false;
     private int indentation = 2;
-    private String resourceLoadMethod = null;
+    private String[] numCache;
 
     JavaWriter(Object generator, Context ctxt, Writer w, String className, CharSequence comment) throws IOException {
         this.w = w;
@@ -59,6 +61,28 @@ final class JavaWriter extends Writer {
         return this;
     }
 
+    public JavaWriter append(int i) throws IOException {
+        String num;
+        if (i >= Byte.MIN_VALUE && i < Byte.MAX_VALUE) {
+            num = cachedNumber(i);
+        } else {
+            num = Integer.toString(i);
+        }
+        w.append(num);
+        return this;
+    }
+
+    private String cachedNumber(int n) {
+        if (numCache == null) {
+            numCache = new String[265];
+        }
+        int index = n + Byte.MAX_VALUE + 1;
+        if (numCache[index] == null) {
+            numCache[index] = Integer.toString(n);
+        }
+        return numCache[index];
+    }
+
     @Override
     public void flush() throws IOException {
         w.flush();
@@ -71,10 +95,6 @@ final class JavaWriter extends Writer {
         }
         closed = true;
         try {
-            if (resourceLoadMethod != null) {
-                writeResourceLoadMethod();
-            }
-
             w.append("}").append(NL);
         } finally {
             w.close();
@@ -130,11 +150,15 @@ final class JavaWriter extends Writer {
     }
 
     public JavaWriter openResource(CharSequence resource, boolean literal) throws IOException {
-        if (resourceLoadMethod == null) {
-            resourceLoadMethod = String.format("open$%08X$resource", className.hashCode());
+        append("java.util.Objects.requireNonNull(");
+        append(className);
+        append(".class.getResourceAsStream(");
+        if (literal) {
+            string(resource);
+        } else {
+            append(resource);
         }
-
-        append(resourceLoadMethod).append("(");
+        append("), ");
         if (literal) {
             string(resource);
         } else {
@@ -142,25 +166,5 @@ final class JavaWriter extends Writer {
         }
         append(")");
         return this;
-    }
-
-    private void writeResourceLoadMethod() throws IOException {
-        this.nl();
-        this.indent()
-                .append("private static java.io.InputStream ")
-                .append(resourceLoadMethod)
-                .append("(java.lang.String resource) throws java.io.IOException ")
-                .openBrace()
-                .nl();
-        this.indent()
-                .append("java.io.InputStream in = ")
-                .append(className)
-                .append(".class.getResourceAsStream(resource);")
-                .nl();
-        this.indent()
-                .append("if (in == null) { throw new java.io.FileNotFoundException(resource); }")
-                .nl();
-        this.indent().append("return in;").nl();
-        this.closeBrace().nl();
     }
 }

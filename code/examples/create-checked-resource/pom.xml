@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.18-alpha</version>
+        <version>11.0.19-beta</version>
     </parent>
 
     <artifactId>create-checked-resource</artifactId>
@@ -37,7 +37,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.strong.DumpResourceToStdout</mainClass>
+                    <mainClass>uk.autores.strong.DumpFillerTextToStdout</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.cfg;
 
 import uk.autores.ResourceFiles;
@@ -7,8 +9,7 @@ import java.nio.charset.Charset;
 
 /**
  * "encoding": encoding of consumed text files.
- * Values are checked against the canonical names.
- * @see Charset#availableCharsets()
+ * Values are validated against the keys in {@link Charset#availableCharsets()}.
  */
 public final class Encoding {
 

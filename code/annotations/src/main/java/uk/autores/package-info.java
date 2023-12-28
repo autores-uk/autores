@@ -1,3 +1,6 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * <p>
  * An annotation driven library for working with embedded resource files.
@@ -63,7 +66,7 @@
  *         <tr>
  *             <td>{@link uk.autores.GenerateInputStreamsFromFiles}</td>
  *             <td>any files</td>
- *             <td>{@link uk.autores.cfg.Visibility}</td>
+ *             <td>{@link uk.autores.cfg.Visibility} {@link uk.autores.cfg.Name}</td>
  *             <td>Generates a single class with methods for opening resource {@link java.io.InputStream}s.</td>
  *         </tr>
  *         <tr>

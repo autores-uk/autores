@@ -6,7 +6,7 @@ Building from source requires [Maven](https://maven.apache.org) and a [Java Deve
 
  - Java Development Kit of choice - version 8 or above
    - e.g. [Temurin JDK](https://adoptium.net)
- - [Maven 3.x.x](https://maven.apache.org/users/index.html)
+ - [Maven 3](https://maven.apache.org/users/index.html) (minimum 3.3.9)
 
 ## BUILD
 

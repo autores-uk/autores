@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.cfg.Format;
@@ -15,8 +17,6 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.*;
-
-import static java.util.Arrays.asList;
 
 /**
  * <p>
@@ -41,17 +41,16 @@ import static java.util.Arrays.asList;
  *         <li>If "localize" is true and localized files have been detected the method requires a {@link Locale} argument.</li>
  *     </ul>
  *     </li>
- *     <li>
+ *     <li>q
  *         A second method is generated if "format" is true and format expressions have been detected in the value.
  *         <ul>
  *             <li>{@link Locale} is the first argument if "localize" is true and localized files have been detected and number/choice/date us used.</li>
- *             <li>If any of the format expressions are of type <code>date</code> {@link TimeZone} is the next argument.</li>
  *             <li>
  *                 Format expressions form the remaining arguments in index order.
  *                 {@link MessageFormat} expressions are mapped as follows.
  *                 <ul>
  *                     <li>number or choice: {@link Number}</li>
- *                     <li>date: {@link java.time.Instant}</li>
+ *                     <li>date or time: {@link java.time.ZonedDateTime}</li>
  *                     <li>none: {@link String}</li>
  *                 </ul>
  *             </li>
@@ -59,19 +58,37 @@ import static java.util.Arrays.asList;
  *     </li>
  * </ul>
  * <h2>Example</h2>
- * <p>Example file <code>Cosmic.properties</code>:</p>
- * <pre>planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</pre>
- * <p>This will generate a class <code>Cosmic</code> with the method signature:</p>
- * <pre>static String planet_event(Locale l, TimeZone tz, Number v0, Instant v1, String v2)</pre>
- * <p>Usage:</p>
- * <pre>Cosmic.planet_event(Locale.ENGLISH, TimeZone.getTimeZone("GMT"), 4, Instant.EPOCH, "an attack")</pre>
  * <p>
- *     This will return the string <code>"At 12:00:00 AM on Jan 1, 1970, there was an attack on planet 4."</code>.
+ *     Example file <code>Cosmic.properties</code>:
+ * </p>
+ *
+ * <pre>planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.</pre>
+ *
+ * <p>
+ *     This will generate a class <code>Cosmic</code> with the method signature:
+ * </p>
+ *
+ * <pre>static String planet_event(Locale l, Number v0, ZonedDateTime v1, ZonedDateTime v2, String v3)</pre>
+ *
+ * <p>
+ *     Usage:
+ * </p>
+ *
+ * <pre>
+ *     var now = ZonedDateTime.now();
+ *     Cosmic.planet_event(Locale.US, 4, now, "an attack")
+ * </pre>
+ *
+ * <p>
+ *     Generally variables can be reused in {@link MessageFormat} patterns but this is unsupported
+ *     when dates are present due to implementation limitations in time zone handling.
  * </p>
  */
 public final class GenerateMessagesFromProperties implements Handler {
 
     private static final String EXTENSION = ".properties";
+
+    private final LocalePatterns locales = new LocalePatterns();
 
     /**
      * <p>All configuration is optional.</p>
@@ -109,7 +126,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
 
             Properties base = PropLoader.load(res);
-            List<Localized> localizations = localize
+            List<Localization> localizations = localize
                     ? loadLocalizations(context, res)
                     : Collections.emptyList();
 
@@ -117,55 +134,78 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
     }
 
-    private List<Localized> loadLocalizations(Context context, Resource resource) throws IOException {
+    private List<Localization> loadLocalizations(Context context, Resource resource) throws IOException {
         Filer filer = context.env().getFiler();
-        JavaFileManager.Location location = context.location();
+        List<JavaFileManager.Location> locations = context.locations();
 
         CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
         CharSequence name = ResourceFiling.relativeName(resource);
 
-        List<Localized> localized = new ArrayList<>();
+        List<Localization> localized = new ArrayList<>();
 
         int end = name.length() - EXTENSION.length();
         CharSequence base = name.subSequence(0, end);
         StringBuilder props = new StringBuilder(base.length() + EXTENSION.length() + 6);
         props.append(base);
 
-        for (Map.Entry<String, Locale> entry : expandedLocales().entrySet()) {
+        for (String pattern : locales.patterns()) {
             props.setLength(base.length());
-
-            String pattern = entry.getKey();
-            Locale locale = entry.getValue();
-            if (locale.getLanguage().isEmpty()) {
-                continue;
-            }
-
             props.append(pattern).append(EXTENSION);
-
             final FileObject file;
             try {
-                file = filer.getResource(location, resourcePackage, props);
-                try (InputStream in = file.openInputStream()) {
-                    Objects.requireNonNull(in);
-                }
+                file = getResource(filer, locations, resourcePackage, props);
             } catch (IOException e) {
                 // probably doesn't exist
                 // env.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
                 continue;
             }
 
-            Resource res = new Resource(file, props.toString());
+            Resource res = new Resource(file::openInputStream, props.toString());
             Properties properties = PropLoader.load(res);
-            localized.add(new Localized(pattern, properties));
+            localized.add(new Localization(pattern, properties));
         }
 
         return localized;
     }
 
+    private FileObject getResource(Filer filer, List<JavaFileManager.Location> locations, CharSequence pkg, CharSequence value) throws IOException {
+        IOException first = null;
+        FileObject fo = null;
+        for (JavaFileManager.Location location : locations) {
+            try {
+                fo = getResource(filer, location, pkg, value);
+                try (InputStream is = fo.openInputStream()) {
+                    // NOOP; if file can be opened it exists
+                    assert is != null;
+                }
+                return fo;
+            } catch (IOException e) {
+                if (first == null) {
+                    first = e;
+                } else {
+                    first.addSuppressed(e);
+                }
+            }
+        }
+        if (first != null) {
+            throw first;
+        }
+        return fo;
+    }
+
+    private FileObject getResource(Filer filer, JavaFileManager.Location location, CharSequence pkg, CharSequence value) throws IOException {
+        try {
+            return filer.getResource(location, pkg, value);
+        } catch (IllegalArgumentException e) {
+            // Eclipse compiler doesn't like CLASS_PATH as a location
+            throw new IOException(e);
+        }
+    }
+
     private void writeProperties(Context ctxt,
                                  Resource resource,
                                  Properties base,
-                                 List<Localized> localizations) throws IOException {
+                                 List<Localization> localizations) throws IOException {
         Namer namer = ctxt.namer();
         Pkg pkg = ctxt.pkg();
         Filer filer = ctxt.env().getFiler();
@@ -203,7 +243,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private void writeCache(JavaWriter writer,
                             String name,
                             String lookupName,
-                            List<Localized> localizations) throws IOException {
+                            List<Localization> localizations) throws IOException {
         String cacheName = "CACHE$" + lookupName.toUpperCase(Locale.ENGLISH);
         String computeName = "compute$" + lookupName;
 
@@ -227,7 +267,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
         writer.indent().append("java.lang.String pattern = ctrl.toBundleName(\"\", candidate).substring(1);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
-        for (Localized l : localizations) {
+        for (Localization l : localizations) {
             String p = l.pattern.substring(1);
             writer.indent().append("case \"")
                     .append(p)
@@ -273,7 +313,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         JavaWriter writer = msgs.writer;
-        List<Localized> localizations = msgs.localizations;
+        List<Localization> localizations = msgs.localizations;
 
         writer.nl().comment(key);
         if (localizations.isEmpty()) {
@@ -288,12 +328,12 @@ public final class GenerateMessagesFromProperties implements Handler {
                     .nl();
             writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
             writer.indent().append("switch (pattern) ").openBrace().nl();
-            for (Localized l : localizations) {
+            for (Localization l : localizations) {
                 String value = l.properties.getProperty(key);
                 if (value == null) {
                     String msg = resource + ": " + l.pattern + ": missing key " + key;
                     Reporting.reporter(ctxt, MissingKey.DEF).accept(msg);
-                    continue;
+                    value = substituteMissingValue(msgs, l.pattern, key, baseValue);
                 }
                 String pattern = l.pattern.substring(1);
                 writer.indent().append("case ").string(pattern).append(": return ").string(value).append(";").nl();
@@ -304,6 +344,17 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
 
         writeFormat(ctxt, msgs, writer, key, baseValue, method);
+    }
+
+    private String substituteMissingValue(Msgs msgs, String pattern, String key, String baseValue) {
+        List<Localization> candidates = locales.findCandidatesFor(pattern, l18n -> l18n.pattern, msgs.localizations);
+        for (Localization candidate : candidates) {
+            String result = candidate.properties.getProperty(key);
+            if (result != null) {
+                return result;
+            }
+        }
+        return baseValue;
     }
 
     private void writeFormat(Context ctxt,
@@ -322,13 +373,13 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         Resource resource = msgs.resource;
-        List<Localized> localizations = msgs.localizations;
+        List<Localization> localizations = msgs.localizations;
 
         if (!localizedMessagesMatchBase(ctxt, resource, vars, localizations, key)) {
             return;
         }
 
-        boolean needsTimeZone = MessageParser.needsTimeZone(vars);
+        int firstDateIndex = MessageParser.firstDateIndex(vars);
         boolean needsLocaleForFormat = MessageParser.needsLocale(vars);
         boolean hasLocalizedMsg = !localizations.isEmpty();
 
@@ -338,13 +389,6 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().staticMember("java.lang.String", method).append("(");
         if (needsLocaleForFormat || hasLocalizedMsg) {
             writer.append("java.util.Locale l");
-            comma = true;
-        }
-        if (needsTimeZone) {
-            if (comma) {
-                writer.append(", ");
-            }
-            writer.append("java.util.TimeZone tz");
             comma = true;
         }
         for (int i = 0; i < vars.size(); i++) {
@@ -368,13 +412,12 @@ public final class GenerateMessagesFromProperties implements Handler {
         } else {
             writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg);").nl();
         }
-        if (needsTimeZone) {
-            writer.indent().append("java.lang.Object[] fmts = formatter.getFormats();").nl();
-            writer.indent().append("for (int i = 0, len = fmts.length; i < len; i++) ").openBrace().nl();
-            writer.indent().append("if (fmts[i] instanceof java.text.DateFormat) ").openBrace().nl();
-            writer.indent().append("((java.text.DateFormat) fmts[i]).setTimeZone(tz);").nl();
-            writer.closeBrace().nl();
-            writer.closeBrace();
+        if (firstDateIndex >= 0) {
+            if (MessageParser.variableReuse(baseValue)) {
+                reportVariableReuseError(ctxt, resource.toString(), baseValue);
+            } else {
+                printTimeZoneFormat(writer, vars);
+            }
         }
         writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
         for (int i = 0; i < vars.size(); i++) {
@@ -386,23 +429,51 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.append("v");
             writer.append(Integer.toString(i));
             if (date) {
-                writer.append(")");
+                writer.append(".toInstant())");
             }
             writer.append(",").nl();
         }
         writer.closeBrace().append(";").nl();
-        writer.indent().append("return formatter.format(args, new java.lang.StringBuffer(), null).toString();").nl();
+        // capacity is just a guess
+        int capacity = baseValue.length() * 2 + vars.size() * 8;
+        writer.indent()
+                .append("return formatter.format(args, new java.lang.StringBuffer(")
+                .append(capacity)
+                .append("), null).toString();").nl();
         writer.closeBrace().nl();
+    }
 
-        // TODO: efficiency
+    private void printTimeZoneFormat(JavaWriter writer, List<String> patternVariables) throws IOException {
+        writer.indent().append("java.util.TimeZone tz;").nl();
+        writer.indent().append("java.text.Format[] fmts = formatter.getFormatsByArgumentIndex();").nl();
+        for (int i = 0; i < patternVariables.size(); i++) {
+            if (MessageParser.DATE.equals(patternVariables.get(i))) {
+                writer.indent()
+                        .append("tz = java.util.TimeZone.getTimeZone(v")
+                        .append(i)
+                        .append(".getZone());")
+                        .nl();
+                writer.indent()
+                        .append("((java.text.DateFormat) fmts[")
+                        .append(i)
+                        .append("]).setTimeZone(tz);")
+                        .nl();
+            }
+        }
+    }
+
+    private void reportVariableReuseError(Context ctxt, String resource, String pattern) {
+        String msg = "Unsupported variable reuse in " + resource + ": " + pattern + ": ";
+        msg += "variable reuse is not supported when dates are present";
+        ctxt.printError(msg);
     }
 
     private boolean localizedMessagesMatchBase(Context ctxt,
                                                Resource resource,
                                                List<String> vars,
-                                               List<Localized> localizations, String key) {
+                                               List<Localization> localizations, String key) {
         boolean ok = true;
-        for (Localized l : localizations) {
+        for (Localization l : localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
@@ -414,42 +485,20 @@ public final class GenerateMessagesFromProperties implements Handler {
                 ctxt.printError(msg);
                 ok = false;
             }
+            if (MessageParser.firstDateIndex(locVars) >=0 && MessageParser.variableReuse(localizedValue)) {
+                reportVariableReuseError(ctxt, resource + " " + l.pattern, localizedValue);
+                ok = false;
+            }
         }
         return ok;
     }
 
-    /**
-     * These locales are used to search for localized properties files.
-     * Default locales can vary by runtime implementation.
-     *
-     * @return the supported locales
-     * @see Locale#getAvailableLocales()
-     */
-    private List<Locale> locales() {
-        return asList(Locale.getAvailableLocales());
-    }
+    private static final class Localization {
 
-    private SortedMap<String, Locale> expandedLocales() {
-        ResourceBundle.Control ctrl = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
-
-        SortedMap<String, Locale> map = new TreeMap<>();
-        for (Locale base : locales()) {
-            if (base.getLanguage().isEmpty()) {
-                continue;
-            }
-            for (Locale locale : ctrl.getCandidateLocales("", base)) {
-                String pattern = ctrl.toBundleName("", locale);
-                map.put(pattern, locale);
-            }
-        }
-        return map;
-    }
-
-    private static class Localized {
         final String pattern;
         final Properties properties;
 
-        private Localized(String pattern, Properties properties) {
+        Localization(String pattern, Properties properties) {
             this.pattern = pattern;
             this.properties = properties;
         }
@@ -458,10 +507,10 @@ public final class GenerateMessagesFromProperties implements Handler {
     private static class Msgs {
         private final Resource resource;
         private final String lookupName;
-        private final List<Localized> localizations;
+        private final List<Localization> localizations;
         private final JavaWriter writer;
 
-        private Msgs(Resource resource, String lookupName, List<Localized> localizations, JavaWriter writer) {
+        private Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
             this.resource = resource;
             this.lookupName = lookupName;
             this.localizations = localizations;

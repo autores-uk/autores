@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
@@ -96,9 +98,8 @@ class UnicodeEscapeWriterTest {
     }
 
     private UEW instance(Writer w) {
-        Class<?>[] types = {Writer.class};
-        Object[] args = {w};
-        return Proxies.instance(UEW.class, "uk.autores.UnicodeEscapeWriter", types, args);
+        return Proxies.instance(UEW.class, "uk.autores.UnicodeEscapeWriter")
+                .params(Writer.class).args(w);
     }
 
     private interface UEW extends Closeable, Appendable {

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
@@ -96,9 +98,8 @@ class ByteHackReaderTest {
     }
 
     private BHR instance(InputStream in) {
-        Class<?>[] ctorTypes = {InputStream.class};
-        Object[] args = {in};
-        return Proxies.instance(BHR.class, "uk.autores.ByteHackReader", ctorTypes, args);
+        return Proxies.instance(BHR.class, "uk.autores.ByteHackReader")
+                .params(InputStream.class).args(in);
     }
 
     private interface BHR extends Closeable {

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.exist;
 
 import uk.autores.ResourceFiles;
@@ -10,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 @ResourceFiles({PrintResources.RELATIVE, PrintResources.ABSOLUTE})
 public class PrintResources {
 
+    // change these strings to see compilation failure
     static final String RELATIVE = "relative.txt";
     static final String ABSOLUTE = "/uk/autores/exist/absolute.txt";
 

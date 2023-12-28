@@ -1,10 +1,12 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.cfg;
 
 import uk.autores.handling.ConfigDef;
 import uk.autores.handling.Namer;
 
 /**
- * Generated class name.
+ * "name": generated class name.
  */
 public final class Name {
 

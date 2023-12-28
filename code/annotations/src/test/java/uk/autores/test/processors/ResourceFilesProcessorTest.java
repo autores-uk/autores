@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.processors;
 
 import org.joor.CompileOptions;
@@ -8,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import uk.autores.ResourceFiles;
 import uk.autores.ResourceFilesRepeater;
 import uk.autores.processors.ResourceFilesProcessor;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.lang.model.SourceVersion;
 import java.io.IOException;

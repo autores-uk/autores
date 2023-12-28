@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import java.io.IOException;
@@ -9,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Specialized {@link Reader} for putting bytes into <code>char</code> arrays.
  * Each pair of <code>byte</code>s becomes one <code>char</code>.
- * @see #lastByteOdd() for byte streams that are odd numbers
+ * See {@link #lastByteOdd()} for byte streams that are odd numbers
  */
 final class ByteHackReader extends Reader {
 

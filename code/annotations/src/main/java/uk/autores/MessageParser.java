@@ -1,10 +1,12 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,7 @@ final class MessageParser {
 
     static final String STRING = String.class.getName();
     static final String NUMBER = Number.class.getName();
-    static final String DATE = Instant.class.getName();
+    static final String DATE = ZonedDateTime.class.getName();
 
     private MessageParser() {}
 
@@ -50,8 +52,18 @@ final class MessageParser {
         return false;
     }
 
-    static boolean needsTimeZone(List<String> vars) {
-        return vars.contains(DATE);
+    static int firstDateIndex(List<String> vars) {
+        for (int i = 0, len = vars.size(); i < len; i++) {
+            String vt = vars.get(i);
+            if (vt.equals(DATE)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
+    static boolean variableReuse(String pattern) {
+        MessageFormat mf = new MessageFormat(pattern);
+        return mf.getFormats().length != mf.getFormatsByArgumentIndex().length;
+    }
 }

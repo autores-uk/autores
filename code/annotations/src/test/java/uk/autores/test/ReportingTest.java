@@ -1,39 +1,32 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.cfg.MissingKey;
 import uk.autores.handling.*;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 import uk.autores.test.testing.Proxies;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReportingTest {
 
     private final RProxy Reporting = Proxies.utility(RProxy.class, "uk.autores.Reporting");
-    private final Pkg unnamed = new Pkg("");
 
     @Test
     void reportsErrorByDefault() {
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                unnamed,
-                TestElement.INSTANCE,
-                emptyList(),
-                emptyList(),
-                new Namer()
-        );
+        Context context = ctxt(env, Collections.emptyList());
         String expected = "default";
         // invoke
         Reporting.reporter(context, MissingKey.DEF).accept(expected);
@@ -50,15 +43,7 @@ class ReportingTest {
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                unnamed,
-                TestElement.INSTANCE,
-                emptyList(),
-                cfg,
-                new Namer()
-        );
+        Context context = ctxt(env, cfg);
         String expected = "foo bar baz";
         // invoke
         Reporting.reporter(context, MissingKey.DEF).accept(expected);
@@ -75,15 +60,7 @@ class ReportingTest {
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                unnamed,
-                TestElement.INSTANCE,
-                emptyList(),
-                cfg,
-                new Namer()
-        );
+        Context context = ctxt(env, cfg);
         String expected = "foo bar baz";
         // invoke
         Reporting.reporter(context, MissingKey.DEF).accept(expected);
@@ -100,21 +77,25 @@ class ReportingTest {
         ));
         // setup
         TestProcessingEnvironment env = new TestProcessingEnvironment();
-        Context context = new Context(
-                env,
-                StandardLocation.CLASS_PATH,
-                unnamed,
-                TestElement.INSTANCE,
-                emptyList(),
-                cfg,
-                new Namer()
-        );
+        Context context = ctxt(env, cfg);
         String expected = "foo bar baz";
         // invoke
         Reporting.reporter(context, MissingKey.DEF).accept(expected);
         // verify
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.WARNING).size());
         assertEquals(0, env.getMessager().messages.get(Diagnostic.Kind.ERROR).size());
+    }
+
+    private Context ctxt(TestProcessingEnvironment env, List<Config> cfg) {
+        return Context.builder()
+                .setAnnotated(TestElement.INSTANCE)
+                .setEnv(env)
+                .setConfig(cfg)
+                .setLocation(singletonList(StandardLocation.CLASS_PATH))
+                .setNamer(new Namer())
+                .setPkg(Pkg.named(""))
+                .setResources(Collections.emptyList())
+                .build();
     }
 
     private interface RProxy {

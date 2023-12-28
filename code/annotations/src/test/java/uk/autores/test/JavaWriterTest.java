@@ -1,11 +1,13 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.handling.Context;
 import uk.autores.handling.Namer;
 import uk.autores.handling.Pkg;
-import uk.autores.test.env.TestElement;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestElement;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 import uk.autores.test.testing.Proxies;
 
 import javax.tools.StandardLocation;
@@ -13,8 +15,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Collections;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JavaWriterTest {
@@ -23,7 +26,7 @@ class JavaWriterTest {
 
     @Test
     void canGenerateClass() throws IOException {
-        Pkg pkg = new Pkg("foo.bar");
+        Pkg pkg = Pkg.named("foo.bar");
         String actual = test(ctxt(pkg), jw -> {});
         // verify
         String expected = "// GENERATED CODE: uk.autores.test.JavaWriterTest" + NL;
@@ -97,31 +100,36 @@ class JavaWriterTest {
     }
 
     private Context ctxt() {
-        return ctxt(new Pkg(""));
+        return ctxt(Pkg.named(""));
     }
 
     private Context ctxt(Pkg pkg) {
         TestProcessingEnvironment env = new TestProcessingEnvironment();
 
-        return new Context(env, StandardLocation.SOURCE_OUTPUT, pkg, TestElement.INSTANCE, Collections.emptyList(), Collections.emptyList(), new Namer());
+        Context context = Context.builder()
+                .setAnnotated(TestElement.INSTANCE)
+                .setEnv(env)
+                .setConfig(emptyList())
+                .setLocation(singletonList(StandardLocation.CLASS_PATH))
+                .setNamer(new Namer())
+                .setPkg(pkg)
+                .setResources(emptyList())
+                .build();
+        return context;
     }
 
     private JW instance(Object generator, Context ctxt, Writer writer, String className, String comment) {
-        Class<?>[] types = {
-                Object.class,
-                Context.class,
-                Writer.class,
-                String.class,
-                CharSequence.class,
-        };
-        Object[] args = {
-                generator,
-                ctxt,
-                writer,
-                className,
-                comment,
-        };
-        return Proxies.instance(JW.class, "uk.autores.JavaWriter", types, args);
+        return Proxies.instance(JW.class, "uk.autores.JavaWriter")
+                .params(Object.class,
+                        Context.class,
+                        Writer.class,
+                        String.class,
+                        CharSequence.class)
+                .args(generator,
+                        ctxt,
+                        writer,
+                        className,
+                        comment);
     }
 
     private interface JW extends Closeable {

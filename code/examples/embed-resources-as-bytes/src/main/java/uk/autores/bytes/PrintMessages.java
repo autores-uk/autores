@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
@@ -12,27 +14,31 @@ import java.io.ByteArrayInputStream;
 import static uk.autores.cfg.Strategy.STRATEGY;
 
 @ResourceFiles(
-        value = "LazyMessage.xml",
+        value = "Utf16LazyMessage.xml",
         handler = GenerateByteArraysFromFiles.class,
+        // loaded at runtime using Class.getResourceAsStream(String)
         config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.LAZY)
 )
 @ResourceFiles(
-        value = "InlineMessage.xml",
+        value = "Utf16InlineMessage.xml",
         handler = GenerateByteArraysFromFiles.class,
+        // stored in class file as byte code instructions
         config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.INLINE)
 )
 @ResourceFiles(
-        value = { "EncodedMessage.xml", "EncodedMessage2.xml", },
+        value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
         handler = GenerateByteArraysFromFiles.class,
+        // stored in class file as string constant
         config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.ENCODE)
 )
 public class PrintMessages {
 
     public static void main(String...args) throws XPathExpressionException {
-        parseAndPrint(LazyMessage.bytes());
-        parseAndPrint(InlineMessage.bytes());
-        parseAndPrint(EncodedMessage.bytes());
-        parseAndPrint(EncodedMessage2.bytes());
+        // These are the generated classes; the XML parser will infer the text encoding of the files
+        parseAndPrint(Utf16LazyMessage.bytes());
+        parseAndPrint(Utf16InlineMessage.bytes());
+        parseAndPrint(Utf16EncodedMessage.bytes());
+        parseAndPrint(Utf8EncodedMessage.bytes());
     }
 
     private static void parseAndPrint(byte[] raw) throws XPathExpressionException {

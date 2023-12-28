@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ class GenerateMessagesFromPropertiesTest {
     private final Handler handler = new GenerateMessagesFromProperties();
     private final String filename = "Messages.properties";
     private final String filename_fr = "Messages_fr.properties";
+    private final String filename_fr_CA = "Messages_fr_CA.properties";
 
     private HandlerTester tester() {
         return new HandlerTester(handler);
@@ -32,18 +35,21 @@ class GenerateMessagesFromPropertiesTest {
     private byte[] messages() {
         String data = "today={0} said \"Today is {1,date}!\"\n";
         data += "foo=bar\n";
+        data += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
         return data.getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] messages_fr() {
         String data_fr = "today=\"{0} a dit : \u00AB Aujourd'hui, c'est {1,date} ! \u00BB\n";
         data_fr += "foo=baz\n";
+        data_fr += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
         return data_fr.getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] messages_fr_differentFormat() {
         String data_fr = "today={0,number}\n";
         data_fr += "foo=baz\n";
+        data_fr += "planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.\n";
         return data_fr.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -135,6 +141,28 @@ class GenerateMessagesFromPropertiesTest {
                 .withConfig(cfg)
                 .withResource(filename, messages())
                 .withUnspecifiedFile(filename_fr, messages_fr_empty())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
+    }
+
+    @Test
+    void substitutesMissingLocalizedKeys() throws Exception {
+        List<Config> cfg = singletonList(new Config(MissingKey.MISSING_KEY, MissingKey.WARN));
+        HandlerResults hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr())
+                .withUnspecifiedFile(filename_fr_CA, messages_fr_empty())
+                .test();
+        hr.assertNoErrorMessagesReported();
+        hr.assertAllGeneratedFilesCompile(1);
+
+        hr = tester()
+                .withConfig(cfg)
+                .withResource(filename, messages())
+                .withUnspecifiedFile(filename_fr, messages_fr_empty())
+                .withUnspecifiedFile(filename_fr_CA, messages_fr_empty())
                 .test();
         hr.assertNoErrorMessagesReported();
         hr.assertAllGeneratedFilesCompile(1);

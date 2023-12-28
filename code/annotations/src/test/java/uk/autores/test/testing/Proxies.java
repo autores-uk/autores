@@ -1,29 +1,45 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.testing;
 
 import java.lang.reflect.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class Proxies {
 
     private Proxies() {}
 
-    @SuppressWarnings("unchecked")
-    public static <T> T instance(Class<T> proxyType, String name, Class<?>[] ctorTypes, Object[] ctorArgs) {
-        assertEquals(ctorTypes.length, ctorArgs.length);
+    public static <T> Params<T> instance(Class<T> proxyType, String name) {
         try {
             ClassLoader cl = Proxies.class.getClassLoader();
             Class<?> c = cl.loadClass(name);
+            return (Class<?>...params) -> instance(cl, proxyType, c, params);
+        } catch (ClassNotFoundException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    private static <T> Args<T> instance(ClassLoader cl, Class<T> proxyType, Class<?> c, Class<?>[] ctorTypes) {
+        try {
             Constructor<?> ctor = c.getDeclaredConstructor(ctorTypes);
             ctor.setAccessible(true);
+            return (Object...args) -> instance(cl, proxyType, c, ctor, args);
+        } catch (NoSuchMethodException e) {
+            throw new AssertionError(e);
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T instance(ClassLoader cl, Class<T> proxyType, Class<?> c, Constructor<?> ctor, Object[] ctorArgs) {
+        try {
             Object inst = ctor.newInstance(ctorArgs);
             Class<?>[] interfaces = {proxyType};
             Object proxy = Proxy.newProxyInstance(cl, interfaces, new IH(c, inst));
             return (T) proxy;
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new AssertionError(e);
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -64,5 +80,13 @@ public final class Proxies {
                 throw e.getCause();
             }
         }
+    }
+
+    public interface Params<T> {
+        Args<T> params(Class<?>...types);
+    }
+
+    public interface Args<T> {
+        T args(Object...args);
     }
 }

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.handling.ConfigDef;
@@ -43,12 +45,30 @@ import java.lang.annotation.*;
 public @interface ResourceFiles {
 
     /**
-     * This value is passed as location (1st arg) to {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}.
-     * The default is {@link StandardLocation#CLASS_PATH}.
+     * <p>
+     *     These values are passed as location (1st arg) to
+     *     {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}
+     *     in order.
+     * </p>
+     * <p>
+     *     The defaults are {@link StandardLocation#CLASS_PATH} and {@link StandardLocation#CLASS_OUTPUT} names.
+     * </p>
+     * <p>
+     *     Tools are inconsistent in how they locate resources.
+     *     The documentation for {@link Filer} states
+     *     <em>"The locations CLASS_OUTPUT and SOURCE_OUTPUT must be supported."</em>
+     *     If the filer throws an {@link IllegalArgumentException} the processor will
+     *     proceed to the next location.
+     * </p>
      *
      * @return where to search for resources
+     * @see StandardLocation#locationFor(String)
+     * @see StandardLocation#getName()
      */
-    StandardLocation location() default StandardLocation.CLASS_PATH;
+    String[] locations() default {
+            "CLASS_OUTPUT", // IntelliJ likes this
+            "CLASS_PATH", // Maven likes this, Eclipse compiler throws IllegalArgumentException
+    };
 
     /**
      * Defines the resource files to be processed.
@@ -62,7 +82,7 @@ public @interface ResourceFiles {
      * Enables non-default resource handling.
      *
      * @return the Handler for these resources
-     * @see Handler for provided implementations
+     * @see Handler Handler for provided implementations
      */
     Class<? extends Handler> handler() default AssertResourceExists.class;
 
@@ -70,7 +90,7 @@ public @interface ResourceFiles {
      * Set this value to provide alternative class/member naming strategy.
      *
      * @return name generator type
-     * @see Namer for provided implementations
+     * @see Namer Namer for provided implementations
      */
     Class<? extends Namer> namer() default Namer.class;
 

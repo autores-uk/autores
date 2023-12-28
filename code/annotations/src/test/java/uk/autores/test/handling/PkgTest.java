@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
@@ -9,20 +11,30 @@ class PkgTest {
 
     @Test
     void implementsCharSequence() {
-        CharSequenceTests.check("foo.bar", new Pkg("foo.bar"));
-        CharSequenceTests.check("", new Pkg(""));
+        CharSequenceTests.check("foo.bar", Pkg.named("foo.bar"));
+        CharSequenceTests.check("", Pkg.named(""));
     }
 
     @Test
     void canReturnLastSegment() {
-        assertEquals("bar", new Pkg("bar").lastSegment());
-        assertEquals("bar", new Pkg("foo.bar").lastSegment());
-        assertEquals("", new Pkg("").lastSegment());
+        assertEquals("bar", Pkg.named("bar").lastSegment());
+        assertEquals("bar", Pkg.named("foo.bar").lastSegment());
+        assertEquals("", Pkg.named("").lastSegment());
     }
 
     @Test
     void detectsUnnamedPackage() {
-        assertFalse(new Pkg("foo.bar").isUnnamed());
-        assertTrue(new Pkg("").isUnnamed());
+        assertFalse(Pkg.named("foo.bar").isUnnamed());
+        assertTrue(Pkg.named("").isUnnamed());
+    }
+
+    @Test
+    void rejectsInvalidNames() {
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("!"));
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("."));
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("a b"));
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("foo."));
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("true"));
+        assertThrowsExactly(AssertionError.class, () -> Pkg.named("foo.null"));
     }
 }

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
@@ -5,6 +7,7 @@ import com.samskivert.mustache.Template;
 import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.GenerateStringsFromText;
 import uk.autores.ResourceFiles;
+import uk.autores.cfg.Visibility;
 import uk.autores.handling.*;
 
 import javax.annotation.processing.Filer;
@@ -14,8 +17,10 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.emptyList;
+
 /**
- * This trivial example of a {@link Handler} generates a class from a
+ * This {@link Handler} example generates a class from a
  * <a href="https://mustache.github.io/mustache.5.html">Mustache</a> template.
  * It decorates {@link GenerateByteArraysFromFiles} to reuse its byte handling functionality
  * and uses {@link GenerateStringsFromText} to load the template.
@@ -23,17 +28,25 @@ import java.util.Set;
 @ResourceFiles(value = "ImageTemplate.txt", handler = GenerateStringsFromText.class)
 public class GenerateIconsFromFiles implements Handler {
 
-    private final Handler decorated = new GenerateByteArraysFromFiles();
+    private final Handler byteArrayGenerator = new GenerateByteArraysFromFiles();
 
     @Override
     public Set<ConfigDef> config() {
-        return decorated.config();
+        return byteArrayGenerator.config();
     }
 
     @Override
     public void handle(Context context) throws Exception {
+        // visibility
+        String visibility = context.option(Visibility.DEF).orElse("");
+
         // Reuse another handler to embed the bytes
-        decorated.handle(context);
+        Namer delegateNamer = new InternalNamer(context.namer());
+        Context delegate = context.rebuild()
+                .setNamer(delegateNamer)
+                .setConfig(emptyList())
+                .build();
+        byteArrayGenerator.handle(delegate);
 
         // Context artifacts
         List<Resource> resources = context.resources();
@@ -48,8 +61,7 @@ public class GenerateIconsFromFiles implements Handler {
 
         for (Resource resource : resources) {
             String simple = namer.simplifyResourceName(resource.toString());
-            String dataClassName = namer.nameType(simple);
-            String className = dataClassName + "Icon";
+            String className = namer.nameType(simple);
             String qualifiedName = pkg.qualifiedClassName(className);
 
             if (!Namer.isIdentifier(className)) {
@@ -58,7 +70,7 @@ public class GenerateIconsFromFiles implements Handler {
             }
 
             // Template context
-            Object itc = new ImageTemplateContext(pkg.toString(), className, dataClassName);
+            Object itc = new ImageTemplateContext(pkg.toString(), className, visibility);
 
             // Generate code
             JavaFileObject jfo = filer.createSourceFile(qualifiedName, annotatedElement);
@@ -68,16 +80,37 @@ public class GenerateIconsFromFiles implements Handler {
         }
     }
 
+    /**
+     * This is passed to the template engine.
+     */
     public static class ImageTemplateContext {
         public final String pkg;
         public final String className;
-        public final String dataClassName;
+        public final String visibility;
 
-        private ImageTemplateContext(String pkg, String className, String dataClassName) {
+        private ImageTemplateContext(String pkg, String className, String visibility) {
             this.pkg = pkg;
             this.className = className;
-            this.dataClassName = dataClassName;
+            this.visibility = visibility;
         }
 
+    }
+
+    private static final class InternalNamer extends Namer {
+        private final Namer delegate;
+
+        private InternalNamer(Namer delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public String nameType(String src) {
+            return "Internal$" + delegate.nameType(src);
+        }
+
+        @Override
+        public String nameMember(String src) {
+            return delegate.nameMember(src);
+        }
     }
 }

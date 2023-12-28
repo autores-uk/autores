@@ -1,20 +1,37 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import static java.util.Objects.requireNonNull;
-
 /**
- * Resource package information.
+ * Character representation of a
+ * <a href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">Java package</a>.
  */
 public final class Pkg implements CharSequence {
 
+    private static final Pkg UNNAMED = new Pkg("");
+
     /** The fully qualified package name of the annotated element. */
-    private final String name;
+    private final CharSequence name;
+
+    private Pkg(CharSequence name) {
+        this.name = name;
+    }
 
     /**
+     * Instantiates an instance, decorating the given sequence.
+     * The argument is typically a {@link javax.lang.model.element.Name}.
+     *
      * @param name package name of the annotated type or package
+     * @return instance
      */
-    public Pkg(String name) {
-        this.name = requireNonNull(name, "name");
+    public static Pkg named(CharSequence name) {
+        if (name.length() == 0) {
+            return UNNAMED;
+        }
+        if (!Namer.isPackage(name)) {
+            throw new AssertionError("Invalid name: " + name);
+        }
+        return new Pkg(name);
     }
 
     /**
@@ -26,7 +43,7 @@ public final class Pkg implements CharSequence {
      * @see Class#getSimpleName()
      */
     public String qualifiedClassName(String simpleClassName) {
-        return name.isEmpty() ? simpleClassName : name + "." + simpleClassName;
+        return isUnnamed() ? simpleClassName : name + "." + simpleClassName;
     }
 
     /**
@@ -35,7 +52,7 @@ public final class Pkg implements CharSequence {
      * @return true if this is the unnamed package
      */
     public boolean isUnnamed() {
-        return name.isEmpty();
+        return name.length() == 0;
     }
 
     @Override
@@ -60,13 +77,22 @@ public final class Pkg implements CharSequence {
      * @return the last dotted segment
      */
     public String lastSegment() {
-        int idx = name.lastIndexOf('.') + 1;
+        int idx = lastIndexOf('.') + 1;
         int start = Math.max(idx, 0);
-        return name.substring(start);
+        return name.subSequence(start, name.length()).toString();
+    }
+
+    private int lastIndexOf(char ch) {
+        for (int i = name.length() - 1; i >= 0; i--) {
+            if (name.charAt(i) == ch) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
     public String toString() {
-        return name;
+        return name.toString();
     }
 }

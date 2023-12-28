@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.cfg.Strategy;
@@ -20,14 +22,6 @@ import java.util.Set;
  * </p>
  * <p>
  *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
- * </p>
- * <p>
- *     Inline files will be stored as bytecode instructions.
- *     The size of inline files is limited by the class file format to ~500MB.
- * </p>
- * <p>
- *     Lazily loaded files are loaded using {@link Class#getResourceAsStream(String)}.
- *     If the resource file size has changed since compilation an {@link AssertionError} is thrown.
  * </p>
  */
 public final class GenerateByteArraysFromFiles implements Handler {
@@ -58,6 +52,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
     /**
      * <p>All configuration is optional.</p>
      *
+     * <p>
+     *     Use "visibility" to make the generated classes public.
+     * </p>
+     *
      * Strategy:
      * <ul>
      *     <li>
@@ -72,7 +70,12 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * </ul>
      *
      * <p>
-     *     Use "visibility" to make the generated classes public.
+     *     The lazy strategy requires that the resource file be provided at runtime.
+     *     The inline strategy results in larger class files than the encode strategy by a factor of about 8.
+     *     The inline strategy uses the stack to fill the byte array.
+     *     The encode strategy copies from the heap to fill the byte array.
+     *     The inline and encode strategies will break down as the resource file approaches 500MB
+     *     due to class file limitations.
      * </p>
      *
      * @return visibility strategy
@@ -139,13 +142,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
     }
 
     private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = new Context(context.env(),
-                context.location(),
-                context.pkg(),
-                context.annotated(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                context.namer());
+        Context copy = context.rebuild()
+                .setConfig(Collections.emptyList())
+                .build();
 
         Pkg pkg = context.pkg();
         String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
@@ -233,7 +232,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.nl();
         writer.indent()
                 .append("private static int fill")
-                .append(Ints.toString(index))
+                .append(index)
                 .append("(byte[] b, int i) ")
                 .openBrace()
                 .nl();
@@ -242,12 +241,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
             if (b == 0) {
                 // array values already initialized to zero so just increment
                 int skip = inlineSkipZeroes(buf, i + 1, limit);
-                String skipStr = Ints.toString(skip + 1);
-                writer.indent().append("i += ").append(skipStr).append(";").nl();
+                writer.indent().append("i += ").append(skip + 1).append(";").nl();
                 i += skip;
             } else {
-                String byteStr = Ints.toString(b);
-                writer.indent().append("b[i++] = ").append(byteStr).append(";").nl();
+                writer.indent().append("b[i++] = ").append(b).append(";").nl();
             }
         }
         writer.indent().append("return i;").nl();
@@ -266,11 +263,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private static void writeInlineBytesMethod(JavaWriter writer, int methodCount, int size) throws IOException {
         writeSignature(writer);
 
-        writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
+        writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
         writer.indent().append("int idx = 0;").nl();
         for (int i = 0; i < methodCount; i++) {
-            String n = Ints.toString(i);
-            writer.indent().append("idx = fill").append(n).append("(barr, idx);").nl();
+            writer.indent().append("idx = fill").append(i).append("(barr, idx);").nl();
         }
 
         writeReturn(writer);
@@ -286,7 +282,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 .append(".load(")
                 .string(stats.resource.toString())
                 .append(", ")
-                .append(Ints.toString((int) stats.size)).append(");").nl();
+                .append((int) stats.size).append(");").nl();
 
         writeReturn(writer);
     }
@@ -297,7 +293,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeSignature(writer);
 
         int size = (int) stats.size;
-        writer.indent().append("byte[] barr = new byte[").append(Ints.toString(size)).append("];").nl();
+        writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
         writer.indent().append("int off = 0;").nl();
 
         ByteHackReader odd;
@@ -318,8 +314,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
         }
 
         if (odd.lastByteOdd()) {
-            String lastIndex = Ints.toString(size - 1);
-            String oddByte = Ints.toString(odd.getOddByte());
+            int lastIndex = size - 1;
+            byte oddByte = odd.getOddByte();
             writer.indent().append("barr[").append(lastIndex).append("] = ").append(oddByte).append(";").nl();
         }
 

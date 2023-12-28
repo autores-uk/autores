@@ -1,53 +1,44 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.GenerateMessagesFromProperties;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Localize;
-import uk.autores.cfg.MissingKey;
-
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.TimeZone;
-import java.util.function.Consumer;
+import java.util.Map;
 
-import static uk.autores.cfg.Localize.LOCALIZE;
-import static uk.autores.cfg.MissingKey.MISSING_KEY;
-
-@ResourceFiles(
-        value = "Non-nls.properties",
-        handler = GenerateMessagesFromProperties.class,
-        config = @ResourceFiles.Cfg(key = LOCALIZE, value = Localize.FALSE)
-)
-@ResourceFiles(
-        value = "Messages.properties",
-        handler = GenerateMessagesFromProperties.class
-)
-@ResourceFiles(
-        value = "Sparse.properties",
-        handler = GenerateMessagesFromProperties.class,
-        config = @ResourceFiles.Cfg(key = MISSING_KEY, value = MissingKey.IGNORE)
-)
 public class PrintProperties {
 
     public static void main(String...args)  {
-        Consumer<String> stdout = System.out::println;
-        printAppName(stdout);
-        printHelloWorld(stdout);
-        printPlanetEvent(stdout);
-    }
+        Map<Locale, ZoneId> places = new LinkedHashMap<>();
+        places.put(Locale.getDefault(), ZoneId.systemDefault());
+        places.put(Locale.US, ZoneId.of("America/New_York"));
+        places.put(Locale.FRANCE, ZoneId.of("Europe/Paris"));
+        places.put(Locale.CANADA_FRENCH, ZoneId.of("America/Toronto"));
+        places.put(Locale.forLanguageTag("ga"), ZoneId.of("Europe/Dublin"));
+        places.put(Locale.GERMANY, ZoneId.of("Europe/Berlin"));
+        // These MessagePrinter implementations use code generated from the properties
+        MessagePrinter[] printers = {
+                new Translated(),
+                new PartlyTranslated(),
+                new Untranslated(),
+        };
 
-    static void printAppName(Consumer<String> c) {
-        c.accept(Non_nls.application_name());
-    }
+        Instant now = Instant.now();
 
-    static void printHelloWorld(Consumer<String> c) {
-        c.accept("base: " + Messages.hello_world(Locale.ENGLISH));
-        c.accept("fr: " + Messages.hello_world(Locale.FRENCH));
-        c.accept("fr_CA: " + Messages.hello_world(Locale.CANADA_FRENCH));
-    }
+        for (Map.Entry<Locale, ZoneId> place : places.entrySet()) {
+            Locale l = place.getKey();
+            ZoneId zone = place.getValue();
 
-    public static void printPlanetEvent(Consumer<String> c) {
-        TimeZone gmt = TimeZone.getTimeZone("GMT");
-        c.accept(Non_nls.planet_event(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack"));
+            ZonedDateTime time = ZonedDateTime.ofInstant(now, zone);
+
+            System.out.println();
+            System.out.println(l.getDisplayName() + " " + zone);
+            for (MessagePrinter printer : printers) {
+                printer.print(System.out, l, time);
+            }
+        }
     }
 }

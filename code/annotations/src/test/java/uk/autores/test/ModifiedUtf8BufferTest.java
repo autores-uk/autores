@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
@@ -94,9 +96,8 @@ class ModifiedUtf8BufferTest {
     }
 
     private MUB instance(int n) {
-        Class<?>[] types = {Integer.TYPE};
-        Object[] args = {n};
-        return Proxies.instance(MUB.class, "uk.autores.ModifiedUtf8Buffer", types, args);
+        return Proxies.instance(MUB.class, "uk.autores.ModifiedUtf8Buffer")
+                .params(Integer.TYPE).args(n);
     }
 
     private interface MUB {

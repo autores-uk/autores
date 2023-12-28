@@ -1,8 +1,10 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.test.testing;
 
 import org.joor.Reflect;
-import uk.autores.test.env.TestFileObject;
-import uk.autores.test.env.TestProcessingEnvironment;
+import uk.autores.test.testing.env.TestFileObject;
+import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;

@@ -1,3 +1,5 @@
+// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.cfg.Visibility;
@@ -17,7 +19,7 @@ import java.util.TreeSet;
  * For every {@link Properties} file defined as a resource:
  * <ul>
  *    <li>Generates a class based on the .properties file name using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}</li>
- *    <li>Adds a {@link String} constant named from the property key using {@link Namer#nameStaticField(String)}</li>
+ *    <li>Adds a {@link String} constant named from the property key using {@link Namer#nameConstant(String)}</li>
  * </ul>
  */
 public final class GenerateConstantsFromProperties implements Handler {
@@ -85,7 +87,7 @@ public final class GenerateConstantsFromProperties implements Handler {
                                Resource resource,
                                JavaWriter writer,
                                String key) throws IOException {
-        String field = ctxt.namer().nameStaticField(key);
+        String field = ctxt.namer().nameConstant(key);
         if (!Namer.isIdentifier(field)) {
             String msg = "Cannot transform key '" + key + "' in " + resource + " to field name";
             ctxt.printError(msg);

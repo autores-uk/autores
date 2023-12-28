@@ -3,7 +3,7 @@
     <title>Automated Resource Handling for Java - AutoRes.uk</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <meta name="description" content="Open source library for automating embedded Java resource file handling">
-    <link rel="icon" href="favicon.png">
+    <link rel="icon" href="icons/favicon.png">
   </head>
   <body>
 
@@ -12,16 +12,17 @@
         <li><a href="apidocs/index.html">API</a></li>
         <li><a href="https://github.com/autores-uk/autores">Source Code</a></li>
         <li><a href="https://github.com/autores-uk/autores/tree/main/code/examples">Examples</a></li>
+        <li><a href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">Copyright</a></li>
+        <li><a href="screenshots.html">Screenshots</a></li>
       </ul>
     </nav>
 
     <h1 id="autores">AutoRes.uk</h1>
 
     <p>
-      Open source library for automating embedded <a href="https://dev.java/">Java&trade;</a> resource file handling.
-      This is an alternative to manual use of methods like
-      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>
-      using annotations for verification and code generation.
+      Annotation driven <a href="https://dev.java/">Java&trade;</a> open source library for automating embedded resource file handling
+      -
+      an alternative to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
     </p>
 
     <ul>
@@ -36,13 +37,7 @@
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
     </p>
 
-    <p>
-      Prior knowledge of how to package and deploy Java libraries and applications is assumed.
-      This library can affect compile time, jar sizes, and constant pools.
-    </p>
-
-    <a id="usage" href="#usage">&#x1f517;</a>
-    <h2>Usage</h2>
+    <h2>Usage <a id="usage" href="#usage" class="link-symbol">&#x1f517;</a></h2>
 
     <p>
       Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
@@ -50,47 +45,56 @@
     </p>
 
     <p>
-      Annotate a type or package with <code>@uk.autores.ResourceFiles</code>,
-      define the resource files, and choose a handler:
+      Annotate a type or package with <code>@ResourceFiles</code>, define the resource files, and choose a handler.
     </p>
 
-    <pre><code>
-    import uk.autores.*;
-    @ResourceFiles(
-      value = {"Poule.txt", "Roses.txt"},
-      handler = GenerateStringsFromText.class
-    )
-    public class PrintRhymes {
-      public static void main(String...args)  {
-        System.out.println(Poule.text());
-        System.out.println(Roses.text());
-      }
-    }
-    </code></pre>
+    <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       The <code>GenerateStringsFromText</code> handler creates one class per text file that provides the file content as a <code>String</code>.
     </p>
 
     <pre><code>
-      import uk.autores.*;
-      @ResourceFiles(
-        // planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
-        value = "Msgs.properties",
-        handler = GenerateMessagesFromProperties.class
-      )
-      public class PrintProperties {
-        public static void main(String...args)  {
-          TimeZone gmt = TimeZone.getTimeZone("GMT");
-          String msg = Msgs.planet_event(Locale.ENGLISH, gmt, 4, Instant.EPOCH, "an attack");
-          System.out.println(msg);
-        }
+    import uk.autores.*;
+    
+    <code>@ResourceFiles(
+      value = {"Poule.txt", "Roses.txt"},
+      handler = GenerateStringsFromText.class
+    )</code>
+    public class PrintRhymes {
+      public static void main(String...args)  {
+        System.out.println(<code>Poule.text()</code>);
+        System.out.println(<code>Roses.text()</code>);
       }
+    }
     </code></pre>
 
     <p>
       The <code>GenerateMessagesFromProperties</code> handler can generate typed methods that match on a locale and then format the string.
     </p>
+
+    <pre><code>
+    import uk.autores.*;
+    import java.time.ZonedDateTime;
+    import java.util.Locale;
+
+    <code>@ResourceFiles(
+      value = "messages.properties",
+      handler = GenerateMessagesFromProperties.class,
+      namer = IdiomaticNamer.class
+    )</code>
+    public class PrintMessage {
+      public static void main(String[] args) {
+        var locale = Locale.getDefault();
+        int planet = 4;
+        var time = ZonedDateTime.now();
+        var event = "a meteor strike";
+        <em>/* planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}. */</em>
+        String msg = <code>Messages.planetEvent(locale, planet, time, time, event)</code>;
+        System.out.println(msg);
+      }
+    }
+    </code></pre>
 
     <p>
       Other handlers include
@@ -100,35 +104,29 @@
       <code>GenerateInputStreamsFromFiles</code>.
     </p>
 
-    <a id="compat" href="#compat">&#x1f517;</a>
-    <h3>Versioning &amp; Compatibility</h3>
+    <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
 
     <p>Versions are split into three integers: Java version; major version; minor version.</p>
 
     <p>
-      Java 8 and Java 11 versions are published.
-      They are functionaly identical.
+      Functionally identical Java 8 and Java 11 versions are published.
+      <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
     </p>
 
-    <a id="modules" href="#modules">&#x1f517;</a>
-    <h3>Modules</h3>
+    <h3>Modules <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       Use <code>requires static uk.autores</code> in 
       <a href="https://dev.java/learn/modules/">module-info.java</a> to depend on this library at compile time only.
-      Add <code>requires static java.compiler</code> to avoid warnings about unknown type <code>StandardLocation</code>.
-      All versions of the library support modules.
     </p>
 
     <pre><code>
     module example.module.name {
       requires static uk.autores;
-      requires static java.compiler;
     }
     </code></pre>
 
-    <a id="maven" href="#maven">&#x1f517;</a>
-    <h3>Apache Maven</h3>
+    <h3>Apache Maven <a id="maven" href="#maven" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       <a href="https://maven.apache.org/">Apache Maven</a> projects should use the 
@@ -136,7 +134,7 @@
     </p>
 
     <pre><code>
-    &lt;!-- Maven 3 --&gt;
+    <em>&lt;!-- Maven 3 --&gt;</em>
     &lt;dependency>
       &lt;groupId>uk.autores&lt;/groupId>
       &lt;artifactId>annotations&lt;/artifactId>
@@ -151,7 +149,7 @@
     </p>
 
     <pre><code>
-    &lt;!-- Maven 3 --&gt;
+    <em>&lt;!-- Maven 3 --&gt;</em>
     &lt;build>
       &lt;plugins>
           &lt;plugin>
@@ -172,15 +170,16 @@
     &lt;/build>
     </code></pre>
 
-    <h3>Gradle</h3>
+    <h3>Gradle <a id="gradle" href="#gradle" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
       <a href="https://gradle.org/">Gradle</a> projects must add resource files to the classpath.
-      The library must be exposed to the annotation processor.
+      The library must be exposed to the
+      <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">annotation processor</a>.
     </p>
 
     <pre><code>
-    // Gradle 8; Kotlin syntax
+    <em>// Gradle 8; Kotlin syntax</em>
     var autores = "uk.autores:annotations:" + autoresVersion
 
     dependencies {
