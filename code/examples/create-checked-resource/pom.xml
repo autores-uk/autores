@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>8.0.18-alpha-SNAPSHOT</version>
+        <version>8.0.19-beta</version>
     </parent>
 
     <artifactId>create-checked-resource</artifactId>
