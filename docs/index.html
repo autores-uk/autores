@@ -13,6 +13,7 @@
         <li><a href="https://github.com/autores-uk/autores">Source Code</a></li>
         <li><a href="https://github.com/autores-uk/autores/tree/main/code/examples">Examples</a></li>
         <li><a href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">Copyright</a></li>
+        <li><a href="screenshots.html">Screenshots</a></li>
       </ul>
     </nav>
 
@@ -45,15 +46,6 @@
 
     <p>
       Annotate a type or package with <code>@ResourceFiles</code>, define the resource files, and choose a handler.
-    </p>
-
-    <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
-
-    <p>Versions are split into three integers: Java version; major version; minor version.</p>
-
-    <p>
-      Functionally identical Java 8 and Java 11 versions are published.
-      <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
     </p>
 
     <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
@@ -112,6 +104,15 @@
       <code>GenerateInputStreamsFromFiles</code>.
     </p>
 
+    <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
+
+    <p>Versions are split into three integers: Java version; major version; minor version.</p>
+
+    <p>
+      Functionally identical Java 8 and Java 11 versions are published.
+      <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
+    </p>
+
     <h3>Modules <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
@@ -133,7 +134,7 @@
     </p>
 
     <pre><code>
-    &lt;!-- Maven 3 --&gt;
+    <em>&lt;!-- Maven 3 --&gt;</em>
     &lt;dependency>
       &lt;groupId>uk.autores&lt;/groupId>
       &lt;artifactId>annotations&lt;/artifactId>
@@ -148,7 +149,7 @@
     </p>
 
     <pre><code>
-    &lt;!-- Maven 3 --&gt;
+    <em>&lt;!-- Maven 3 --&gt;</em>
     &lt;build>
       &lt;plugins>
           &lt;plugin>
@@ -178,7 +179,7 @@
     </p>
 
     <pre><code>
-    // Gradle 8; Kotlin syntax
+    <em>// Gradle 8; Kotlin syntax</em>
     var autores = "uk.autores:annotations:" + autoresVersion
 
     dependencies {
