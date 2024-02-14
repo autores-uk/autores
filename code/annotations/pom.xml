@@ -188,7 +188,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.2.0</version>
+                <version>4.8.3.1</version>
                 <configuration>
                     <fork>false</fork>
                     <effort>Max</effort>
@@ -200,7 +200,7 @@
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>
                             <artifactId>findsecbugs-plugin</artifactId>
-                            <version>1.10.1</version>
+                            <version>1.12.0</version>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -224,7 +224,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.3</version>
+                <version>3.2.5</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
