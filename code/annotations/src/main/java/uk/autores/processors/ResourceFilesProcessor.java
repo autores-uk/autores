@@ -3,7 +3,7 @@
 package uk.autores.processors;
 
 import uk.autores.ResourceFiles;
-import uk.autores.ResourceFilesRepeater;
+import uk.autores.repeat.RepeatableResourceFiles;
 import uk.autores.handling.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -54,17 +54,17 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   /**
    * Supported annotations.
    *
-   * @return {@link ResourceFiles} and {@link ResourceFilesRepeater}
+   * @return {@link ResourceFiles} and {@link RepeatableResourceFiles}
    */
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
+    return Stream.of(ResourceFiles.class, RepeatableResourceFiles.class)
             .map(Class::getName)
             .collect(toSet());
   }
 
   /**
-   * Consumes {@link ResourceFiles} and {@link ResourceFilesRepeater} and passes derived information to the
+   * Consumes {@link ResourceFiles} and {@link RepeatableResourceFiles} and passes derived information to the
    * specified {@link Handler}.
    *
    * @param annotations the annotation types requested to be processed
@@ -86,8 +86,8 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
         if (sameSeq(ResourceFiles.class.getName(), name)) {
           ResourceFiles cpr = annotated.getAnnotation(ResourceFiles.class);
           process(cpr, annotated);
-        } else if (sameSeq(ResourceFilesRepeater.class.getName(), name)) {
-          ResourceFilesRepeater cprs = annotated.getAnnotation(ResourceFilesRepeater.class);
+        } else if (sameSeq(RepeatableResourceFiles.class.getName(), name)) {
+          RepeatableResourceFiles cprs = annotated.getAnnotation(RepeatableResourceFiles.class);
           for (ResourceFiles cpr : cprs.value()) {
             process(cpr, annotated);
           }

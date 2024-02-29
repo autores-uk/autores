@@ -1,6 +1,8 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores;
+package uk.autores.repeat;
+
+import uk.autores.ResourceFiles;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,7 +17,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface ResourceFilesRepeater {
+public @interface RepeatableResourceFiles {
 
     /**
      * @return the individual resource annotations

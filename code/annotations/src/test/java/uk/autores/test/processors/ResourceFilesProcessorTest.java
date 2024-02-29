@@ -8,7 +8,7 @@ import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.ResourceFiles;
-import uk.autores.ResourceFilesRepeater;
+import uk.autores.repeat.RepeatableResourceFiles;
 import uk.autores.processors.ResourceFilesProcessor;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
@@ -34,7 +34,7 @@ class ResourceFilesProcessorTest {
   void metadata() {
     processor.init(new TestProcessingEnvironment());
     assertEquals(SourceVersion.RELEASE_8, processor.getSupportedSourceVersion());
-    Set<String> expected = Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
+    Set<String> expected = Stream.of(ResourceFiles.class, RepeatableResourceFiles.class)
             .map(Class::getName)
             .collect(Collectors.toSet());
     assertEquals(expected, processor.getSupportedAnnotationTypes());
