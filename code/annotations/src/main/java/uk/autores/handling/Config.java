@@ -13,6 +13,8 @@ public final class Config {
     private final String value;
 
     /**
+     * Constructor with mandatory values.
+     *
      * @param key name
      * @param value configuration value
      */
@@ -22,6 +24,8 @@ public final class Config {
     }
 
     /**
+     * Key.
+     *
      * @return configuration key name
      * @see ResourceFiles.Cfg#key()
      */
@@ -30,6 +34,8 @@ public final class Config {
     }
 
     /**
+     * Value.
+     *
      * @return configuration value
      * @see ResourceFiles.Cfg#value()
      */

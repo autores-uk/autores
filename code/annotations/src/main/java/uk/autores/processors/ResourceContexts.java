@@ -12,7 +12,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableResourceFiles> {
+final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableResourceFiles> {
     ResourceContexts(ProcessingEnvironment env) {
         super(env, ResourceFiles.class, RepeatableResourceFiles.class);
     }

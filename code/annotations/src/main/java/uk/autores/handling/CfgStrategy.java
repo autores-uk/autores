@@ -6,6 +6,7 @@ package uk.autores.handling;
  * "strategy": how to consume resources.
  * <ul>
  *     <li>"inline": embed in class files</li>
+ *     <li>"const": embed in class file constant pool</li>
  *     <li>"lazy": load resources using {@link ClassLoader}</li>
  *     <li>"auto": use some heuristic to decide loading strategy</li>
  * </ul>
@@ -23,7 +24,7 @@ public final class CfgStrategy {
     /** Value */
     public static final String LAZY = "lazy";
     /** Value */
-    public static final String ENCODE = "encode";
+    public static final String CONST = "const";
 
     /**
      * Config definition.
@@ -31,7 +32,7 @@ public final class CfgStrategy {
      * @see ResourceFiles#config()
      */
     public static final ConfigDef DEF = new ConfigDef(STRATEGY, s -> s.matches(
-            AUTO + '|' + INLINE + '|' + LAZY + '|' + ENCODE
+            AUTO + '|' + INLINE + '|' + LAZY + '|' + CONST
     ));
 
     private CfgStrategy() {}

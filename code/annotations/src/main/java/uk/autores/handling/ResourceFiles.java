@@ -83,12 +83,16 @@ public @interface ResourceFiles {
      */
     @interface Cfg {
         /**
+         * Key.
+         *
          * @return name of config option
          * @see ConfigDef#key()
          */
         String key();
 
         /**
+         * Value.
+         *
          * @return config option value
          * @see ConfigDef#isValid(String)
          */

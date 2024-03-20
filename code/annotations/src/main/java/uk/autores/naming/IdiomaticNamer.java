@@ -14,6 +14,9 @@ import java.util.function.Function;
  */
 public final class IdiomaticNamer extends Namer {
 
+    /** Public no-args constructor as per contract. */
+    public IdiomaticNamer() {}
+
     /**
      * For input "foo-bar-baz" returns "fooBarBaz".
      *

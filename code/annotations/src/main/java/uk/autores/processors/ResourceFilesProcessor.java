@@ -37,6 +37,9 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
           StringContexts.def(),
   };
 
+  /** Public constructor as per contract */
+  public ResourceFilesProcessor() {}
+
   /**
    * Returns {@link ProcessingEnvironment#getSourceVersion()} or
    * the minimum {@link SourceVersion#RELEASE_11}.

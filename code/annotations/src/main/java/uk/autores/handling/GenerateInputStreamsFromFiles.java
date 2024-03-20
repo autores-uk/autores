@@ -18,6 +18,9 @@ import java.util.Set;
  */
 public final class GenerateInputStreamsFromFiles implements Handler {
 
+    /** Ctor */
+    public GenerateInputStreamsFromFiles() {}
+
     /**
      * <p>
      *     All configuration is optional.

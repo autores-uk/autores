@@ -33,6 +33,9 @@ import java.util.Set;
  */
 public final class GenerateStringsFromText implements Handler {
 
+    /** Ctor */
+    public GenerateStringsFromText() {}
+
     /**
      * <p>All configuration is optional.</p>
      *
@@ -45,11 +48,11 @@ public final class GenerateStringsFromText implements Handler {
      *
      * Strategy:
      * <ul>
-     *     <li>"auto": "inline" for files up to 65535B when encoded as modified UTF-8 - the limit for a String constant;
+     *     <li>{@link CfgStrategy#AUTO}: "inline" for files up to 65535B when encoded as modified UTF-8 - the limit for a String constant;
      *     "lazy" otherwise</li>
-     *     <li>"inline": files become {@link String} literals</li>
-     *     <li>"encode": alias for "inline"</li>
-     *     <li>"lazy": files are loaded using the {@link ClassLoader}</li>
+     *     <li>{@link CfgStrategy#INLINE}: files become {@link String} literals</li>
+     *     <li>{@link CfgStrategy#CONST}: alias for "inline"</li>
+     *     <li>{@link CfgStrategy#LAZY}: files are loaded using the {@link ClassLoader}</li>
      * </ul>
      *
      * <p>
@@ -125,7 +128,7 @@ public final class GenerateStringsFromText implements Handler {
         switch (strategy) {
             case CfgStrategy.LAZY: return GenerateStringsFromText::writeLazyLoad;
             case CfgStrategy.INLINE:
-            case CfgStrategy.ENCODE: return GenerateStringsFromText::writeInLine;
+            case CfgStrategy.CONST: return GenerateStringsFromText::writeInLine;
             default: return GenerateStringsFromText::writeAuto;
         }
     }

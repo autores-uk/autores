@@ -31,7 +31,7 @@ class GenerateStringsFromTextTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.ENCODE, CfgStrategy.LAZY})
+    @ValueSource(strings = {CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.CONST, CfgStrategy.LAZY})
     void canGenerateTextFromFiles(String strategy) throws Exception {
         List<Config> cfg = singletonList(new Config(CfgStrategy.STRATEGY, strategy));
         HandlerResults hr = tester().withLargeAndSmallTextFiles(0xFFFF + 1).withConfig(cfg).test();

@@ -14,5 +14,6 @@ public final class CfgName {
     /** Key */
     public static final String NAME = "name";
 
+    /** Name configuration definition */
     public static final ConfigDef DEF = new ConfigDef(NAME, Namer::isIdentifier);
 }

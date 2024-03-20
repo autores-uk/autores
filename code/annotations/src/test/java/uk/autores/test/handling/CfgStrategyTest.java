@@ -15,7 +15,7 @@ class CfgStrategyTest {
     @Test
     void validates() {
         ConfigDef def = CfgStrategy.DEF;
-        for (String enc : asList(CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.LAZY, CfgStrategy.ENCODE)) {
+        for (String enc : asList(CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.LAZY, CfgStrategy.CONST)) {
             assertTrue(def.isValid(enc));
         }
         assertFalse(def.isValid("foobar"));

@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 public @interface RepeatableByteArrayResources {
 
     /**
+     * Repeating elements.
+     *
      * @return the individual resource annotations
      */
     ByteArrayResources[] value();

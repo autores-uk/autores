@@ -86,6 +86,9 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private final LocalePatterns locales = new LocalePatterns();
 
+    /** Ctor */
+    public GenerateMessagesFromProperties() {}
+
     /**
      * <p>All configuration is optional.</p>
      * <p>"localize" is "true" by default.</p>
