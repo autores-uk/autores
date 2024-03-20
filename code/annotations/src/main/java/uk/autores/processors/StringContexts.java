@@ -2,14 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.GenerateStringsFromText;
 import uk.autores.Processing;
 import uk.autores.StringResources;
-import uk.autores.cfg.Encoding;
-import uk.autores.cfg.Strategy;
-import uk.autores.cfg.Visibility;
-import uk.autores.handling.Config;
-import uk.autores.handling.Handler;
+import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableStringResources;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -32,10 +27,10 @@ final class StringContexts extends ContextFactory<StringResources, RepeatableStr
     List<Config> config(StringResources byteArrayResources) {
         List<Config> cfg = new ArrayList<>();
         if (byteArrayResources.isPublic()) {
-            cfg.add(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+            cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
-        cfg.add(new Config(Strategy.STRATEGY, byteArrayResources.strategy().value()));
-        cfg.add(new Config(Encoding.ENCODING, byteArrayResources.encoding()));
+        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrayResources.strategy().value()));
+        cfg.add(new Config(CfgEncoding.ENCODING, byteArrayResources.encoding()));
         return cfg;
     }
 

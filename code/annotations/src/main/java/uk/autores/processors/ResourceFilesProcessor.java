@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.ResourceFiles;
 import uk.autores.handling.Context;
 import uk.autores.handling.Handler;
+import uk.autores.handling.ResourceFiles;
 import uk.autores.repeat.RepeatableResourceFiles;
 
 import javax.annotation.processing.AbstractProcessor;

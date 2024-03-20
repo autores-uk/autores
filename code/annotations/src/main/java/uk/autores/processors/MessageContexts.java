@@ -2,15 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.GenerateMessagesFromProperties;
 import uk.autores.MessageResources;
 import uk.autores.Processing;
-import uk.autores.cfg.Format;
-import uk.autores.cfg.Localize;
-import uk.autores.cfg.MissingKey;
-import uk.autores.cfg.Visibility;
-import uk.autores.handling.Config;
-import uk.autores.handling.Handler;
+import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableMessageResources;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -33,11 +27,11 @@ final class MessageContexts extends ContextFactory<MessageResources, RepeatableM
     List<Config> config(MessageResources m) {
         List<Config> cfg = new ArrayList<>();
         if (m.isPublic()) {
-            cfg.add(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+            cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
-        cfg.add(new Config(Format.FORMAT, m.format() ? Format.TRUE : Format.FALSE));
-        cfg.add(new Config(Localize.LOCALIZE, m.localize() ? Localize.TRUE : Localize.FALSE));
-        cfg.add(new Config(MissingKey.MISSING_KEY, m.missingKey().value()));
+        cfg.add(new Config(CfgFormat.FORMAT, m.format() ? CfgFormat.TRUE : CfgFormat.FALSE));
+        cfg.add(new Config(CfgLocalize.LOCALIZE, m.localize() ? CfgLocalize.TRUE : CfgLocalize.FALSE));
+        cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().value()));
 
         return cfg;
     }

@@ -1,7 +1,7 @@
 package uk.autores.test.processors;
 
-import uk.autores.GenerateByteArraysFromFiles;
-import uk.autores.ResourceFiles;
+import uk.autores.handling.GenerateByteArraysFromFiles;
+import uk.autores.handling.ResourceFiles;
 
 @ResourceFiles(
         value = "BadConfig.java",

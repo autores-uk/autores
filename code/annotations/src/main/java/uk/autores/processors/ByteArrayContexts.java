@@ -3,12 +3,8 @@
 package uk.autores.processors;
 
 import uk.autores.ByteArrayResources;
-import uk.autores.GenerateByteArraysFromFiles;
 import uk.autores.Processing;
-import uk.autores.cfg.Strategy;
-import uk.autores.cfg.Visibility;
-import uk.autores.handling.Config;
-import uk.autores.handling.Handler;
+import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableByteArrayResources;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -31,9 +27,9 @@ final class ByteArrayContexts extends ContextFactory<ByteArrayResources, Repeata
     List<Config> config(ByteArrayResources byteArrayResources) {
         List<Config> cfg = new ArrayList<>();
         if (byteArrayResources.isPublic()) {
-            cfg.add(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+            cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
-        cfg.add(new Config(Strategy.STRATEGY, byteArrayResources.strategy().value()));
+        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrayResources.strategy().value()));
         return cfg;
     }
 

@@ -27,7 +27,7 @@ public final class ConfigDef {
 
     /**
      * @return config key name
-     * @see uk.autores.ResourceFiles.Cfg#key()
+     * @see ResourceFiles.Cfg#key()
      * @see Config#key()
      */
     public String key() {
@@ -37,7 +37,7 @@ public final class ConfigDef {
     /**
      * @param value the value to test
      * @return true if the value is valid or false otherwise
-     * @see uk.autores.ResourceFiles.Cfg#value()
+     * @see ResourceFiles.Cfg#value()
      * @see Config#value()
      */
     public boolean isValid(String value) {

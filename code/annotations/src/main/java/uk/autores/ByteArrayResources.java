@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
+import uk.autores.handling.GenerateByteArraysFromFiles;
 import uk.autores.naming.IdiomaticNamer;
 import uk.autores.repeat.RepeatableByteArrayResources;
 
@@ -36,5 +37,5 @@ public @interface ByteArrayResources {
      * Code generation strategy.
      * @return strategy
      */
-    Strat strategy() default Strat.AUTO;
+    Strategy strategy() default Strategy.AUTO;
 }

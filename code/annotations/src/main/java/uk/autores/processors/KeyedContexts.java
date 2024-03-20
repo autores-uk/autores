@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.GenerateConstantsFromProperties;
 import uk.autores.KeyedResources;
 import uk.autores.Processing;
-import uk.autores.cfg.Visibility;
+import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.Config;
+import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.handling.Handler;
 import uk.autores.repeat.RepeatableKeyedResources;
 
@@ -30,7 +30,7 @@ final class KeyedContexts extends ContextFactory<KeyedResources, RepeatableKeyed
     List<Config> config(KeyedResources m) {
         List<Config> cfg = new ArrayList<>();
         if (m.isPublic()) {
-            cfg.add(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+            cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
 
         return cfg;

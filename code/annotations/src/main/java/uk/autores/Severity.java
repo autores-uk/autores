@@ -1,12 +1,13 @@
 package uk.autores;
 
-import uk.autores.cfg.MissingKey;
+import uk.autores.handling.CfgMissingKey;
 
 /**
- * Error handling.
+ * Error handling choices.
+ * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Severity {
-    ERROR(MissingKey.ERROR), WARN(MissingKey.WARN), IGNORE(MissingKey.IGNORE);
+    ERROR(CfgMissingKey.ERROR), WARN(CfgMissingKey.WARN), IGNORE(CfgMissingKey.IGNORE);
 
     private final String value;
 

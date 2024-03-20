@@ -4,10 +4,7 @@ package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import uk.autores.GenerateByteArraysFromFiles;
-import uk.autores.GenerateStringsFromText;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Visibility;
+import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 
@@ -39,7 +36,7 @@ public class GenerateIconsFromFiles implements Handler {
     @Override
     public void handle(Context context) throws Exception {
         // visibility
-        String visibility = context.option(Visibility.DEF).orElse("");
+        String visibility = context.option(CfgVisibility.DEF).orElse("");
 
         // Reuse another handler to embed the bytes
         Namer delegateNamer = new InternalNamer(context.namer());
