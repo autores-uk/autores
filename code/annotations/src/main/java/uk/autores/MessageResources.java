@@ -1,3 +1,5 @@
+// Copyright 2024 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
 import uk.autores.naming.IdiomaticNamer;
