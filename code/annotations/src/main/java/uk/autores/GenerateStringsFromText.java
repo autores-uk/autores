@@ -6,6 +6,7 @@ import uk.autores.cfg.Encoding;
 import uk.autores.cfg.Strategy;
 import uk.autores.cfg.Visibility;
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;

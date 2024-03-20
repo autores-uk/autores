@@ -7,6 +7,7 @@ import uk.autores.cfg.Localize;
 import uk.autores.cfg.MissingKey;
 import uk.autores.cfg.Visibility;
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;

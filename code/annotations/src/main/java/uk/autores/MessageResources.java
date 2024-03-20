@@ -1,5 +1,6 @@
 package uk.autores;
 
+import uk.autores.naming.IdiomaticNamer;
 import uk.autores.repeat.RepeatableMessageResources;
 
 import java.lang.annotation.*;

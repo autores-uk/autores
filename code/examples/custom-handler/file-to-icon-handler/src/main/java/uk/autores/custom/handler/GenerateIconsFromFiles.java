@@ -9,6 +9,7 @@ import uk.autores.GenerateStringsFromText;
 import uk.autores.ResourceFiles;
 import uk.autores.cfg.Visibility;
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;

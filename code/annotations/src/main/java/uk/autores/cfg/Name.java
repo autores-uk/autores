@@ -3,7 +3,7 @@
 package uk.autores.cfg;
 
 import uk.autores.handling.ConfigDef;
-import uk.autores.handling.Namer;
+import uk.autores.naming.Namer;
 
 /**
  * "name": generated class name.

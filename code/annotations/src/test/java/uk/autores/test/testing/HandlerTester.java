@@ -3,6 +3,7 @@
 package uk.autores.test.testing;
 
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 import uk.autores.test.testing.env.TestElement;
 import uk.autores.test.testing.env.TestFileObject;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
