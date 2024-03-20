@@ -56,8 +56,8 @@
  * <h3>Links</h3>
  *
  * <ul>
- *     <li><a href="https://github.com/autores-uk/autores">Source code</a></li>
- *     <li><a href="https://autores.uk">Website</a></li>
+ *     <li><a href="https://github.com/autores-uk/autores" target="_">Source code</a></li>
+ *     <li><a href="https://autores.uk" target="_">Website</a></li>
  * </ul>
  */
 package uk.autores;
