@@ -16,7 +16,7 @@
  *         Add {@code import uk.autores.*;}
  *     </li>
  *     <li>
- *         Annotate a package ({@link java.lang.annotation.ElementType#PACKAGE}
+ *         Annotate a package ({@link java.lang.annotation.ElementType#PACKAGE})
  *         or type ({@link java.lang.annotation.ElementType#TYPE}) with one
  *         of the provided annotations
  *     </li>
@@ -56,8 +56,8 @@
  * <h3>Links</h3>
  *
  * <ul>
- *     <li><a href="https://github.com/autores-uk/autores">Source code</a></li>
- *     <li><a href="https://autores.uk">Website</a></li>
+ *     <li><a href="https://github.com/autores-uk/autores" target="_">Source code</a></li>
+ *     <li><a href="https://autores.uk" target="_">Website</a></li>
  * </ul>
  */
 package uk.autores;
