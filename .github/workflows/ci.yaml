@@ -13,7 +13,7 @@ jobs:
           cache: 'maven'
       - name: Package with Maven
         run: mvn --file code/pom.xml --batch-mode --update-snapshots install
-  document:
+  javadoc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
