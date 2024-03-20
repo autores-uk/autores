@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.naming.Namer;
+
 /**
  * Character representation of a
  * <a href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">Java package</a>.

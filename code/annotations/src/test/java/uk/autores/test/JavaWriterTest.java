@@ -4,7 +4,7 @@ package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.handling.Context;
-import uk.autores.handling.Namer;
+import uk.autores.naming.Namer;
 import uk.autores.handling.Pkg;
 import uk.autores.test.testing.env.TestElement;
 import uk.autores.test.testing.env.TestProcessingEnvironment;

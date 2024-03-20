@@ -1,4 +1,4 @@
-package uk.autores.handling;
+package uk.autores.naming;
 
 import java.util.ArrayList;
 import java.util.List;

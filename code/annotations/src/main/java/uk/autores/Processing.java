@@ -1,6 +1,6 @@
 package uk.autores;
 
-import uk.autores.handling.Namer;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileManager;

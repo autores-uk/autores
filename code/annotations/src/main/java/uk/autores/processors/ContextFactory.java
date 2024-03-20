@@ -2,6 +2,7 @@ package uk.autores.processors;
 
 import uk.autores.Processing;
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;

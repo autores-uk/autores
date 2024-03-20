@@ -1,8 +1,6 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores;
-
-import uk.autores.handling.Namer;
+package uk.autores.naming;
 
 import java.util.Locale;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package uk.autores.test.handling;
+package uk.autores.test.naming;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.test.testing.Proxies;
@@ -32,7 +32,7 @@ class CharSequenceSetTest {
     }
 
     private CSS instance(CharSequence...cs) {
-        return Proxies.instance(CSS.class, "uk.autores.handling.CharSequenceSet")
+        return Proxies.instance(CSS.class, "uk.autores.naming.CharSequenceSet")
                 .params(CharSequence[].class).args(new Object[] {cs});
     }
 

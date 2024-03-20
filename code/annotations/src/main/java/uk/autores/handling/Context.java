@@ -3,6 +3,7 @@
 package uk.autores.handling;
 
 import uk.autores.ResourceFiles;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;

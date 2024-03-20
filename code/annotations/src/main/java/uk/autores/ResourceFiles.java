@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.ConfigDef;
 import uk.autores.handling.Handler;
-import uk.autores.handling.Namer;
+import uk.autores.naming.Namer;
 import uk.autores.repeat.RepeatableResourceFiles;
 
 import javax.annotation.processing.Filer;

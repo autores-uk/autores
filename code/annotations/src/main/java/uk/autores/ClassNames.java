@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.Namer;
+import uk.autores.naming.Namer;
 
 final class ClassNames {
 
