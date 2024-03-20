@@ -23,7 +23,6 @@ module uk.autores {
     requires transitive java.compiler;
     // public packages
     exports uk.autores;
-    exports uk.autores.cfg;
     exports uk.autores.handling;
     exports uk.autores.naming;
     exports uk.autores.repeat;
@@ -31,7 +30,6 @@ module uk.autores {
     provides javax.annotation.processing.Processor with uk.autores.processors.ResourceFilesProcessor;
     // testable packages
     opens uk.autores to uk.autores.test;
-    opens uk.autores.cfg to uk.autores.test;
     opens uk.autores.handling to uk.autores.test;
     opens uk.autores.naming to uk.autores.test;
     opens uk.autores.processors to uk.autores.test;
