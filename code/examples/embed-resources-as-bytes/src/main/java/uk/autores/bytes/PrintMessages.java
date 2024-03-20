@@ -23,7 +23,7 @@ import java.io.ByteArrayInputStream;
 @ByteArrayResources(
         value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
         // stored in class file as string constant
-        strategy = Strategy.ENCODE
+        strategy = Strategy.CONST
 )
 public class PrintMessages {
 

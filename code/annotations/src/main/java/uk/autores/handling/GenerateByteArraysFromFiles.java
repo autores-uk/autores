@@ -47,6 +47,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         return new byte[MAX_BYTES_PER_METHOD];
     }
 
+    /** Ctor. */
+    public GenerateByteArraysFromFiles() {}
+
     /**
      * <p>All configuration is optional.</p>
      *
@@ -57,14 +60,14 @@ public final class GenerateByteArraysFromFiles implements Handler {
      * Strategy:
      * <ul>
      *     <li>
-     *         "auto":
-     *         "inline" for files up to 128 bytes;
-     *         "encode" for files up to 65535 bytes;
-     *         "lazy" otherwise
+     *         {@link CfgStrategy#AUTO}:
+     *         {@link CfgStrategy#INLINE} for files up to 128 bytes;
+     *         {@link CfgStrategy#CONST} for files up to 65535 bytes;
+     *         {@link CfgStrategy#LAZY} otherwise
      *     </li>
-     *     <li>"inline": files become bytecode instructions</li>
-     *     <li>"encode": files are encoded in string literals in the class constant pool</li>
-     *     <li>"lazy": files are loaded using using {@link Class#getResourceAsStream(String)}</li>
+     *     <li>{@link CfgStrategy#INLINE}: files become bytecode instructions</li>
+     *     <li>{@link CfgStrategy#CONST}: files are encoded in string literals in the class constant pool</li>
+     *     <li>{@link CfgStrategy#LAZY}: files are loaded using using {@link Class#getResourceAsStream(String)}</li>
      * </ul>
      *
      * <p>
@@ -132,7 +135,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private ClassGenerator generatorStrategy(Context context) {
         String strategy = context.option(CfgStrategy.DEF).orElse(CfgStrategy.AUTO);
         switch (strategy) {
-            case CfgStrategy.ENCODE: return GenerateByteArraysFromFiles::writeStringMethods;
+            case CfgStrategy.CONST: return GenerateByteArraysFromFiles::writeStringMethods;
             case CfgStrategy.INLINE: return GenerateByteArraysFromFiles::writeInlineMethods;
             case CfgStrategy.LAZY: return GenerateByteArraysFromFiles::writeLazyLoad;
             default: return GenerateByteArraysFromFiles::writeAuto;

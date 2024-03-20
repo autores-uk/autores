@@ -39,6 +39,9 @@ public final class GenerateConstantsFromProperties implements Handler {
         return Sets.of(CfgVisibility.DEF);
     }
 
+    /** Ctor */
+    public GenerateConstantsFromProperties() {}
+
     @Override
     public void handle(Context context) throws Exception {
 

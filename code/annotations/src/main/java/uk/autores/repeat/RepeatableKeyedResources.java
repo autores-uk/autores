@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 public @interface RepeatableKeyedResources {
 
     /**
+     * Repeating elements.
+     *
      * @return the individual resource annotations
      */
     KeyedResources[] value();

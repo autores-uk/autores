@@ -7,7 +7,12 @@ import uk.autores.handling.CfgMissingKey;
  * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Severity {
-    ERROR(CfgMissingKey.ERROR), WARN(CfgMissingKey.WARN), IGNORE(CfgMissingKey.IGNORE);
+    /** Processor is expected to fail. */
+    ERROR(CfgMissingKey.ERROR),
+    /** Processor is expected to emit message but continue. */
+    WARN(CfgMissingKey.WARN),
+    /** Processor is expected to silently ignore problem. */
+    IGNORE(CfgMissingKey.IGNORE);
 
     private final String value;
 
@@ -15,6 +20,11 @@ public enum Severity {
         this.value = value;
     }
 
+    /**
+     * Underlying string value.
+     *
+     * @return configuration string
+     */
     public String value() {
         return value;
     }

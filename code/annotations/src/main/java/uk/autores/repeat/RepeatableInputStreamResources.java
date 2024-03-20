@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 public @interface RepeatableInputStreamResources {
 
     /**
+     * Repeating elements.
+     *
      * @return the individual resource annotations
      */
     InputStreamResources[] value();

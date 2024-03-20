@@ -34,7 +34,7 @@ class GenerateByteArraysFromFilesTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.ENCODE, CfgStrategy.LAZY})
+    @ValueSource(strings = {CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.CONST, CfgStrategy.LAZY})
     void canGenerateByteArraysFromFiles(String strat) throws Exception {
         List<Config> cfg = singletonList(new Config(STRATEGY, strat));
         HandlerResults results = tester()

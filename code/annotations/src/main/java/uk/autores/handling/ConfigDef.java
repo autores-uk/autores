@@ -17,6 +17,8 @@ public final class ConfigDef {
     private final Predicate<String> validator;
 
     /**
+     * Ctor.
+     *
      * @param key the config key
      * @param validator must return true if the value is valid or false otherwise
      */
@@ -26,6 +28,8 @@ public final class ConfigDef {
     }
 
     /**
+     * Configuration key.
+     *
      * @return config key name
      * @see ResourceFiles.Cfg#key()
      * @see Config#key()
@@ -35,6 +39,8 @@ public final class ConfigDef {
     }
 
     /**
+     * Tests validity of value.
+     *
      * @param value the value to test
      * @return true if the value is valid or false otherwise
      * @see ResourceFiles.Cfg#value()

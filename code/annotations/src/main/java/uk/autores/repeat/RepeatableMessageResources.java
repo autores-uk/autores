@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 public @interface RepeatableMessageResources {
 
     /**
+     * Repeating elements.
+     *
      * @return the individual resource annotations
      */
     MessageResources[] value();

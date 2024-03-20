@@ -125,6 +125,8 @@ public class Namer {
     }
 
     /**
+     * Reduces a resource name to a simpler form.
+     *
      * @param resource resource name
      * @return name stripped of path and extension
      */

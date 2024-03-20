@@ -4,7 +4,7 @@
 /**
  * Use these types to extend the API.
  *
- * <h3>Usage</h3>
+ * <h2>Usage</h2>
  *
  * <ol>
  *     <li>

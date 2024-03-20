@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 public @interface RepeatableResourceFiles {
 
     /**
+     * Repeating elements.
+     *
      * @return the individual resource annotations
      */
     ResourceFiles[] value();
