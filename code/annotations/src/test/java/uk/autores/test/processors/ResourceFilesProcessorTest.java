@@ -7,8 +7,8 @@ import org.joor.Reflect;
 import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import uk.autores.ResourceFiles;
-import uk.autores.ResourceFilesRepeater;
+import uk.autores.*;
+import uk.autores.repeat.*;
 import uk.autores.processors.ResourceFilesProcessor;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
@@ -34,7 +34,15 @@ class ResourceFilesProcessorTest {
   void metadata() {
     processor.init(new TestProcessingEnvironment());
     assertEquals(SourceVersion.RELEASE_11, processor.getSupportedSourceVersion());
-    Set<String> expected = Stream.of(ResourceFiles.class, ResourceFilesRepeater.class)
+    Class<?>[] annotations = {
+            ResourceFiles.class, RepeatableResourceFiles.class,
+            ByteArrayResources.class, RepeatableByteArrayResources.class,
+            InputStreamResources.class, RepeatableInputStreamResources.class,
+            KeyedResources.class, RepeatableKeyedResources.class,
+            MessageResources.class, RepeatableMessageResources.class,
+            StringResources.class, RepeatableStringResources.class,
+    };
+    Set<String> expected = Stream.of(annotations)
             .map(Class::getName)
             .collect(Collectors.toSet());
     assertEquals(expected, processor.getSupportedAnnotationTypes());
@@ -135,5 +143,27 @@ class ResourceFilesProcessorTest {
     } catch (ReflectException e) {
       assertTrue(processor.invoked);
     }
+  }
+
+  @Test
+  void resourcesAnnotationsProcessed() throws IOException {
+    TestSources.Source src = TestSources.load(this, "SpecificResources_OK.java");
+    Reflect.compile(
+            src.className,
+            src.sourceCode,
+            new CompileOptions().processors(processor)
+    ).create().get();
+    assertTrue(processor.invoked);
+  }
+
+  @Test
+  void repeatedResourceAnnotationsProcessed() throws IOException {
+    TestSources.Source src = TestSources.load(this, "SpecificResourcesRepeated_OK.java");
+    Reflect.compile(
+            src.className,
+            src.sourceCode,
+            new CompileOptions().processors(processor)
+    ).create().get();
+    assertTrue(processor.invoked);
   }
 }

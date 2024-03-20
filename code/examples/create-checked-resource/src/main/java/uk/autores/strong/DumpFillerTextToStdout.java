@@ -3,26 +3,22 @@
 package uk.autores.strong;
 
 import com.google.common.io.ByteStreams;
-import uk.autores.GenerateInputStreamsFromFiles;
-import uk.autores.ResourceFiles;
+import uk.autores.InputStreamResources;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static uk.autores.cfg.Name.NAME;
-
-@ResourceFiles(
+@InputStreamResources(
         value = {"Charles-E-Weller.txt", "etaoin-shrdlu.txt", "Lorem-ipsum.txt"},
-        handler = GenerateInputStreamsFromFiles.class,
-        config = @ResourceFiles.Cfg(key = NAME, value = "FillerText")
+        name = "FillerText"
 )
 public class DumpFillerTextToStdout {
 
     public static void main(String... args) throws IOException {
         // InputStreams from generated class file
-        try (InputStream weller = FillerText.Charles_E_Weller();
-            InputStream etaoinShrdlu = FillerText.etaoin_shrdlu();
-            InputStream loremIpsum = FillerText.Lorem_ipsum()) {
+        try (InputStream weller = FillerText.charlesEWeller();
+            InputStream etaoinShrdlu = FillerText.etaoinShrdlu();
+            InputStream loremIpsum = FillerText.loremIpsum()) {
 
             ByteStreams.copy(weller, System.out);
             ByteStreams.copy(etaoinShrdlu, System.out);

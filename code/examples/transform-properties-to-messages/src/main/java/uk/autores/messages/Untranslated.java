@@ -2,10 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.GenerateMessagesFromProperties;
-import uk.autores.IdiomaticNamer;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Localize;
+import uk.autores.MessageResources;
 
 import java.io.PrintStream;
 import java.time.ZoneId;
@@ -13,16 +10,7 @@ import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-import static uk.autores.cfg.Localize.LOCALIZE;
-
-@ResourceFiles(
-        value = "non-nls.properties",
-        handler = GenerateMessagesFromProperties.class,
-        // this config stops needless search for localized files
-        config = @ResourceFiles.Cfg(key = LOCALIZE, value = Localize.FALSE),
-        // generated names conform to Java norms
-        namer = IdiomaticNamer.class
-)
+@MessageResources(value = "non-nls.properties", localize = false)
 public class Untranslated implements MessagePrinter {
 
     @Override

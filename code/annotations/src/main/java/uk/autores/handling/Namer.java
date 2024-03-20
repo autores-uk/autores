@@ -2,13 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.ResourceFiles;
-
 /**
  * <p>
  *     Utilized in naming classes, methods and fields.
  *     Does the bare minimum to create viable identifiers by replacing invalid codepoints with underscores.
- *     Extend this type to provide alternative behaviour and specify using {@link ResourceFiles#namer()}.
+ *     Extend this type to provide alternative behaviour and specify using {@link uk.autores.Processing#namer()}.
  * </p>
  * <p>
  *     Implementations MUST:
