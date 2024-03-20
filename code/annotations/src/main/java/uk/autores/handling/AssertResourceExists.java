@@ -10,6 +10,9 @@ import uk.autores.processors.ResourceFilesProcessor;
  */
 public final class AssertResourceExists implements Handler {
 
+    /** Public constructor as per contract */
+    public AssertResourceExists() {}
+
     /**
      * Does nothing.
      * @param context processing context

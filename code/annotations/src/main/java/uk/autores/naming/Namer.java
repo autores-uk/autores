@@ -44,6 +44,9 @@ public class Namer {
             "_"
     );
 
+    /** Public no-args constructor as per contract. */
+    public Namer() {}
+
     private static boolean isIdentifier(CharSequence cs, int off, int len) {
         if (len == 0 || RESERVED.contains(cs, off, len)) {
             return false;

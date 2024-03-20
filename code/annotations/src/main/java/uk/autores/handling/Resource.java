@@ -17,6 +17,8 @@ public final class Resource implements CharSequence {
     private final String path;
 
     /**
+     * All arguments must be non-null.
+     *
      * @param file resource bytes
      * @param path as defined in {@link ResourceFiles#value()}
      */
