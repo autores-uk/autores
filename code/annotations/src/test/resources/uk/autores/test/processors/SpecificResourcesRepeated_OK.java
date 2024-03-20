@@ -3,7 +3,7 @@ package uk.autores.test.processors;
 import uk.autores.*;
 
 @ByteArrayResources(isPublic = true)
-@ByteArrayResources(value = "SpecificResourcesRepeated_OK.java", strategy = Strat.INLINE)
+@ByteArrayResources(value = "SpecificResourcesRepeated_OK.java", strategy = Strategy.INLINE)
 @InputStreamResources(isPublic = true)
 @InputStreamResources(name = "Foo")
 @MessageResources(isPublic = true, format = false, localize = false)

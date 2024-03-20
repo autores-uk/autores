@@ -1,5 +1,8 @@
+// Copyright 2024 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
+import uk.autores.handling.GenerateMessagesFromProperties;
 import uk.autores.naming.IdiomaticNamer;
 import uk.autores.repeat.RepeatableMessageResources;
 

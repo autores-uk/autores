@@ -4,7 +4,7 @@ package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
 import uk.autores.ByteArrayResources;
-import uk.autores.Strat;
+import uk.autores.Strategy;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -13,17 +13,17 @@ import java.io.ByteArrayInputStream;
 @ByteArrayResources(
         value = "Utf16LazyMessage.xml",
         // loaded at runtime using Class.getResourceAsStream(String)
-        strategy = Strat.LAZY
+        strategy = Strategy.LAZY
 )
 @ByteArrayResources(
         value = "Utf16InlineMessage.xml",
         // stored in class file as byte code instructions
-        strategy = Strat.INLINE
+        strategy = Strategy.INLINE
 )
 @ByteArrayResources(
         value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
         // stored in class file as string constant
-        strategy = Strat.ENCODE
+        strategy = Strategy.ENCODE
 )
 public class PrintMessages {
 

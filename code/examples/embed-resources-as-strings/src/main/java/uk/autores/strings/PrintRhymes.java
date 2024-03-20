@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.strings;
 
-import uk.autores.GenerateStringsFromText;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Strategy;
-import uk.autores.cfg.Visibility;
+import uk.autores.handling.CfgStrategy;
+import uk.autores.handling.CfgVisibility;
+import uk.autores.handling.GenerateStringsFromText;
+import uk.autores.handling.ResourceFiles;
 
-import static uk.autores.cfg.Strategy.STRATEGY;
-import static uk.autores.cfg.Visibility.VISIBILITY;
+import static uk.autores.handling.CfgStrategy.STRATEGY;
+import static uk.autores.handling.CfgVisibility.VISIBILITY;
 
 @ResourceFiles(
         value = {
@@ -17,8 +17,8 @@ import static uk.autores.cfg.Visibility.VISIBILITY;
         },
         handler = GenerateStringsFromText.class,
         config = {
-                @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.INLINE),
-                @ResourceFiles.Cfg(key = VISIBILITY, value = Visibility.PUBLIC),
+                @ResourceFiles.Cfg(key = STRATEGY, value = CfgStrategy.INLINE),
+                @ResourceFiles.Cfg(key = VISIBILITY, value = CfgVisibility.PUBLIC),
         }
 )
 public class PrintRhymes {

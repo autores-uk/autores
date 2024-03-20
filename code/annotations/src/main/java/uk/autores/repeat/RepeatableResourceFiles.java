@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.repeat;
 
-import uk.autores.ResourceFiles;
+import uk.autores.handling.ResourceFiles;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

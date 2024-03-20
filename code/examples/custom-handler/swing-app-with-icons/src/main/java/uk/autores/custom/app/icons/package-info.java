@@ -8,12 +8,12 @@
                 "Woof.png",
         },
         handler = GenerateIconsFromFiles.class,
-        config = @ResourceFiles.Cfg(key = VISIBILITY, value = Visibility.PUBLIC)
+        config = @ResourceFiles.Cfg(key = VISIBILITY, value = CfgVisibility.PUBLIC)
 )
 package uk.autores.custom.app.icons;
 
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Visibility;
+import uk.autores.handling.CfgVisibility;
 import uk.autores.custom.handler.GenerateIconsFromFiles;
+import uk.autores.handling.ResourceFiles;
 
-import static uk.autores.cfg.Visibility.VISIBILITY;
+import static uk.autores.handling.CfgVisibility.VISIBILITY;

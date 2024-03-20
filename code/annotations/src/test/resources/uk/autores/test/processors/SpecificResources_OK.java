@@ -2,7 +2,7 @@ package uk.autores.test.processors;
 
 import uk.autores.*;
 
-@ByteArrayResources(value = "SpecificResources_OK.java", strategy = Strat.INLINE)
+@ByteArrayResources(value = "SpecificResources_OK.java", strategy = Strategy.INLINE)
 @InputStreamResources
 @MessageResources
 @KeyedResources

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.ResourceFiles;
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.ProcessingEnvironment;

@@ -1,12 +1,10 @@
+// Copyright 2024 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.GenerateInputStreamsFromFiles;
 import uk.autores.InputStreamResources;
 import uk.autores.Processing;
-import uk.autores.cfg.Name;
-import uk.autores.cfg.Visibility;
-import uk.autores.handling.Config;
-import uk.autores.handling.Handler;
+import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableInputStreamResources;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -29,10 +27,10 @@ final class InputStreamContexts extends ContextFactory<InputStreamResources, Rep
     List<Config> config(InputStreamResources r) {
         List<Config> cfg = new ArrayList<>();
         if (r.isPublic()) {
-            cfg.add(new Config(Visibility.VISIBILITY, Visibility.PUBLIC));
+            cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
         if (!r.name().isEmpty()) {
-            cfg.add(new Config(Name.NAME, r.name()));
+            cfg.add(new Config(CfgName.NAME, r.name()));
         }
         return cfg;
     }

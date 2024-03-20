@@ -1,5 +1,8 @@
+// Copyright 2024 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
+import uk.autores.handling.GenerateStringsFromText;
 import uk.autores.naming.IdiomaticNamer;
 import uk.autores.repeat.RepeatableStringResources;
 
@@ -34,7 +37,7 @@ public @interface StringResources {
      * Code generation strategy.
      * @return strategy
      */
-    Strat strategy() default Strat.AUTO;
+    Strategy strategy() default Strategy.AUTO;
 
     /**
      * Resource text encoding.
