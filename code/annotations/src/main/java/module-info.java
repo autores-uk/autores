@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * <h1>AutoRes.uk</h1>
+ * <h2>AutoRes.uk</h2>
  *
  * <p>
  *     An annotation driven <a href="https://dev.java/learn/modules/intro/">module</a>
