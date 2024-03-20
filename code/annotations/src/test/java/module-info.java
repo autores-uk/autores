@@ -12,6 +12,7 @@ module uk.autores.test {
     opens uk.autores.test to org.junit.platform.commons;
     opens uk.autores.test.cfg to org.junit.platform.commons;
     opens uk.autores.test.handling to org.junit.platform.commons;
+    opens uk.autores.test.naming to org.junit.platform.commons;
     opens uk.autores.test.processors to org.junit.platform.commons;
 
     exports uk.autores.test.processors;
