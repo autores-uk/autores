@@ -16,7 +16,7 @@
  *         Add {@code import uk.autores.*;}
  *     </li>
  *     <li>
- *         Annotate a package ({@link java.lang.annotation.ElementType#PACKAGE}
+ *         Annotate a package ({@link java.lang.annotation.ElementType#PACKAGE})
  *         or type ({@link java.lang.annotation.ElementType#TYPE}) with one
  *         of the provided annotations
  *     </li>
