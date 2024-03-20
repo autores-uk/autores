@@ -2,27 +2,23 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.consts;
 
-import uk.autores.GenerateConstantsFromProperties;
-import uk.autores.ResourceFiles;
+import uk.autores.KeyedResources;
 
 import java.io.PrintStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-@ResourceFiles(
-        value = "CincoLobitos.properties",
-        handler = GenerateConstantsFromProperties.class
-)
+@KeyedResources("CincoLobitos.properties")
 public class PrintCincoLobitos {
 
     public static String[] lines() {
         // Constants generated from the properties file keys
         String[] lines = {
-                CincoLobitos.she_wolf,
-                CincoLobitos.wolf_cubs,
-                CincoLobitos.she_raised,
-                CincoLobitos.and_all,
-                CincoLobitos.she_nursed,
+                CincoLobitos.SHE_WOLF,
+                CincoLobitos.WOLF_CUBS,
+                CincoLobitos.SHE_RAISED,
+                CincoLobitos.AND_ALL,
+                CincoLobitos.SHE_NURSED,
         };
         return lines;
     }

@@ -102,7 +102,7 @@ public final class Context {
 
     /**
      * @return where resources are to be loaded from
-     * @see ResourceFiles#locations()
+     * @see uk.autores.Processing#locations()
      * @see ProcessingEnvironment#getFiler()
      * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
      */
@@ -146,7 +146,7 @@ public final class Context {
 
     /**
      * @return name resolver
-     * @see ResourceFiles#namer()
+     * @see uk.autores.Processing#namer()
      */
     public Namer namer() {
         return namer;

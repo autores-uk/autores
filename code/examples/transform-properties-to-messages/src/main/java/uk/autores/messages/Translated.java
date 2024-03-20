@@ -2,20 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.GenerateMessagesFromProperties;
-import uk.autores.IdiomaticNamer;
-import uk.autores.ResourceFiles;
+import uk.autores.MessageResources;
 
 import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
-@ResourceFiles(
-        value = "messages.properties",
-        handler = GenerateMessagesFromProperties.class,
-        // generated names conform to Java norms
-        namer = IdiomaticNamer.class
-)
+@MessageResources("messages.properties")
 public class Translated implements MessagePrinter {
 
     @Override

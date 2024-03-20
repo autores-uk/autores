@@ -9,7 +9,6 @@ import uk.autores.repeat.RepeatableResourceFiles;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileManager;
-import javax.tools.StandardLocation;
 import java.lang.annotation.*;
 
 /**
@@ -35,8 +34,8 @@ import java.lang.annotation.*;
  * </p>
  * <p>
  *     Custom generation or validation can be provided by implementing a {@link Handler}.
- *     Alternative naming strategies can be provided by providing a {@link Namer}.
- *     The compiler must be able to load and instantiate any value set in {@link #handler()} or {@link #namer()}.
+ *     Alternative naming strategies can be set by providing a {@link Namer} via {@link #processing()}.
+ *     The compiler must be able to load and instantiate any value set in {@link #handler()}.
  *     This typically means compiling the code in a separate project to the one where they are used.
  * </p>
  */
@@ -44,32 +43,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.SOURCE)
 @Repeatable(RepeatableResourceFiles.class)
 public @interface ResourceFiles {
-
-    /**
-     * <p>
-     *     These values are passed as location (1st arg) to
-     *     {@link Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)}
-     *     in order.
-     * </p>
-     * <p>
-     *     The defaults are {@link StandardLocation#CLASS_PATH} and {@link StandardLocation#CLASS_OUTPUT} names.
-     * </p>
-     * <p>
-     *     Tools are inconsistent in how they locate resources.
-     *     The documentation for {@link Filer} states
-     *     <em>"The locations CLASS_OUTPUT and SOURCE_OUTPUT must be supported."</em>
-     *     If the filer throws an {@link IllegalArgumentException} the processor will
-     *     proceed to the next location.
-     * </p>
-     *
-     * @return where to search for resources
-     * @see StandardLocation#locationFor(String)
-     * @see StandardLocation#getName()
-     */
-    String[] locations() default {
-            "CLASS_OUTPUT", // IntelliJ likes this
-            "CLASS_PATH", // Maven likes this, Eclipse compiler throws IllegalArgumentException
-    };
 
     /**
      * Defines the resource files to be processed.
@@ -88,12 +61,11 @@ public @interface ResourceFiles {
     Class<? extends Handler> handler() default AssertResourceExists.class;
 
     /**
-     * Set this value to provide alternative class/member naming strategy.
+     * Common processing instructions
      *
-     * @return name generator type
-     * @see Namer Namer for provided implementations
+     * @return processing instructions
      */
-    Class<? extends Namer> namer() default Namer.class;
+    Processing processing() default @Processing();
 
     /**
      * Some implementations of {@link Handler} support configuration.

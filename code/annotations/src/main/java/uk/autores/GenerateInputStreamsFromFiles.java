@@ -43,6 +43,10 @@ public final class GenerateInputStreamsFromFiles implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
+        if (context.resources().isEmpty()) {
+            return;
+        }
+
         Namer namer = context.namer();
         String segment = context.pkg().lastSegment();
         String base = context.option(Name.DEF).orElse(segment);

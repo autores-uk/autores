@@ -73,6 +73,10 @@ public final class GenerateStringsFromText implements Handler {
     @Override
     public void handle(Context context) throws Exception {
         List<Resource> resources = context.resources();
+        if (resources.isEmpty()) {
+            return;
+        }
+
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
