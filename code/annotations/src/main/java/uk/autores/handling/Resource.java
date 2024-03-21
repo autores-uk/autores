@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.ResourceFiles;
-
 import javax.tools.FileObject;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +17,8 @@ public final class Resource implements CharSequence {
     private final String path;
 
     /**
+     * All arguments must be non-null.
+     *
      * @param file resource bytes
      * @param path as defined in {@link ResourceFiles#value()}
      */

@@ -2,25 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.GenerateMessagesFromProperties;
-import uk.autores.IdiomaticNamer;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.MissingKey;
+import uk.autores.MessageResources;
+import uk.autores.Severity;
 
 import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
-import static uk.autores.cfg.MissingKey.MISSING_KEY;
-
-@ResourceFiles(
-        value = "sparse.properties",
-        handler = GenerateMessagesFromProperties.class,
-        // intentionally allow translated files to not contain all the keys the base does
-        config = @ResourceFiles.Cfg(key = MISSING_KEY, value = MissingKey.IGNORE),
-        // generated names conform to Java norms
-        namer = IdiomaticNamer.class
-)
+@MessageResources(value = "sparse.properties", missingKey = Severity.IGNORE)
 public class PartlyTranslated implements MessagePrinter {
 
     @Override

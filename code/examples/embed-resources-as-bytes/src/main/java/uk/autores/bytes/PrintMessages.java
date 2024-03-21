@@ -3,33 +3,27 @@
 package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
-import uk.autores.GenerateByteArraysFromFiles;
-import uk.autores.ResourceFiles;
-import uk.autores.cfg.Strategy;
+import uk.autores.ByteArrayResources;
+import uk.autores.Strategy;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 
-import static uk.autores.cfg.Strategy.STRATEGY;
-
-@ResourceFiles(
+@ByteArrayResources(
         value = "Utf16LazyMessage.xml",
-        handler = GenerateByteArraysFromFiles.class,
         // loaded at runtime using Class.getResourceAsStream(String)
-        config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.LAZY)
+        strategy = Strategy.LAZY
 )
-@ResourceFiles(
+@ByteArrayResources(
         value = "Utf16InlineMessage.xml",
-        handler = GenerateByteArraysFromFiles.class,
         // stored in class file as byte code instructions
-        config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.INLINE)
+        strategy = Strategy.INLINE
 )
-@ResourceFiles(
+@ByteArrayResources(
         value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
-        handler = GenerateByteArraysFromFiles.class,
         // stored in class file as string constant
-        config = @ResourceFiles.Cfg(key = STRATEGY, value = Strategy.ENCODE)
+        strategy = Strategy.CONST
 )
 public class PrintMessages {
 

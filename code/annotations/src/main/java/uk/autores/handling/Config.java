@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.ResourceFiles;
-
 import java.util.Objects;
 
 /**
@@ -15,6 +13,8 @@ public final class Config {
     private final String value;
 
     /**
+     * Constructor with mandatory values.
+     *
      * @param key name
      * @param value configuration value
      */
@@ -24,6 +24,8 @@ public final class Config {
     }
 
     /**
+     * Key.
+     *
      * @return configuration key name
      * @see ResourceFiles.Cfg#key()
      */
@@ -32,6 +34,8 @@ public final class Config {
     }
 
     /**
+     * Value.
+     *
      * @return configuration value
      * @see ResourceFiles.Cfg#value()
      */

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.ResourceFiles;
+import uk.autores.naming.Namer;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -53,6 +53,8 @@ public final class Context {
     }
 
     /**
+     * Builder pattern.
+     *
      * @return new builder
      */
     public static Builder builder() {
@@ -94,6 +96,8 @@ public final class Context {
     }
 
     /**
+     * Annotation processing environment.
+     *
      * @return annotation processing environment
      */
     public ProcessingEnvironment env() {
@@ -101,8 +105,10 @@ public final class Context {
     }
 
     /**
+     * Filer locations to search.
+     *
      * @return where resources are to be loaded from
-     * @see ResourceFiles#locations()
+     * @see uk.autores.Processing#locations()
      * @see ProcessingEnvironment#getFiler()
      * @see javax.annotation.processing.Filer#getResource(JavaFileManager.Location, CharSequence, CharSequence)
      */
@@ -120,6 +126,8 @@ public final class Context {
     }
 
     /**
+     * The annotated element.
+     *
      * @return the annotated element - class or package
      * @see javax.lang.model.element.TypeElement
      * @see javax.lang.model.element.PackageElement
@@ -129,6 +137,8 @@ public final class Context {
     }
 
     /**
+     * Resources to process.
+     *
      * @return unmodifiable resources list
      * @see ResourceFiles#value()
      */
@@ -137,6 +147,8 @@ public final class Context {
     }
 
     /**
+     * Configuration.
+     *
      * @return unmodifiable configuration list
      * @see ResourceFiles#config()
      */
@@ -145,8 +157,10 @@ public final class Context {
     }
 
     /**
+     * Naming strategy.
+     *
      * @return name resolver
-     * @see ResourceFiles#namer()
+     * @see uk.autores.Processing#namer()
      */
     public Namer namer() {
         return namer;
@@ -179,6 +193,8 @@ public final class Context {
         Builder() {}
 
         /**
+         * Creates immutable context instance.
+         *
          * @return new context
          */
         public Context build() {
@@ -186,6 +202,8 @@ public final class Context {
         }
 
         /**
+         * Sets package or type.
+         *
          * @param annotated element
          * @return this
          * @see Context#annotated()
@@ -196,6 +214,8 @@ public final class Context {
         }
 
         /**
+         * Sets configuration.
+         *
          * @param config configuration options
          * @return this
          * @see Context#config()
@@ -206,6 +226,8 @@ public final class Context {
         }
 
         /**
+         * Sets processing environment.
+         *
          * @param env processing environment
          * @return this
          * @see Context#env()
@@ -216,6 +238,8 @@ public final class Context {
         }
 
         /**
+         * Sets locations to search.
+         *
          * @param locations resource location
          * @return this
          * @see Context#locations()
@@ -226,6 +250,8 @@ public final class Context {
         }
 
         /**
+         * Sets naming conventions.
+         *
          * @param namer generated code namer
          * @return this
          * @see Context#namer()
@@ -236,6 +262,8 @@ public final class Context {
         }
 
         /**
+         * Sets annotated package.
+         *
          * @param pkg annotated element package
          * @return this
          * @see Context#pkg()
@@ -246,6 +274,8 @@ public final class Context {
         }
 
         /**
+         * Sets resources to process.
+         *
          * @param resources resource files
          * @return this
          * @see Context#resources()
