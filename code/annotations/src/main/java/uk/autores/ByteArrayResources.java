@@ -10,6 +10,15 @@ import java.lang.annotation.*;
 
 /**
  * Annotation for {@link GenerateByteArraysFromFiles}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;ByteArrayResources("foo.bin")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     byte[] data = Foo.bytes();
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -28,7 +37,7 @@ public @interface ByteArrayResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;

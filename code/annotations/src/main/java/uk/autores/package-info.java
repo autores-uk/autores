@@ -37,7 +37,7 @@
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.InputStreamResources}</td>
- *         <td>Generate single class that returns {@link java.io.InputStream}.</td>
+ *         <td>Generate single class with one {@link java.io.InputStream} method per file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.KeyedResources}</td>

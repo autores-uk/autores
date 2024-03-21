@@ -10,6 +10,17 @@ import java.lang.annotation.*;
 
 /**
  * Annotation for {@link GenerateConstantsFromProperties}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     // she-wolf=Cinco lobitos tiene la loba
+ *     &#64;KeyedResources("CincoLobitos.properties")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     // "she-wolf"
+ *     String key = CincoLobitos.SHE_WOLF;
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -28,7 +39,7 @@ public @interface KeyedResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;

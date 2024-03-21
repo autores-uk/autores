@@ -10,6 +10,15 @@ import java.lang.annotation.*;
 
 /**
  * Annotation for {@link GenerateStringsFromText}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;StringResources("Roses.txt")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     String roses = Roses.text();
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -28,7 +37,7 @@ public @interface StringResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;

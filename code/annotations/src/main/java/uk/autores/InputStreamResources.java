@@ -10,6 +10,19 @@ import java.lang.annotation.*;
 
 /**
  * Annotation for {@link GenerateInputStreamsFromFiles}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;InputStreamResources(value = "foo.bin", name = "Data")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     try (java.io.InputStream in = Data.foo()) {
+ *         // etc...
+ *     } catch (java.io.IOException e) {
+ *         // handle exception
+ *     }
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -28,7 +41,7 @@ public @interface InputStreamResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;
