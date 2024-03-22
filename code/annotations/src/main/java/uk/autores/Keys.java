@@ -2,19 +2,30 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateInputStreamsFromFiles;
+import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableKeyedResources;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateInputStreamsFromFiles}.
+ * Annotation for {@link GenerateConstantsFromProperties}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     // she-wolf=Cinco lobitos tiene la loba
+ *     &#64;Keys("CincoLobitos.properties")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     // "she-wolf"
+ *     String key = CincoLobitos.SHE_WOLF;
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableInputStreamResources.class)
-public @interface InputStreamResources {
+@Repeatable(RepeatableKeyedResources.class)
+public @interface Keys {
     /**
      * Resource files.
      * @return resources
@@ -28,14 +39,8 @@ public @interface InputStreamResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;
-
-    /**
-     * Generated class name.
-     * @return class name
-     */
-    String name() default "";
 }

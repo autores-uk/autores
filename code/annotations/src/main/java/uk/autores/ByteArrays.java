@@ -2,19 +2,28 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateConstantsFromProperties;
+import uk.autores.handling.GenerateByteArraysFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableKeyedResources;
+import uk.autores.repeat.RepeatableByteArrayResources;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateConstantsFromProperties}.
+ * Annotation for {@link GenerateByteArraysFromFiles}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;ByteArrays("foo.bin")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     byte[] data = Foo.bytes();
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableKeyedResources.class)
-public @interface KeyedResources {
+@Repeatable(RepeatableByteArrayResources.class)
+public @interface ByteArrays {
     /**
      * Resource files.
      * @return resources
@@ -28,8 +37,14 @@ public @interface KeyedResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;
+
+    /**
+     * Code generation strategy.
+     * @return strategy
+     */
+    Strategy strategy() default Strategy.AUTO;
 }

@@ -3,12 +3,12 @@
 package uk.autores.strong;
 
 import com.google.common.io.ByteStreams;
-import uk.autores.InputStreamResources;
+import uk.autores.InputStreams;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-@InputStreamResources(
+@InputStreams(
         value = {"Charles-E-Weller.txt", "etaoin-shrdlu.txt", "Lorem-ipsum.txt"},
         name = "FillerText"
 )

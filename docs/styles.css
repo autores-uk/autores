@@ -4,7 +4,7 @@ code code { font-weight: bolder; color: black; }
 code em { font-weight: bolder; color: dimgrey; }
 pre { border-radius: 10px; border-style: groove; border-color: gainsboro; }
 a.link-symbol { text-decoration: none; }
-nav { text-align: center; font-size: inherit; }
+nav { text-align: center; font-size: inherit; font-weight: bolder; }
 nav ul { list-style-type: none; }
 nav ul li { display: inline-block; }
 nav ul li + li::before { content: ' - '; }

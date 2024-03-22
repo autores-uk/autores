@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.ByteArrayResources;
+import uk.autores.ByteArrays;
 import uk.autores.Processing;
 import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableByteArrayResources;
@@ -11,44 +11,44 @@ import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class ByteArrayContexts extends ContextFactory<ByteArrayResources, RepeatableByteArrayResources> {
+final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByteArrayResources> {
     private final Handler handler = new GenerateByteArraysFromFiles();
 
-    ByteArrayContexts(ProcessingEnvironment env) {
-        super(env, ByteArrayResources.class, RepeatableByteArrayResources.class);
+    ByteArraysContexts(ProcessingEnvironment env) {
+        super(env, ByteArrays.class, RepeatableByteArrayResources.class);
     }
 
     @Override
-    Handler handler(ByteArrayResources single) {
+    Handler handler(ByteArrays single) {
         return handler;
     }
 
     @Override
-    List<Config> config(ByteArrayResources byteArrayResources) {
+    List<Config> config(ByteArrays byteArrays) {
         List<Config> cfg = new ArrayList<>();
-        if (byteArrayResources.isPublic()) {
+        if (byteArrays.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
-        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrayResources.strategy().value()));
+        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrays.strategy().value()));
         return cfg;
     }
 
     @Override
-    ByteArrayResources[] expand(RepeatableByteArrayResources repeating) {
+    ByteArrays[] expand(RepeatableByteArrayResources repeating) {
         return repeating.value();
     }
 
     @Override
-    Processing processing(ByteArrayResources single) {
+    Processing processing(ByteArrays single) {
         return single.processing();
     }
 
     @Override
-    String[] resources(ByteArrayResources single) {
+    String[] resources(ByteArrays single) {
         return single.value();
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(ByteArrayResources.class, RepeatableByteArrayResources.class, ByteArrayContexts::new);
+        return new AnnotationDef<>(ByteArrays.class, RepeatableByteArrayResources.class, ByteArraysContexts::new);
     }
 }

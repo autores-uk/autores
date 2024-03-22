@@ -2,15 +2,15 @@ package uk.autores.test.processors;
 
 import uk.autores.*;
 
-@ByteArrayResources(isPublic = true)
-@ByteArrayResources(value = "SpecificResourcesRepeated_OK.java", strategy = Strategy.INLINE)
-@InputStreamResources(isPublic = true)
-@InputStreamResources(name = "Foo")
-@MessageResources(isPublic = true, format = false, localize = false)
-@MessageResources
-@KeyedResources(isPublic = true)
-@KeyedResources
-@StringResources(isPublic = true)
-@StringResources
+@ByteArrays(isPublic = true)
+@ByteArrays(value = "SpecificResourcesRepeated_OK.java", strategy = Strategy.INLINE)
+@InputStreams(isPublic = true)
+@InputStreams(name = "Foo")
+@Messages(isPublic = true, format = false, localize = false)
+@Messages
+@Keys(isPublic = true)
+@Keys
+@Texts(isPublic = true)
+@Texts
 class SpecificResourcesRepeated_OK {
 }

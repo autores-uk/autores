@@ -2,28 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.strings;
 
-import uk.autores.handling.CfgStrategy;
-import uk.autores.handling.CfgVisibility;
-import uk.autores.handling.GenerateStringsFromText;
-import uk.autores.handling.ResourceFiles;
+import uk.autores.Texts;
 
-import static uk.autores.handling.CfgStrategy.STRATEGY;
-import static uk.autores.handling.CfgVisibility.VISIBILITY;
-
-@ResourceFiles(
-        value = {
-                "Poule.txt",
-                "Roses.txt",
-        },
-        handler = GenerateStringsFromText.class,
-        config = {
-                @ResourceFiles.Cfg(key = STRATEGY, value = CfgStrategy.INLINE),
-                @ResourceFiles.Cfg(key = VISIBILITY, value = CfgVisibility.PUBLIC),
-        }
-)
+// UTF-8 encoded text files containing nursery rhymes
+@Texts(value = {"Poule.txt", "Roses.txt"}, isPublic = true)
 public class PrintRhymes {
 
     public static void main(String...args)  {
+        // Just access text directly
         System.out.println(Poule.text());
         System.out.println(Roses.text());
     }
