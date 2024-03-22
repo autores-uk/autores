@@ -5,17 +5,17 @@ package uk.autores.processors;
 import uk.autores.InputStreams;
 import uk.autores.Processing;
 import uk.autores.handling.*;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableInputStreams;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class InputStreamsContexts extends ContextFactory<InputStreams, RepeatableInputStreamResources> {
+final class InputStreamsContexts extends ContextFactory<InputStreams, RepeatableInputStreams> {
     private final Handler handler = new GenerateInputStreamsFromFiles();
 
     InputStreamsContexts(ProcessingEnvironment env) {
-        super(env, InputStreams.class, RepeatableInputStreamResources.class);
+        super(env, InputStreams.class, RepeatableInputStreams.class);
     }
 
     @Override
@@ -36,7 +36,7 @@ final class InputStreamsContexts extends ContextFactory<InputStreams, Repeatable
     }
 
     @Override
-    InputStreams[] expand(RepeatableInputStreamResources repeating) {
+    InputStreams[] expand(RepeatableInputStreams repeating) {
         return repeating.value();
     }
 
@@ -51,6 +51,6 @@ final class InputStreamsContexts extends ContextFactory<InputStreams, Repeatable
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(InputStreams.class, RepeatableInputStreamResources.class, InputStreamsContexts::new);
+        return new AnnotationDef<>(InputStreams.class, RepeatableInputStreams.class, InputStreamsContexts::new);
     }
 }

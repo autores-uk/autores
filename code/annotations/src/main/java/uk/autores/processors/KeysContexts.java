@@ -8,17 +8,17 @@ import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.Config;
 import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.handling.Handler;
-import uk.autores.repeat.RepeatableKeyedResources;
+import uk.autores.repeat.RepeatableKeys;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class KeysContexts extends ContextFactory<Keys, RepeatableKeyedResources> {
+final class KeysContexts extends ContextFactory<Keys, RepeatableKeys> {
     private final Handler handler = new GenerateConstantsFromProperties();
 
     KeysContexts(ProcessingEnvironment env) {
-        super(env, Keys.class, RepeatableKeyedResources.class);
+        super(env, Keys.class, RepeatableKeys.class);
     }
 
     @Override
@@ -37,7 +37,7 @@ final class KeysContexts extends ContextFactory<Keys, RepeatableKeyedResources> 
     }
 
     @Override
-    Keys[] expand(RepeatableKeyedResources repeating) {
+    Keys[] expand(RepeatableKeys repeating) {
         return repeating.value();
     }
 
@@ -52,6 +52,6 @@ final class KeysContexts extends ContextFactory<Keys, RepeatableKeyedResources> 
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(Keys.class, RepeatableKeyedResources.class, KeysContexts::new);
+        return new AnnotationDef<>(Keys.class, RepeatableKeys.class, KeysContexts::new);
     }
 }

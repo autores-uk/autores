@@ -5,17 +5,17 @@ package uk.autores.processors;
 import uk.autores.Messages;
 import uk.autores.Processing;
 import uk.autores.handling.*;
-import uk.autores.repeat.RepeatableMessageResources;
+import uk.autores.repeat.RepeatableMessages;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class MessagesContexts extends ContextFactory<Messages, RepeatableMessageResources> {
+final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages> {
     private final Handler handler = new GenerateMessagesFromProperties();
 
     MessagesContexts(ProcessingEnvironment env) {
-        super(env, Messages.class, RepeatableMessageResources.class);
+        super(env, Messages.class, RepeatableMessages.class);
     }
 
     @Override
@@ -37,7 +37,7 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessageR
     }
 
     @Override
-    Messages[] expand(RepeatableMessageResources repeating) {
+    Messages[] expand(RepeatableMessages repeating) {
         return repeating.value();
     }
 
@@ -52,6 +52,6 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessageR
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(Messages.class, RepeatableMessageResources.class, MessagesContexts::new);
+        return new AnnotationDef<>(Messages.class, RepeatableMessages.class, MessagesContexts::new);
     }
 }
