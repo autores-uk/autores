@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.22-beta-SNAPSHOT</version>
+        <version>11.0.22-beta</version>
     </parent>
 
     <artifactId>transform-properties-to-messages</artifactId>
