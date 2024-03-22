@@ -48,10 +48,10 @@ public final class GenerateStringsFromText implements Handler {
      *
      * Strategy:
      * <ul>
-     *     <li>{@link CfgStrategy#AUTO}: "inline" for files up to 65535B when encoded as modified UTF-8 - the limit for a String constant;
-     *     "lazy" otherwise</li>
+     *     <li>{@link CfgStrategy#AUTO}: {@link CfgStrategy#INLINE} for files up to 65535B when encoded as modified UTF-8
+     *     - the limit for a String constant; {@link CfgStrategy#LAZY} otherwise</li>
      *     <li>{@link CfgStrategy#INLINE}: files become {@link String} literals</li>
-     *     <li>{@link CfgStrategy#CONST}: alias for "inline"</li>
+     *     <li>{@link CfgStrategy#CONST}: alias for {@link CfgStrategy#INLINE}</li>
      *     <li>{@link CfgStrategy#LAZY}: files are loaded using the {@link ClassLoader}</li>
      * </ul>
      *

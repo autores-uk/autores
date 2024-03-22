@@ -21,7 +21,7 @@ import java.lang.annotation.*;
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     ZonedDateTime time = ...
+ *     var time = ZonedDateTime.now();
  *     String event = Messages.planetEvent(locale, 4, time, time, "an attack");
  * </code></pre>
  *

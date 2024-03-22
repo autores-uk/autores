@@ -72,10 +72,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
      *
      * <p>
      *     The lazy strategy requires that the resource file be provided at runtime.
-     *     The inline strategy results in larger class files than the encode strategy by a factor of about 8.
+     *     The inline strategy results in larger class files than the const strategy by a factor of about 8.
      *     The inline strategy uses the stack to fill the byte array.
-     *     The encode strategy copies from the heap to fill the byte array.
-     *     The inline and encode strategies will break down as the resource file approaches 500MB
+     *     The const strategy copies from the heap to fill the byte array.
+     *     The inline and const strategies will break down as the resource file approaches 500MB
      *     due to class file limitations.
      * </p>
      *
