@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.MessageResources;
+import uk.autores.Messages;
 
 import java.io.PrintStream;
 import java.time.ZoneId;
@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-@MessageResources(value = "non-nls.properties", localize = false)
+@Messages(value = "non-nls.properties", localize = false)
 public class Untranslated implements MessagePrinter {
 
     @Override

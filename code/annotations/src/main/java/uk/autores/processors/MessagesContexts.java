@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.MessageResources;
+import uk.autores.Messages;
 import uk.autores.Processing;
 import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableMessageResources;
@@ -11,20 +11,20 @@ import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class MessageContexts extends ContextFactory<MessageResources, RepeatableMessageResources> {
+final class MessagesContexts extends ContextFactory<Messages, RepeatableMessageResources> {
     private final Handler handler = new GenerateMessagesFromProperties();
 
-    MessageContexts(ProcessingEnvironment env) {
-        super(env, MessageResources.class, RepeatableMessageResources.class);
+    MessagesContexts(ProcessingEnvironment env) {
+        super(env, Messages.class, RepeatableMessageResources.class);
     }
 
     @Override
-    Handler handler(MessageResources single) {
+    Handler handler(Messages single) {
         return handler;
     }
 
     @Override
-    List<Config> config(MessageResources m) {
+    List<Config> config(Messages m) {
         List<Config> cfg = new ArrayList<>();
         if (m.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
@@ -37,21 +37,21 @@ final class MessageContexts extends ContextFactory<MessageResources, RepeatableM
     }
 
     @Override
-    MessageResources[] expand(RepeatableMessageResources repeating) {
+    Messages[] expand(RepeatableMessageResources repeating) {
         return repeating.value();
     }
 
     @Override
-    Processing processing(MessageResources single) {
+    Processing processing(Messages single) {
         return single.processing();
     }
 
     @Override
-    String[] resources(MessageResources single) {
+    String[] resources(Messages single) {
         return single.value();
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(MessageResources.class, RepeatableMessageResources.class, MessageContexts::new);
+        return new AnnotationDef<>(Messages.class, RepeatableMessageResources.class, MessagesContexts::new);
     }
 }

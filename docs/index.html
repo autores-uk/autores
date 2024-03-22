@@ -51,13 +51,13 @@
     <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
-      The <code>@StringResources</code> annotation creates one class per text file that provides the file content as a <code>String</code>.
+      The <code>@Texts</code> annotation creates one class per text file that provides the file content as a <code>String</code>.
     </p>
 
     <pre><code>
     import uk.autores.*;
     
-    <code>@StringResources({"Poule.txt", "Roses.txt"})</code>
+    <code>@Texts({"Poule.txt", "Roses.txt"})</code>
     public class PrintRhymes {
       public static void main(String...args)  {
         System.out.println(<code>Poule.text()</code>);
@@ -67,7 +67,7 @@
     </code></pre>
 
     <p>
-      The <code>@MessageResources</code> annotation can generate typed methods that match on a locale and then format the string.
+      The <code>@Messages</code> annotation can generate typed methods that match on a locale and then format the string.
     </p>
 
     <pre><code>
@@ -75,7 +75,7 @@
     import java.time.ZonedDateTime;
     import java.util.Locale;
 
-    <code>@MessageResources("messages.properties")</code>
+    <code>@Messages("messages.properties")</code>
     public class PrintMessage {
       public static void main(String[] args) {
         var locale = Locale.getDefault();
@@ -91,9 +91,9 @@
 
     <p>
       Other annotations are
-      <code>@ByteArrayResources</code>,
-      <code>@KeyedResources</code>,
-      <code>@InputStreamResources</code>,
+      <code>@ByteArrays</code>,
+      <code>@Keys</code>,
+      <code>@InputStreams</code>,
       and the extensible <code>@ResourceFiles</code>.
     </p>
 

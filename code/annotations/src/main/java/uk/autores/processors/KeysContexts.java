@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.KeyedResources;
+import uk.autores.Keys;
 import uk.autores.Processing;
 import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.Config;
@@ -14,20 +14,20 @@ import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class KeyedContexts extends ContextFactory<KeyedResources, RepeatableKeyedResources> {
+final class KeysContexts extends ContextFactory<Keys, RepeatableKeyedResources> {
     private final Handler handler = new GenerateConstantsFromProperties();
 
-    KeyedContexts(ProcessingEnvironment env) {
-        super(env, KeyedResources.class, RepeatableKeyedResources.class);
+    KeysContexts(ProcessingEnvironment env) {
+        super(env, Keys.class, RepeatableKeyedResources.class);
     }
 
     @Override
-    Handler handler(KeyedResources single) {
+    Handler handler(Keys single) {
         return handler;
     }
 
     @Override
-    List<Config> config(KeyedResources m) {
+    List<Config> config(Keys m) {
         List<Config> cfg = new ArrayList<>();
         if (m.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
@@ -37,21 +37,21 @@ final class KeyedContexts extends ContextFactory<KeyedResources, RepeatableKeyed
     }
 
     @Override
-    KeyedResources[] expand(RepeatableKeyedResources repeating) {
+    Keys[] expand(RepeatableKeyedResources repeating) {
         return repeating.value();
     }
 
     @Override
-    Processing processing(KeyedResources single) {
+    Processing processing(Keys single) {
         return single.processing();
     }
 
     @Override
-    String[] resources(KeyedResources single) {
+    String[] resources(Keys single) {
         return single.value();
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(KeyedResources.class, RepeatableKeyedResources.class, KeyedContexts::new);
+        return new AnnotationDef<>(Keys.class, RepeatableKeyedResources.class, KeysContexts::new);
     }
 }

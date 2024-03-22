@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.repeat;
 
-import uk.autores.KeyedResources;
+import uk.autores.Keys;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Allows {@link uk.autores.KeyedResources} to be used multiple times on a package or class.
+ * Allows {@link Keys} to be used multiple times on a package or class.
  * API consumers do not need to reference this type - it is only used by the compiler and annotation processor.
  *
  * @see java.lang.annotation.Repeatable
@@ -24,5 +24,5 @@ public @interface RepeatableKeyedResources {
      *
      * @return the individual resource annotations
      */
-    KeyedResources[] value();
+    Keys[] value();
 }

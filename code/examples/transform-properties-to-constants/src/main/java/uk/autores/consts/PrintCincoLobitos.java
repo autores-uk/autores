@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.consts;
 
-import uk.autores.KeyedResources;
+import uk.autores.Keys;
 
 import java.io.PrintStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-@KeyedResources("CincoLobitos.properties")
+@Keys("CincoLobitos.properties")
 public class PrintCincoLobitos {
 
     public static String[] lines() {

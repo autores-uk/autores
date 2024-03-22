@@ -2,32 +2,28 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateInputStreamsFromFiles;
+import uk.autores.handling.GenerateByteArraysFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableByteArrayResources;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateInputStreamsFromFiles}.
+ * Annotation for {@link GenerateByteArraysFromFiles}.
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;InputStreamResources(value = "foo.bin", name = "Data")
+ *     &#64;ByteArrays("foo.bin")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     try (java.io.InputStream in = Data.foo()) {
- *         // etc...
- *     } catch (java.io.IOException e) {
- *         // handle exception
- *     }
+ *     byte[] data = Foo.bytes();
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableInputStreamResources.class)
-public @interface InputStreamResources {
+@Repeatable(RepeatableByteArrayResources.class)
+public @interface ByteArrays {
     /**
      * Resource files.
      * @return resources
@@ -47,8 +43,8 @@ public @interface InputStreamResources {
     boolean isPublic() default false;
 
     /**
-     * Generated class name.
-     * @return class name
+     * Code generation strategy.
+     * @return strategy
      */
-    String name() default "";
+    Strategy strategy() default Strategy.AUTO;
 }

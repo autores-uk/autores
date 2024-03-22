@@ -2,28 +2,30 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateByteArraysFromFiles;
+import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableByteArrayResources;
+import uk.autores.repeat.RepeatableKeyedResources;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateByteArraysFromFiles}.
+ * Annotation for {@link GenerateConstantsFromProperties}.
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;ByteArrayResources("foo.bin")
+ *     // she-wolf=Cinco lobitos tiene la loba
+ *     &#64;Keys("CincoLobitos.properties")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     byte[] data = Foo.bytes();
+ *     // "she-wolf"
+ *     String key = CincoLobitos.SHE_WOLF;
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableByteArrayResources.class)
-public @interface ByteArrayResources {
+@Repeatable(RepeatableKeyedResources.class)
+public @interface Keys {
     /**
      * Resource files.
      * @return resources
@@ -41,10 +43,4 @@ public @interface ByteArrayResources {
      * @return visibility
      */
     boolean isPublic() default false;
-
-    /**
-     * Code generation strategy.
-     * @return strategy
-     */
-    Strategy strategy() default Strategy.AUTO;
 }

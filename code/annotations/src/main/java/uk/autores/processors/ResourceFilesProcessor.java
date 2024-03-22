@@ -30,11 +30,11 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
 
   private final AnnotationDef<?, ?>[] defs = {
           ResourceContexts.def(),
-          ByteArrayContexts.def(),
-          InputStreamContexts.def(),
-          KeyedContexts.def(),
-          MessageContexts.def(),
-          StringContexts.def(),
+          ByteArraysContexts.def(),
+          InputStreamsContexts.def(),
+          KeysContexts.def(),
+          MessagesContexts.def(),
+          TextsContexts.def(),
   };
 
   /** Public constructor as per contract */

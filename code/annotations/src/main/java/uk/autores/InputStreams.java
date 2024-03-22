@@ -2,30 +2,32 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateConstantsFromProperties;
+import uk.autores.handling.GenerateInputStreamsFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableKeyedResources;
+import uk.autores.repeat.RepeatableInputStreamResources;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateConstantsFromProperties}.
+ * Annotation for {@link GenerateInputStreamsFromFiles}.
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     // she-wolf=Cinco lobitos tiene la loba
- *     &#64;KeyedResources("CincoLobitos.properties")
+ *     &#64;InputStreams(value = "foo.bin", name = "Data")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     // "she-wolf"
- *     String key = CincoLobitos.SHE_WOLF;
+ *     try (java.io.InputStream in = Data.foo()) {
+ *         // etc...
+ *     } catch (java.io.IOException e) {
+ *         // handle exception
+ *     }
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableKeyedResources.class)
-public @interface KeyedResources {
+@Repeatable(RepeatableInputStreamResources.class)
+public @interface InputStreams {
     /**
      * Resource files.
      * @return resources
@@ -43,4 +45,10 @@ public @interface KeyedResources {
      * @return visibility
      */
     boolean isPublic() default false;
+
+    /**
+     * Generated class name.
+     * @return class name
+     */
+    String name() default "";
 }

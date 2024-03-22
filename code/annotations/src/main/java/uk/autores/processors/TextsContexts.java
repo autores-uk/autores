@@ -3,7 +3,7 @@
 package uk.autores.processors;
 
 import uk.autores.Processing;
-import uk.autores.StringResources;
+import uk.autores.Texts;
 import uk.autores.handling.*;
 import uk.autores.repeat.RepeatableStringResources;
 
@@ -11,20 +11,20 @@ import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class StringContexts extends ContextFactory<StringResources, RepeatableStringResources> {
+final class TextsContexts extends ContextFactory<Texts, RepeatableStringResources> {
     private final Handler handler = new GenerateStringsFromText();
 
-    StringContexts(ProcessingEnvironment env) {
-        super(env, StringResources.class, RepeatableStringResources.class);
+    TextsContexts(ProcessingEnvironment env) {
+        super(env, Texts.class, RepeatableStringResources.class);
     }
 
     @Override
-    Handler handler(StringResources single) {
+    Handler handler(Texts single) {
         return handler;
     }
 
     @Override
-    List<Config> config(StringResources byteArrayResources) {
+    List<Config> config(Texts byteArrayResources) {
         List<Config> cfg = new ArrayList<>();
         if (byteArrayResources.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
@@ -35,21 +35,21 @@ final class StringContexts extends ContextFactory<StringResources, RepeatableStr
     }
 
     @Override
-    StringResources[] expand(RepeatableStringResources repeating) {
+    Texts[] expand(RepeatableStringResources repeating) {
         return repeating.value();
     }
 
     @Override
-    Processing processing(StringResources single) {
+    Processing processing(Texts single) {
         return single.processing();
     }
 
     @Override
-    String[] resources(StringResources single) {
+    String[] resources(Texts single) {
         return single.value();
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(StringResources.class, RepeatableStringResources.class, StringContexts::new);
+        return new AnnotationDef<>(Texts.class, RepeatableStringResources.class, TextsContexts::new);
     }
 }

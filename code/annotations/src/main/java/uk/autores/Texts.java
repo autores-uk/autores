@@ -13,7 +13,7 @@ import java.lang.annotation.*;
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;StringResources("Roses.txt")
+ *     &#64;Texts("Roses.txt")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
@@ -23,7 +23,7 @@ import java.lang.annotation.*;
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 @Repeatable(RepeatableStringResources.class)
-public @interface StringResources {
+public @interface Texts {
     /**
      * Resource files.
      * @return text resources

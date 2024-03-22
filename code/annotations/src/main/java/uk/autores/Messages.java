@@ -17,7 +17,7 @@ import java.lang.annotation.*;
  *     // planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.
  *     // messages_de.properties
  *     // planet-event=Am {1,time} um {2,date} Uhr gab es {3} auf Planet {0,number,integer}.
- *     &#64;MessageResources("messages.properties")
+ *     &#64;Messages("messages.properties")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
@@ -33,7 +33,7 @@ import java.lang.annotation.*;
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 @Repeatable(RepeatableMessageResources.class)
-public @interface MessageResources {
+public @interface Messages {
     /**
      * Resource files.
      * @return resources

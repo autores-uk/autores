@@ -37,11 +37,11 @@ class ResourceFilesProcessorTest {
     assertEquals(SourceVersion.RELEASE_8, processor.getSupportedSourceVersion());
     Class<?>[] annotations = {
             ResourceFiles.class, RepeatableResourceFiles.class,
-            ByteArrayResources.class, RepeatableByteArrayResources.class,
-            InputStreamResources.class, RepeatableInputStreamResources.class,
-            KeyedResources.class, RepeatableKeyedResources.class,
-            MessageResources.class, RepeatableMessageResources.class,
-            StringResources.class, RepeatableStringResources.class,
+            ByteArrays.class, RepeatableByteArrayResources.class,
+            InputStreams.class, RepeatableInputStreamResources.class,
+            Keys.class, RepeatableKeyedResources.class,
+            Messages.class, RepeatableMessageResources.class,
+            Texts.class, RepeatableStringResources.class,
     };
     Set<String> expected = Stream.of(annotations)
             .map(Class::getName)
