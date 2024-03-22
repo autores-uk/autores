@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.GenerateStringsFromText;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableStringResources;
+import uk.autores.repeat.RepeatableTexts;
 
 import java.lang.annotation.*;
 
@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableStringResources.class)
+@Repeatable(RepeatableTexts.class)
 public @interface Texts {
     /**
      * Resource files.

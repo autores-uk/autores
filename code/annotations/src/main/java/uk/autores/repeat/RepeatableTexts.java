@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface RepeatableStringResources {
+public @interface RepeatableTexts {
 
     /**
      * Repeating elements.

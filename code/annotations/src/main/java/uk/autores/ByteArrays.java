@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.GenerateByteArraysFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableByteArrayResources;
+import uk.autores.repeat.RepeatableByteArrays;
 
 import java.lang.annotation.*;
 
@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableByteArrayResources.class)
+@Repeatable(RepeatableByteArrays.class)
 public @interface ByteArrays {
     /**
      * Resource files.

@@ -5,17 +5,17 @@ package uk.autores.processors;
 import uk.autores.Processing;
 import uk.autores.Texts;
 import uk.autores.handling.*;
-import uk.autores.repeat.RepeatableStringResources;
+import uk.autores.repeat.RepeatableTexts;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class TextsContexts extends ContextFactory<Texts, RepeatableStringResources> {
+final class TextsContexts extends ContextFactory<Texts, RepeatableTexts> {
     private final Handler handler = new GenerateStringsFromText();
 
     TextsContexts(ProcessingEnvironment env) {
-        super(env, Texts.class, RepeatableStringResources.class);
+        super(env, Texts.class, RepeatableTexts.class);
     }
 
     @Override
@@ -35,7 +35,7 @@ final class TextsContexts extends ContextFactory<Texts, RepeatableStringResource
     }
 
     @Override
-    Texts[] expand(RepeatableStringResources repeating) {
+    Texts[] expand(RepeatableTexts repeating) {
         return repeating.value();
     }
 
@@ -50,6 +50,6 @@ final class TextsContexts extends ContextFactory<Texts, RepeatableStringResource
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(Texts.class, RepeatableStringResources.class, TextsContexts::new);
+        return new AnnotationDef<>(Texts.class, RepeatableTexts.class, TextsContexts::new);
     }
 }

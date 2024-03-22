@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableKeyedResources;
+import uk.autores.repeat.RepeatableKeys;
 
 import java.lang.annotation.*;
 
@@ -24,7 +24,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableKeyedResources.class)
+@Repeatable(RepeatableKeys.class)
 public @interface Keys {
     /**
      * Resource files.

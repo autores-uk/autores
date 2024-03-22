@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.GenerateInputStreamsFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableInputStreams;
 
 import java.lang.annotation.*;
 
@@ -26,7 +26,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableInputStreamResources.class)
+@Repeatable(RepeatableInputStreams.class)
 public @interface InputStreams {
     /**
      * Resource files.

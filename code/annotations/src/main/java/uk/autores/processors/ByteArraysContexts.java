@@ -5,17 +5,17 @@ package uk.autores.processors;
 import uk.autores.ByteArrays;
 import uk.autores.Processing;
 import uk.autores.handling.*;
-import uk.autores.repeat.RepeatableByteArrayResources;
+import uk.autores.repeat.RepeatableByteArrays;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByteArrayResources> {
+final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByteArrays> {
     private final Handler handler = new GenerateByteArraysFromFiles();
 
     ByteArraysContexts(ProcessingEnvironment env) {
-        super(env, ByteArrays.class, RepeatableByteArrayResources.class);
+        super(env, ByteArrays.class, RepeatableByteArrays.class);
     }
 
     @Override
@@ -34,7 +34,7 @@ final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByte
     }
 
     @Override
-    ByteArrays[] expand(RepeatableByteArrayResources repeating) {
+    ByteArrays[] expand(RepeatableByteArrays repeating) {
         return repeating.value();
     }
 
@@ -49,6 +49,6 @@ final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByte
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(ByteArrays.class, RepeatableByteArrayResources.class, ByteArraysContexts::new);
+        return new AnnotationDef<>(ByteArrays.class, RepeatableByteArrays.class, ByteArraysContexts::new);
     }
 }

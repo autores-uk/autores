@@ -4,7 +4,7 @@ package uk.autores;
 
 import uk.autores.handling.GenerateMessagesFromProperties;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableMessageResources;
+import uk.autores.repeat.RepeatableMessages;
 
 import java.lang.annotation.*;
 
@@ -32,7 +32,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableMessageResources.class)
+@Repeatable(RepeatableMessages.class)
 public @interface Messages {
     /**
      * Resource files.
