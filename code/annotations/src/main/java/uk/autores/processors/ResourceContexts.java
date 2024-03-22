@@ -6,15 +6,15 @@ import uk.autores.Processing;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
 import uk.autores.handling.ResourceFiles;
-import uk.autores.repeat.RepeatableResourceFiles;
+import uk.autores.repeat.RepeatableResources;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableResourceFiles> {
+final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableResources> {
     ResourceContexts(ProcessingEnvironment env) {
-        super(env, ResourceFiles.class, RepeatableResourceFiles.class);
+        super(env, ResourceFiles.class, RepeatableResources.class);
     }
 
     @Override
@@ -32,7 +32,7 @@ final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableRes
     }
 
     @Override
-    ResourceFiles[] expand(RepeatableResourceFiles repeating) {
+    ResourceFiles[] expand(RepeatableResources repeating) {
         return repeating.value();
     }
 
@@ -47,6 +47,6 @@ final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableRes
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(ResourceFiles.class, RepeatableResourceFiles.class, ResourceContexts::new);
+        return new AnnotationDef<>(ResourceFiles.class, RepeatableResources.class, ResourceContexts::new);
     }
 }

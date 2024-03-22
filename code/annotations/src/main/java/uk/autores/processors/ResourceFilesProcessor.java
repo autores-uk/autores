@@ -5,7 +5,7 @@ package uk.autores.processors;
 import uk.autores.handling.Context;
 import uk.autores.handling.Handler;
 import uk.autores.handling.ResourceFiles;
-import uk.autores.repeat.RepeatableResourceFiles;
+import uk.autores.repeat.RepeatableResources;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,11 +30,11 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
 
   private final AnnotationDef<?, ?>[] defs = {
           ResourceContexts.def(),
-          ByteArrayContexts.def(),
-          InputStreamContexts.def(),
-          KeyedContexts.def(),
-          MessageContexts.def(),
-          StringContexts.def(),
+          ByteArraysContexts.def(),
+          InputStreamsContexts.def(),
+          KeysContexts.def(),
+          MessagesContexts.def(),
+          TextsContexts.def(),
   };
 
   /** Public constructor as per contract */
@@ -55,7 +55,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   /**
    * Supported annotations.
    *
-   * @return {@link ResourceFiles} and {@link RepeatableResourceFiles}
+   * @return {@link ResourceFiles} and {@link RepeatableResources}
    */
   @Override
   public Set<String> getSupportedAnnotationTypes() {
@@ -66,7 +66,7 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   }
 
   /**
-   * Consumes {@link ResourceFiles} and {@link RepeatableResourceFiles} and passes derived information to the
+   * Consumes {@link ResourceFiles} and {@link RepeatableResources} and passes derived information to the
    * specified {@link Handler}.
    *
    * @param annotations the annotation types requested to be processed

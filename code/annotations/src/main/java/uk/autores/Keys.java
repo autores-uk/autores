@@ -2,22 +2,33 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateStringsFromText;
+import uk.autores.handling.GenerateConstantsFromProperties;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableStringResources;
+import uk.autores.repeat.RepeatableKeys;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateStringsFromText}.
+ * Annotation for {@link GenerateConstantsFromProperties}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     // she-wolf=Cinco lobitos tiene la loba
+ *     &#64;Keys("CincoLobitos.properties")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     // "she-wolf"
+ *     String key = CincoLobitos.SHE_WOLF;
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableStringResources.class)
-public @interface StringResources {
+@Repeatable(RepeatableKeys.class)
+public @interface Keys {
     /**
      * Resource files.
-     * @return text resources
+     * @return resources
      */
     String[] value() default {};
 
@@ -28,20 +39,8 @@ public @interface StringResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;
-
-    /**
-     * Code generation strategy.
-     * @return strategy
-     */
-    Strategy strategy() default Strategy.AUTO;
-
-    /**
-     * Resource text encoding.
-     * @return canonical encoding name
-     */
-    String encoding() default "UTF-8";
 }

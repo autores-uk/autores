@@ -4,17 +4,30 @@ package uk.autores;
 
 import uk.autores.handling.GenerateInputStreamsFromFiles;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableInputStreams;
 
 import java.lang.annotation.*;
 
 /**
  * Annotation for {@link GenerateInputStreamsFromFiles}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;InputStreams(value = "foo.bin", name = "Data")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     try (java.io.InputStream in = Data.foo()) {
+ *         // etc...
+ *     } catch (java.io.IOException e) {
+ *         // handle exception
+ *     }
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableInputStreamResources.class)
-public @interface InputStreamResources {
+@Repeatable(RepeatableInputStreams.class)
+public @interface InputStreams {
     /**
      * Resource files.
      * @return resources
@@ -28,7 +41,7 @@ public @interface InputStreamResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;

@@ -7,7 +7,7 @@ import uk.autores.handling.CfgMissingKey;
  * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Severity {
-    /** Processor is expected to fail. */
+    /** Processor is expected to fail compilation on error. */
     ERROR(CfgMissingKey.ERROR),
     /** Processor is expected to emit message but continue. */
     WARN(CfgMissingKey.WARN),

@@ -4,7 +4,7 @@ package uk.autores.handling;
 
 import uk.autores.Processing;
 import uk.autores.naming.Namer;
-import uk.autores.repeat.RepeatableResourceFiles;
+import uk.autores.repeat.RepeatableResources;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileManager;
@@ -40,7 +40,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableResourceFiles.class)
+@Repeatable(RepeatableResources.class)
 public @interface ResourceFiles {
 
     /**

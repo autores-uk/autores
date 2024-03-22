@@ -32,23 +32,23 @@
  *         <th>Description</th>
  *     </tr>
  *     <tr>
- *         <td>{@link uk.autores.ByteArrayResources}</td>
+ *         <td>{@link uk.autores.ByteArrays}</td>
  *         <td>Generate one class per file that returns <code>byte[]</code>.</td>
  *     </tr>
  *     <tr>
- *         <td>{@link uk.autores.InputStreamResources}</td>
- *         <td>Generate single class that returns {@link java.io.InputStream}.</td>
+ *         <td>{@link uk.autores.InputStreams}</td>
+ *         <td>Generate single class with one {@link java.io.InputStream} method per file.</td>
  *     </tr>
  *     <tr>
- *         <td>{@link uk.autores.KeyedResources}</td>
+ *         <td>{@link uk.autores.Keys}</td>
  *         <td>Generate one constants class with keys per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
- *         <td>{@link uk.autores.MessageResources}</td>
+ *         <td>{@link uk.autores.Messages}</td>
  *         <td>Generate one localized, formatting message generator class per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
- *         <td>{@link uk.autores.StringResources}</td>
+ *         <td>{@link uk.autores.Texts}</td>
  *         <td>Generate one class per text file that returns {@link java.lang.String}.</td>
  *     </tr>
  * </table>

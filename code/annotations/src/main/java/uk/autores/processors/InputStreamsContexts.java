@@ -2,29 +2,29 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processors;
 
-import uk.autores.InputStreamResources;
+import uk.autores.InputStreams;
 import uk.autores.Processing;
 import uk.autores.handling.*;
-import uk.autores.repeat.RepeatableInputStreamResources;
+import uk.autores.repeat.RepeatableInputStreams;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-final class InputStreamContexts extends ContextFactory<InputStreamResources, RepeatableInputStreamResources> {
+final class InputStreamsContexts extends ContextFactory<InputStreams, RepeatableInputStreams> {
     private final Handler handler = new GenerateInputStreamsFromFiles();
 
-    InputStreamContexts(ProcessingEnvironment env) {
-        super(env, InputStreamResources.class, RepeatableInputStreamResources.class);
+    InputStreamsContexts(ProcessingEnvironment env) {
+        super(env, InputStreams.class, RepeatableInputStreams.class);
     }
 
     @Override
-    Handler handler(InputStreamResources single) {
+    Handler handler(InputStreams single) {
         return handler;
     }
 
     @Override
-    List<Config> config(InputStreamResources r) {
+    List<Config> config(InputStreams r) {
         List<Config> cfg = new ArrayList<>();
         if (r.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
@@ -36,21 +36,21 @@ final class InputStreamContexts extends ContextFactory<InputStreamResources, Rep
     }
 
     @Override
-    InputStreamResources[] expand(RepeatableInputStreamResources repeating) {
+    InputStreams[] expand(RepeatableInputStreams repeating) {
         return repeating.value();
     }
 
     @Override
-    Processing processing(InputStreamResources single) {
+    Processing processing(InputStreams single) {
         return single.processing();
     }
 
     @Override
-    String[] resources(InputStreamResources single) {
+    String[] resources(InputStreams single) {
         return single.value();
     }
 
     static AnnotationDef<?, ?> def() {
-        return new AnnotationDef<>(InputStreamResources.class, RepeatableInputStreamResources.class, InputStreamContexts::new);
+        return new AnnotationDef<>(InputStreams.class, RepeatableInputStreams.class, InputStreamsContexts::new);
     }
 }

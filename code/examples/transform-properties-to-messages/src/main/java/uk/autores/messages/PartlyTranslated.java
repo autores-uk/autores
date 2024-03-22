@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.messages;
 
-import uk.autores.MessageResources;
+import uk.autores.Messages;
 import uk.autores.Severity;
 
 import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
-@MessageResources(value = "sparse.properties", missingKey = Severity.IGNORE)
+@Messages(value = "sparse.properties", missingKey = Severity.IGNORE)
 public class PartlyTranslated implements MessagePrinter {
 
     @Override

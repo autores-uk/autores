@@ -3,24 +3,24 @@
 package uk.autores.bytes;
 
 import org.xml.sax.InputSource;
-import uk.autores.ByteArrayResources;
+import uk.autores.ByteArrays;
 import uk.autores.Strategy;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 
-@ByteArrayResources(
+@ByteArrays(
         value = "Utf16LazyMessage.xml",
         // loaded at runtime using Class.getResourceAsStream(String)
         strategy = Strategy.LAZY
 )
-@ByteArrayResources(
+@ByteArrays(
         value = "Utf16InlineMessage.xml",
         // stored in class file as byte code instructions
         strategy = Strategy.INLINE
 )
-@ByteArrayResources(
+@ByteArrays(
         value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
         // stored in class file as string constant
         strategy = Strategy.CONST

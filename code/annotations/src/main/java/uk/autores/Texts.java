@@ -2,22 +2,31 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores;
 
-import uk.autores.handling.GenerateByteArraysFromFiles;
+import uk.autores.handling.GenerateStringsFromText;
 import uk.autores.naming.IdiomaticNamer;
-import uk.autores.repeat.RepeatableByteArrayResources;
+import uk.autores.repeat.RepeatableTexts;
 
 import java.lang.annotation.*;
 
 /**
- * Annotation for {@link GenerateByteArraysFromFiles}.
+ * Annotation for {@link GenerateStringsFromText}.
+ *
+ * <pre><code>
+ *     // EXAMPLE ANNOTATION
+ *     &#64;Texts("Roses.txt")
+ * </code></pre>
+ * <pre><code>
+ *     // EXAMPLE CODE
+ *     String roses = Roses.text();
+ * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-@Repeatable(RepeatableByteArrayResources.class)
-public @interface ByteArrayResources {
+@Repeatable(RepeatableTexts.class)
+public @interface Texts {
     /**
      * Resource files.
-     * @return resources
+     * @return text resources
      */
     String[] value() default {};
 
@@ -28,7 +37,7 @@ public @interface ByteArrayResources {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Whether generated code is public.
+     * Generated code visibility.
      * @return visibility
      */
     boolean isPublic() default false;
@@ -38,4 +47,10 @@ public @interface ByteArrayResources {
      * @return strategy
      */
     Strategy strategy() default Strategy.AUTO;
+
+    /**
+     * Resource text encoding.
+     * @return canonical encoding name
+     */
+    String encoding() default "UTF-8";
 }

@@ -10,7 +10,6 @@ package uk.autores.handling;
  *     <li>"lazy": load resources using {@link ClassLoader}</li>
  *     <li>"auto": use some heuristic to decide loading strategy</li>
  * </ul>
- * "auto" is the default strategy.
  */
 public final class CfgStrategy {
 
