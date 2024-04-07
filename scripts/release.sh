@@ -47,7 +47,7 @@ upversion "${CURRENT}"
 git add code
 git commit -m "Releasing version ${CURRENT}"
 git push origin "${BRANCH}"
-git checkout -b "${RELEASEBRANCH}"
+git tag -l "${RELEASEBRANCH}"
 git push origin "${RELEASEBRANCH}"
 git checkout "${BRANCH}"
 
