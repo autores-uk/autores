@@ -148,7 +148,7 @@ public class Namer {
     }
 
     private static String replace(String s) {
-        if (Namer.isIdentifier(s)) {
+        if (isIdentifier(s)) {
             return s;
         }
         StringBuilder buf = new StringBuilder(s.length());
