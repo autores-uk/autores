@@ -35,6 +35,7 @@
         <maven.jxr.plugin.version>3.3.2</maven.jxr.plugin.version>
         <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
         <nexus.staging.maven.plugin.version>1.6.13</nexus.staging.maven.plugin.version>
+        <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
     </properties>
 
     <licenses>
@@ -130,7 +131,7 @@
                 <configuration>
                     <bottom>
                         <![CDATA[
-                        Copyright 2023
+                        Copyright 2023-2024
                         <a href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
                         ]]>
                     </bottom>
@@ -215,7 +216,7 @@
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>
                             <artifactId>findsecbugs-plugin</artifactId>
-                            <version>1.13.0</version>
+                            <version>${findsecbugs-plugin.version}</version>
                         </plugin>
                     </plugins>
                 </configuration>
