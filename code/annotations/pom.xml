@@ -27,14 +27,15 @@
         <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
-        <spotbugs.maven.plugin.version>4.8.3.1</spotbugs.maven.plugin.version>
+        <spotbugs.maven.plugin.version>4.8.4.0</spotbugs.maven.plugin.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
-        <maven.pmd.plugin.version>3.21.2</maven.pmd.plugin.version>
+        <maven.pmd.plugin.version>3.22.0</maven.pmd.plugin.version>
         <maven.enforcer.plugin.version>3.4.1</maven.enforcer.plugin.version>
         <maven.checkstyle.plugin.version>3.3.1</maven.checkstyle.plugin.version>
         <maven.jxr.plugin.version>3.3.2</maven.jxr.plugin.version>
-        <maven.gpg.plugin.version>3.2.2</maven.gpg.plugin.version>
+        <maven.gpg.plugin.version>3.2.4</maven.gpg.plugin.version>
         <nexus.staging.maven.plugin.version>1.6.13</nexus.staging.maven.plugin.version>
+        <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
     </properties>
 
     <licenses>
@@ -122,7 +123,7 @@
                 <configuration>
                     <bottom>
                         <![CDATA[
-                        Copyright 2023
+                        Copyright 2023-2024
                         <a href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
                         ]]>
                     </bottom>
@@ -207,7 +208,7 @@
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>
                             <artifactId>findsecbugs-plugin</artifactId>
-                            <version>1.13.0</version>
+                            <version>${findsecbugs-plugin.version}</version>
                         </plugin>
                     </plugins>
                 </configuration>
