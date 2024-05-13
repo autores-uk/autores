@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 /** Utility type for analysing {@link MessageFormat} strings */
 final class MessageParser {
 
