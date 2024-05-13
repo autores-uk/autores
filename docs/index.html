@@ -24,7 +24,7 @@
       open source library for automating embedded resource file handling
       -
       a convenient alternative to
-      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">getResourceAsStream</a>.
+      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html#getResourceAsStream-java.lang.String-">Class.getResourceAsStream</a>.
     </p>
 
     <ul>
@@ -53,12 +53,12 @@
     <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
 
     <p>
-      The <code>@Texts</code> annotation creates one class per text file that provides the file content as a <code>String</code>.
+      <code>@Texts</code> creates one class per text file that provides the file content as a <code>String</code>.
     </p>
 
     <pre><code>
     import uk.autores.*;
-    
+
     <code>@Texts({"Poule.txt", "Roses.txt"})</code>
     public class PrintRhymes {
       public static void main(String...args)  {
@@ -69,7 +69,7 @@
     </code></pre>
 
     <p>
-      The <code>@Messages</code> annotation can generate typed methods that match on a locale and then format the string.
+      <code>@Messages</code> generates typed methods from properties files that localize and format strings.
     </p>
 
     <pre><code>

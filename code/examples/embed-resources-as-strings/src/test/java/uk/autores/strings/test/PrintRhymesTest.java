@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PrintRhymesTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void main() {
         PrintRhymes.main();
     }
