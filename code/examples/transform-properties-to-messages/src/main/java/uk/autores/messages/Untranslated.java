@@ -38,7 +38,7 @@ public class Untranslated implements MessagePrinter {
     }
 
     public void printPlanetEvent(PrintStream out, Locale l, ZonedDateTime time) {
-        String event = NonNls.planetEvent(l, 4, time, time, "an attack");
+        String event = NonNls.planetEvent(l, 4, time, "an attack");
         out.println(event);
     }
 
