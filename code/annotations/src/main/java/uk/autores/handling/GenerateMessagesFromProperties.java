@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.format.FormatGeneration;
+import uk.autores.format.FormatSegment;
+import uk.autores.format.Formatting;
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
@@ -13,6 +16,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -342,7 +346,15 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().append("return ").string(baseValue).append(";").nl();
         writer.closeBrace().nl();
 
-        writeFormat(ctxt, msgs, writer, key, baseValue, method);
+        if (ctxt.option(CfgFormat.DEF).filter(CfgFormat.FALSE::equals).isPresent()) {
+            return;
+        }
+
+        List<FormatSegment> expression = Formatting.parse(baseValue);
+        int args = Formatting.argumentCount(expression);
+        if (args != 0) {
+            writeFormat(ctxt, msgs, writer, key, expression, method);
+        }
     }
 
     private String substituteMissingValue(Msgs msgs, String pattern, String key, String baseValue) {
@@ -360,136 +372,91 @@ public final class GenerateMessagesFromProperties implements Handler {
                              Msgs msgs,
                              JavaWriter writer,
                              String key,
-                             String baseValue,
+                             List<FormatSegment> expression,
                              String method) throws IOException {
-        if (ctxt.option(CfgFormat.DEF).filter(CfgFormat.FALSE::equals).isPresent()) {
-            return;
-        }
 
-        List<String> vars = MessageParser.parse(baseValue);
-        if (vars.isEmpty()) {
-            return;
-        }
+        List<Class<?>> args = Formatting.argumentTypesByIndex(expression);
 
-        Resource resource = msgs.resource;
-        List<Localization> localizations = msgs.localizations;
-
-        if (!localizedMessagesMatchBase(ctxt, resource, vars, localizations, key)) {
-            return;
-        }
-
-        int firstDateIndex = MessageParser.firstDateIndex(vars);
-        boolean needsLocaleForFormat = MessageParser.needsLocale(vars);
-        boolean hasLocalizedMsg = !localizations.isEmpty();
-
-        boolean comma = false;
+        boolean needsLocaleForFormat = Formatting.needsLocale(expression);
+        boolean hasLocalizedMsg = hasTranslations(msgs, key);
 
         writer.nl().comment(key);
         writer.indent().staticMember("java.lang.String", method).append("(");
+        String delim = "";
         if (needsLocaleForFormat || hasLocalizedMsg) {
             writer.append("java.util.Locale l");
-            comma = true;
+            delim = ", ";
         }
-        for (int i = 0; i < vars.size(); i++) {
-            if (comma) {
-                writer.append(", ");
-            }
-            comma = true;
+        for (int i = 0; i < args.size(); i++) {
+            writer.append(delim);
+            delim = ", ";
 
-            String vt = vars.get(i);
-            writer.append(vt).append(" v").append(Integer.toString(i));
+            String vt = args.get(i).getName();
+            writer.append(vt).append(" arg").append(Integer.toString(i));
         }
         writer.append(") ").openBrace().nl();
-        writer.indent().append("java.lang.String msg = ").append(method);
+
         if (hasLocalizedMsg) {
-            writer.append("(l);").nl();
+            writeTranslatedExpressions(ctxt, msgs, writer, key, expression);
         } else {
-            writer.append("();").nl();
+            writeExpression(writer, expression);
         }
-        if (needsLocaleForFormat || hasLocalizedMsg) {
-            writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg, l);").nl();
-        } else {
-            writer.indent().append("java.text.MessageFormat formatter = new java.text.MessageFormat(msg);").nl();
-        }
-        if (firstDateIndex >= 0) {
-            if (MessageParser.variableReuse(baseValue)) {
-                reportVariableReuseError(ctxt, resource.toString(), baseValue);
-            } else {
-                printTimeZoneFormat(writer, vars);
-            }
-        }
-        writer.indent().append("java.lang.Object[] args = ").openBrace().nl();
-        for (int i = 0; i < vars.size(); i++) {
-            boolean date = vars.get(i).equals(MessageParser.DATE);
-            writer.indent();
-            if (date) {
-                writer.append("java.util.Date.from(");
-            }
-            writer.append("v");
-            writer.append(Integer.toString(i));
-            if (date) {
-                writer.append(".toInstant())");
-            }
-            writer.append(",").nl();
-        }
-        writer.closeBrace().append(";").nl();
-        // capacity is just a guess
-        int capacity = baseValue.length() * 2 + vars.size() * 8;
-        writer.indent()
-                .append("return formatter.format(args, new java.lang.StringBuffer(")
-                .append(capacity)
-                .append("), null).toString();").nl();
+
         writer.closeBrace().nl();
     }
 
-    private void printTimeZoneFormat(JavaWriter writer, List<String> patternVariables) throws IOException {
-        writer.indent().append("java.util.TimeZone tz;").nl();
-        writer.indent().append("java.text.Format[] fmts = formatter.getFormatsByArgumentIndex();").nl();
-        for (int i = 0; i < patternVariables.size(); i++) {
-            if (MessageParser.DATE.equals(patternVariables.get(i))) {
-                writer.indent()
-                        .append("tz = java.util.TimeZone.getTimeZone(v")
-                        .append(i)
-                        .append(".getZone());")
-                        .nl();
-                writer.indent()
-                        .append("((java.text.DateFormat) fmts[")
-                        .append(i)
-                        .append("]).setTimeZone(tz);")
-                        .nl();
-            }
+    private void writeExpression(JavaWriter w, List<FormatSegment> expression) throws IOException {
+        for (String line : FormatGeneration.expressions(expression)) {
+            w.indent().append(line).nl();
         }
     }
 
-    private void reportVariableReuseError(Context ctxt, String resource, String pattern) {
-        String msg = "Unsupported variable reuse in " + resource + ": " + pattern + ": ";
-        msg += "variable reuse is not supported when dates are present";
-        ctxt.printError(msg);
-    }
+    private void writeTranslatedExpressions(Context ctxt,
+                                            Msgs msgs,
+                                            JavaWriter writer,
+                                            String key,
+                                            List<FormatSegment> expression) throws IOException {
+        String lookupName = msgs.lookupName;
+        writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
+        writer.indent().append("switch (pattern) ").openBrace().nl();
 
-    private boolean localizedMessagesMatchBase(Context ctxt,
-                                               Resource resource,
-                                               List<String> vars,
-                                               List<Localization> localizations, String key) {
-        boolean ok = true;
-        for (Localization l : localizations) {
+        List<Class<?>> args = Formatting.argumentTypesByIndex(expression);
+
+        for (Localization l : msgs.localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
             }
-            List<String> locVars = MessageParser.parse(localizedValue);
-            if (!locVars.equals(vars)) {
-                String msg = "Differing message variables in localization " + resource + ": " + l.pattern + ": ";
-                msg += "key=" + key + " have " + locVars + " need " + vars;
+            List<FormatSegment> lExpression = Formatting.parse(localizedValue);
+            List<Class<?>> locVars = Formatting.argumentTypesByIndex(lExpression);
+            if (!locVars.equals(args)) {
+                String have = locVars.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+                String need = args.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+                String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
+                msg += "key=" + key + " have {" + have + "} need {" + need + "}";
                 ctxt.printError(msg);
-                ok = false;
+                break;
             }
-            if (MessageParser.firstDateIndex(locVars) >=0 && MessageParser.variableReuse(localizedValue)) {
-                reportVariableReuseError(ctxt, resource + " " + l.pattern, localizedValue);
-                ok = false;
+            String pattern = l.pattern.substring(1);
+            writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
+            writeExpression(writer, lExpression);
+            writer.closeBrace().nl();
+        }
+
+        writer.indent().append("default:").openBrace().nl();
+        writeExpression(writer, expression);
+        writer.closeBrace().nl();
+
+        writer.closeBrace().nl();
+    }
+
+    private boolean hasTranslations(Msgs msgs, String key) {
+        for (Localization l : msgs.localizations) {
+            if (l.properties.getProperty(key) != null) {
+                return true;
             }
         }
-        return ok;
+        return false;
     }
 
     private static final class Localization {
