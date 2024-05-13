@@ -7,7 +7,7 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 
 /**
- * Common processing instructions.
+ * Common processing instructions annotation.
  * The compiler must be able to load and instantiate any value set in {@link #namer()}.
  */
 public @interface Processing {

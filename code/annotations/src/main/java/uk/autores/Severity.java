@@ -3,7 +3,7 @@ package uk.autores;
 import uk.autores.handling.CfgMissingKey;
 
 /**
- * Error handling choices.
+ * Error handling choices enum.
  * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Severity {
