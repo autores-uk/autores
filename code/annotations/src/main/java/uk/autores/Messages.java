@@ -13,16 +13,16 @@ import java.lang.annotation.*;
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     // messages.properties
- *     // planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.
- *     // messages_de.properties
- *     // planet-event=Am {1,time} um {2,date} Uhr gab es {3} auf Planet {0,number,integer}.
- *     &#64;Messages("messages.properties")
+ *     // planets.properties
+ *     //   planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.
+ *     // planets_de.properties
+ *     //   planet-event=Am {1,time} um {1,date} Uhr gab es {2} auf Planet {0,number,integer}.
+ *     &#64;Messages("planets.properties")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
  *     var time = ZonedDateTime.now();
- *     String event = Messages.planetEvent(locale, 4, time, time, "an attack");
+ *     String event = Planets.planetEvent(locale, 4, time, "an attack");
  * </code></pre>
  *
  * <p>

@@ -77,15 +77,15 @@
     import java.time.ZonedDateTime;
     import java.util.Locale;
 
-    <code>@Messages("messages.properties")</code>
+    <code>@Messages("msgs.properties")</code>
     public class PrintMessage {
       public static void main(String[] args) {
         var locale = Locale.getDefault();
         int planet = 4;
         var time = ZonedDateTime.now();
         var event = "a meteor strike";
-        <em>/* planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}. */</em>
-        String msg = <code>Messages.planetEvent(locale, planet, time, time, event)</code>;
+        <em>/* planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}. */</em>
+        String msg = <code>Msgs.planetEvent(locale, planet, time, event)</code>;
         System.out.println(msg);
       }
     }
