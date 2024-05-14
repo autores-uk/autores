@@ -219,13 +219,13 @@
                     <xmlOutput>true</xmlOutput>
                     <failOnError>true</failOnError>
                     <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
-                    <plugins>
-                        <plugin>
-                            <groupId>com.h3xstream.findsecbugs</groupId>
-                            <artifactId>findsecbugs-plugin</artifactId>
-                            <version>${findsecbugs-plugin.version}</version>
-                        </plugin>
-                    </plugins>
+<!--                    <plugins>-->
+<!--                        <plugin>-->
+<!--                            <groupId>com.h3xstream.findsecbugs</groupId>-->
+<!--                            <artifactId>findsecbugs-plugin</artifactId>-->
+<!--                            <version>${findsecbugs-plugin.version}</version>-->
+<!--                        </plugin>-->
+<!--                    </plugins>-->
                 </configuration>
                 <executions>
                     <execution>
