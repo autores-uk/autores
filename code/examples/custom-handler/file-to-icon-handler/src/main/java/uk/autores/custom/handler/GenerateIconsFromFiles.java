@@ -4,7 +4,6 @@ package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 

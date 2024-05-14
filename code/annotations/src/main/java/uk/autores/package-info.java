@@ -29,26 +29,32 @@
  *     <caption>Annotation Summary</caption>
  *     <tr>
  *         <th>Annotation</th>
+ *         <th>Consumes</th>
  *         <th>Description</th>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.ByteArrays}</td>
+ *         <th>any file</th>
  *         <td>Generate one class per file that returns <code>byte[]</code>.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.InputStreams}</td>
+ *         <th>any file</th>
  *         <td>Generate single class with one {@link java.io.InputStream} method per file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Keys}</td>
+ *         <th>properties</th>
  *         <td>Generate one constants class with keys per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Messages}</td>
+ *         <th>properties</th>
  *         <td>Generate one localized, formatting message generator class per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Texts}</td>
+ *         <th>text files</th>
  *         <td>Generate one class per text file that returns {@link java.lang.String}.</td>
  *     </tr>
  * </table>

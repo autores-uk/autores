@@ -19,6 +19,8 @@
  *  </p>
  */
 module uk.autores {
+    // provides format library
+    requires uk.autores.format;
     // provides annotation processing library
     requires transitive java.compiler;
     // public packages

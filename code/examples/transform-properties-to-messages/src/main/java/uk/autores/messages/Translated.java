@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
-@Messages("messages.properties")
+@Messages("msgs.properties")
 public class Translated implements MessagePrinter {
 
     @Override
@@ -19,18 +19,18 @@ public class Translated implements MessagePrinter {
     }
 
     public void printHelloWorld(PrintStream out, Locale l) {
-        String hello = uk.autores.messages.Messages.helloWorld(l);
+        String hello = Msgs.helloWorld(l);
         out.println(hello);
     }
 
     public void printHelloX(PrintStream out, Locale l) {
-        String hello = uk.autores.messages.Messages.hello(l, "Pollux");
+        String hello = Msgs.hello(l, "Pollux");
         out.println(hello);
     }
 
     public void printTodayIs(PrintStream out, Locale l, ZonedDateTime time) {
         // needs a time zone because the format string includes DateFormat {N,date}
-        String msg = uk.autores.messages.Messages.todayIs(l, time);
+        String msg = Msgs.todayIs(l, time);
         out.println(msg);
     }
 }

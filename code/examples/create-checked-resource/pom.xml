@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.26-beta</version>
+        <version>11.0.28-beta</version>
     </parent>
 
     <artifactId>create-checked-resource</artifactId>

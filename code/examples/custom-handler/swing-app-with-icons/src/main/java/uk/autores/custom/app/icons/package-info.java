@@ -12,8 +12,8 @@
 )
 package uk.autores.custom.app.icons;
 
-import uk.autores.handling.CfgVisibility;
 import uk.autores.custom.handler.GenerateIconsFromFiles;
+import uk.autores.handling.CfgVisibility;
 import uk.autores.handling.ResourceFiles;
 
 import static uk.autores.handling.CfgVisibility.VISIBILITY;
