@@ -3,7 +3,7 @@ package uk.autores;
 import uk.autores.handling.CfgStrategy;
 
 /**
- * Code generation choices.
+ * Code generation choices enum.
  * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Strategy {
