@@ -36,4 +36,4 @@ Pull requests will NOT be accepted.
 
 ## Tests
 
-See [autores-integration](https://github.com/autores-uk/autores-integration) for additional examples.
+See [autores-integration](https://github.com/autores-uk/autores-integration) for build integration examples.
