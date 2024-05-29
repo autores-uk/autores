@@ -33,7 +33,7 @@ import java.lang.annotation.*;
  *     This annotation is strict by default.
  *     Translations will likely lag software development and the addition or modification of natural language strings.
  *     The {@link #missingKey()} and {@link #incompatibleFormat()} properties can be set to {@link Severity#WARN}
- *     during development to avoid breaking builds.
+ *     or {@link Severity#IGNORE} during development to avoid breaking builds.
  *     Create a single {@code static final Severity} variable and reference it in annotations to control this globally.
  * </p>
  */
