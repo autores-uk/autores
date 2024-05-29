@@ -429,7 +429,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 String need = args.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
                 String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have {" + have + "} need {" + need + "}";
-                Reporting.reporter(ctxt, CfgMissingKey.DEF).accept(msg);
+                Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
                 continue;
             }
             String pattern = l.pattern.substring(1);
