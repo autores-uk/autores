@@ -28,7 +28,8 @@ class GenerateMessagesFromPropertiesTest {
     private byte[] messages() {
         String data = "today={0} said \"Today is {1,date}!\"\n";
         data += "foo=bar\n";
-        data += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
+        data += "planet-event=At {1,time,short} on {1,time,EEEE} {2,date}, there was {3} on planet {0,number,integer}.\n";
+        data = addCases(data);
         return data.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -36,6 +37,7 @@ class GenerateMessagesFromPropertiesTest {
         String data_fr = "today=\"{0} a dit : \u00AB Aujourd'hui, c'est {1,date} ! \u00BB\n";
         data_fr += "foo=baz\n";
         data_fr += "planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.\n";
+        data_fr = addCases(data_fr);
         return data_fr.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -43,7 +45,28 @@ class GenerateMessagesFromPropertiesTest {
         String data_fr = "today={0,number}\n";
         data_fr += "foo=baz\n";
         data_fr += "planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.\n";
+        data_fr = addCases(data_fr);
         return data_fr.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String addCases(String s) {
+        s += "missing-args={10}\n";
+        s += "number={0,number}\n";
+        s += "custom-number={0,number,#,##0.00;(#,##0.00)}\n";
+        s += "percent={0,number,percentage}\n";
+        s += "currency={0,number,currency}\n";
+        s += "date-short={0,date,short}\n";
+        s += "date-medium={0,date,medium}\n";
+        s += "date-long={0,date,long}\n";
+        s += "date-full={0,date,full}\n";
+        s += "date={0,date,EEEE}\n";
+        s += "time-short={0,time,short}\n";
+        s += "time-medium={0,time,medium}\n";
+        s += "time-long={0,time,long}\n";
+        s += "time-full={0,time,full}\n";
+        s += "time={0,time,EEEE}\n";
+        s += "choice=\"There {0,choice,0#are no files|1#is one file|1<are {0,number,integer} files}.\"";
+        return s;
     }
 
     private byte[] messages_fr_empty() {
@@ -61,6 +84,7 @@ class GenerateMessagesFromPropertiesTest {
         assertTrue(supported.contains(CfgLocalize.DEF));
         assertTrue(supported.contains(CfgMissingKey.DEF));
         assertTrue(supported.contains(CfgFormat.DEF));
+        assertTrue(supported.contains(CfgIncompatibleFormat.DEF));
     }
 
     @Test

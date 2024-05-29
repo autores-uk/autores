@@ -9,3 +9,5 @@ nav ul { list-style-type: none; }
 nav ul li { display: inline-block; }
 nav ul li + li::before { content: ' - '; }
 img { width: 100%; height: auto; object-fit: fill; }
+figure { background-color: lightgray; }
+figcaption { padding: 10px; }

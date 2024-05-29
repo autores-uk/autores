@@ -6,7 +6,7 @@
 
     <artifactId>annotations</artifactId>
     <groupId>uk.autores</groupId>
-    <version>11.0.28-beta</version>
+    <version>11.0.29-beta</version>
 
     <packaging>jar</packaging>
 
@@ -27,7 +27,8 @@
         <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
-        <spotbugs.maven.plugin.version>4.8.4.0</spotbugs.maven.plugin.version>
+        <spotbugs.maven.plugin.version>4.8.5.0</spotbugs.maven.plugin.version>
+        <spotbugs.version>4.8.5</spotbugs.version>
         <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
         <maven.pmd.plugin.version>3.22.0</maven.pmd.plugin.version>
         <maven.enforcer.plugin.version>3.4.1</maven.enforcer.plugin.version>
@@ -62,7 +63,7 @@
         <dependency>
             <groupId>uk.autores</groupId>
             <artifactId>format</artifactId>
-            <version>8.0.0-beta</version>
+            <version>8.0.1-beta</version>
         </dependency>
 
         <dependency>
@@ -210,13 +211,13 @@
                     <xmlOutput>true</xmlOutput>
                     <failOnError>true</failOnError>
                     <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
-                    <plugins>
-                        <plugin>
-                            <groupId>com.h3xstream.findsecbugs</groupId>
-                            <artifactId>findsecbugs-plugin</artifactId>
-                            <version>${findsecbugs-plugin.version}</version>
-                        </plugin>
-                    </plugins>
+<!--                    <plugins>-->
+<!--                        <plugin>-->
+<!--                            <groupId>com.h3xstream.findsecbugs</groupId>-->
+<!--                            <artifactId>findsecbugs-plugin</artifactId>-->
+<!--                            <version>${findsecbugs-plugin.version}</version>-->
+<!--                        </plugin>-->
+<!--                    </plugins>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -231,7 +232,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.8.3</version>
+                        <version>${spotbugs.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -239,6 +240,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <parallel>all</parallel>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

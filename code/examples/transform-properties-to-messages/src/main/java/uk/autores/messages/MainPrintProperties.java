@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PrintProperties {
+public class MainPrintProperties {
 
     public static void main(String...args)  {
         Map<Locale, ZoneId> places = new LinkedHashMap<>();

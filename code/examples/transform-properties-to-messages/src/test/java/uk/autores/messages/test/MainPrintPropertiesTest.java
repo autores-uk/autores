@@ -3,12 +3,12 @@
 package uk.autores.messages.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.messages.PrintProperties;
+import uk.autores.messages.MainPrintProperties;
 
-class PrintPropertiesTest {
+class MainPrintPropertiesTest {
 
     @Test
     void main() {
-        PrintProperties.main();
+        MainPrintProperties.main();
     }
 }

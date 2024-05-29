@@ -1,8 +1,7 @@
-// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// Copyright 2023-2024 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.format.FormatGeneration;
 import uk.autores.format.FormatSegment;
 import uk.autores.format.Formatting;
 import uk.autores.naming.Namer;
@@ -98,19 +97,21 @@ public final class GenerateMessagesFromProperties implements Handler {
      * <p>"localize" is "true" by default.</p>
      * <p>"missing-key" is "error" by default.</p>
      * <p>"format" is "true" by default.</p>
+     * <p>"incompatible-format" is "error" by default.</p>
      * <p>
      *     Use "visibility" to make the generated classes public.
      * </p>
      *
-     * @return visibility, localize, missing-key
+     * @return visibility, localize, missing-key, incompatible-format
      * @see CfgVisibility
      * @see CfgLocalize
      * @see CfgMissingKey
      * @see CfgFormat
+     * @see CfgIncompatibleFormat
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF);
+        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF);
     }
 
     @Override
@@ -399,16 +400,10 @@ public final class GenerateMessagesFromProperties implements Handler {
         if (hasLocalizedMsg) {
             writeTranslatedExpressions(ctxt, msgs, writer, key, expression);
         } else {
-            writeExpression(writer, expression);
+            GenerateMessages.write(writer, expression);
         }
 
         writer.closeBrace().nl();
-    }
-
-    private void writeExpression(JavaWriter w, List<FormatSegment> expression) throws IOException {
-        for (String line : FormatGeneration.expressions(expression)) {
-            w.indent().append(line).nl();
-        }
     }
 
     private void writeTranslatedExpressions(Context ctxt,
@@ -434,17 +429,17 @@ public final class GenerateMessagesFromProperties implements Handler {
                 String need = args.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
                 String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have {" + have + "} need {" + need + "}";
-                ctxt.printError(msg);
-                break;
+                Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
+                continue;
             }
             String pattern = l.pattern.substring(1);
             writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
-            writeExpression(writer, lExpression);
+            GenerateMessages.write(writer, lExpression);
             writer.closeBrace().nl();
         }
 
         writer.indent().append("default:").openBrace().nl();
-        writeExpression(writer, expression);
+        GenerateMessages.write(writer, expression);
         writer.closeBrace().nl();
 
         writer.closeBrace().nl();

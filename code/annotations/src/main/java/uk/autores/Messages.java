@@ -29,6 +29,13 @@ import java.lang.annotation.*;
  *     See <a href="https://docs.oracle.com/javase/tutorial/i18n/resbundle/propfile.html"
  *     >Backing a {@link java.util.ResourceBundle} with Properties Files</a> for more information on localization.
  * </p>
+ * <p>
+ *     This annotation is strict by default.
+ *     Translations will likely lag software development and the addition or modification of natural language strings.
+ *     The {@link #missingKey()} and {@link #incompatibleFormat()} properties can be set to {@link Severity#WARN}
+ *     or {@link Severity#IGNORE} during development to avoid breaking builds.
+ *     Create a single {@code static final Severity} variable and reference it in annotations to control this globally.
+ * </p>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
@@ -69,8 +76,17 @@ public @interface Messages {
 
     /**
      * How to handle missing keys in localized files.
+     * Only applies when {@link #localize()} is true.
      *
      * @return error severity
      */
     Severity missingKey() default Severity.ERROR;
+
+    /**
+     * How to handle incompatible format string in localized files.
+     * Only applies when {@link #format()} is true.
+     *
+     * @return error severity
+     */
+    Severity incompatibleFormat() default Severity.ERROR;
 }

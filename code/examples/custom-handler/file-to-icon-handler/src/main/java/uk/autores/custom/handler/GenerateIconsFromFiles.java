@@ -38,9 +38,9 @@ public class GenerateIconsFromFiles implements Handler {
         String visibility = context.option(CfgVisibility.DEF).orElse("");
 
         // Reuse another handler to embed the bytes
-        Namer delegateNamer = new InternalNamer(context.namer());
+        Namer nameDecorator = new InternalNamer(context.namer());
         Context delegate = context.rebuild()
-                .setNamer(delegateNamer)
+                .setNamer(nameDecorator)
                 .setConfig(emptyList())
                 .build();
         byteArrayGenerator.handle(delegate);
@@ -77,9 +77,7 @@ public class GenerateIconsFromFiles implements Handler {
         }
     }
 
-    /**
-     * This is passed to the template engine.
-     */
+    /** This is passed to the template engine. */
     public static class ImageTemplateContext {
         public final String pkg;
         public final String className;
@@ -94,20 +92,20 @@ public class GenerateIconsFromFiles implements Handler {
     }
 
     private static final class InternalNamer extends Namer {
-        private final Namer delegate;
+        private final Namer decorated;
 
-        private InternalNamer(Namer delegate) {
-            this.delegate = delegate;
+        private InternalNamer(Namer decorated) {
+            this.decorated = decorated;
         }
 
         @Override
         public String nameType(String src) {
-            return "Internal$" + delegate.nameType(src);
+            return "Internal$" + decorated.nameType(src);
         }
 
         @Override
         public String nameMember(String src) {
-            return delegate.nameMember(src);
+            return decorated.nameMember(src);
         }
     }
 }
