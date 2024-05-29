@@ -46,7 +46,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.messages.PrintProperties</mainClass>
+                    <mainClass>uk.autores.messages.MainPrintProperties</mainClass>
                 </configuration>
             </plugin>
         </plugins>
