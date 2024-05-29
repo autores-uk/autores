@@ -69,8 +69,17 @@ public @interface Messages {
 
     /**
      * How to handle missing keys in localized files.
+     * Only applies when {@link #localize()} is true.
      *
      * @return error severity
      */
     Severity missingKey() default Severity.ERROR;
+
+    /**
+     * How to handle incompatible format string in localized files.
+     * Only applies when {@link #format()} is true.
+     *
+     * @return error severity
+     */
+    Severity incompatibleFormat() default Severity.ERROR;
 }

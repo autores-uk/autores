@@ -15,6 +15,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: 'maven'
+          cache-dependency-path: 'code/pom.xml'
       - name: Package with Maven
         run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/pom.xml --batch-mode --update-snapshots install
 

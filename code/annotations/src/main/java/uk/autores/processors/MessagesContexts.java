@@ -32,6 +32,7 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages
         cfg.add(new Config(CfgFormat.FORMAT, m.format() ? CfgFormat.TRUE : CfgFormat.FALSE));
         cfg.add(new Config(CfgLocalize.LOCALIZE, m.localize() ? CfgLocalize.TRUE : CfgLocalize.FALSE));
         cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().value()));
+        cfg.add(new Config(CfgIncompatibleFormat.INCOMPATIBLE_FORMAT, m.incompatibleFormat().value()));
 
         return cfg;
     }
