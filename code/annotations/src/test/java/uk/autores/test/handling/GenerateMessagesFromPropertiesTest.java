@@ -84,6 +84,7 @@ class GenerateMessagesFromPropertiesTest {
         assertTrue(supported.contains(CfgLocalize.DEF));
         assertTrue(supported.contains(CfgMissingKey.DEF));
         assertTrue(supported.contains(CfgFormat.DEF));
+        assertTrue(supported.contains(CfgIncompatibleFormat.DEF));
     }
 
     @Test
