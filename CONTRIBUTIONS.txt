@@ -1,0 +1,3 @@
+Pull requests will NOT be accepted.
+
+Defect reports are welcome but may not be acted upon.
