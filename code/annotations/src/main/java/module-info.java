@@ -8,6 +8,9 @@
  *     Use for compile-time resource verification or streamlining
  *     resource handling via code generation.
  * </p>
+ * <p>
+ *     See the {@link uk.autores} package for core functionality.
+ * </p>
  *
  * <h3>Modules</h3>
  * <p>
