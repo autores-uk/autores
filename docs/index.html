@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Automated Resource Handling for Java&trade; - AutoRes.uk</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <meta name="description" content="Open source library for automating embedded Java resource file handling">
@@ -17,7 +19,7 @@
       </ul>
     </nav>
 
-    <h1 id="autores">AutoRes.uk</h1>
+    <h1 id="autores">AutoRes.uk <img src="icons/favicon.png" alt="logo"></h1>
 
     <p>
       Annotation driven
@@ -40,6 +42,14 @@
       AutoRes.uk is a compile-time only dependency and does not need to be distributed with application code.
     </p>
 
+    <p>
+      <a 
+          href="https://javadoc.io/doc/uk.autores/annotations"><img
+            src="https://javadoc.io/badge2/uk.autores/annotations/javadoc.svg"
+            alt="javadoc.io"
+          ></a>
+    </p>
+
     <h2>Usage <a id="usage" href="#usage" class="link-symbol">&#x1f517;</a></h2>
 
     <p>
@@ -58,15 +68,15 @@
     </p>
 
     <pre><code>
-    import uk.autores.*;
+import uk.autores.*;
 
-    <code>@Texts({"Poule.txt", "Roses.txt"})</code>
-    public class PrintRhymes {
-      public static void main(String...args)  {
-        System.out.println(<code>Poule.text()</code>);
-        System.out.println(<code>Roses.text()</code>);
-      }
-    }
+<code>@Texts({"Poule.txt", "Roses.txt"})</code>
+public class PrintRhymes {
+  public static void main(String...args)  {
+    System.out.println(<code>Poule.text()</code>);
+    System.out.println(<code>Roses.text()</code>);
+  }
+}
     </code></pre>
 
     <p>
@@ -74,22 +84,22 @@
     </p>
 
     <pre><code>
-    import uk.autores.*;
-    import java.time.ZonedDateTime;
-    import java.util.Locale;
+import uk.autores.*;
+import java.time.ZonedDateTime;
+import java.util.Locale;
 
-    <code>@Messages("msgs.properties")</code>
-    public class PrintMessage {
-      public static void main(String[] args) {
-        var locale = Locale.getDefault();
-        int planet = 4;
-        var time = ZonedDateTime.now();
-        var event = "a meteor strike";
-        <em>/* planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}. */</em>
-        String msg = <code>Msgs.planetEvent(locale, planet, time, event)</code>;
-        System.out.println(msg);
-      }
-    }
+<code>@Messages("msgs.properties")</code>
+public class PrintMessage {
+  public static void main(String[] args) {
+    var locale = Locale.getDefault();
+    int planet = 4;
+    var time = ZonedDateTime.now();
+    var event = "a meteor strike";
+    <em>/* planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}. */</em>
+    String msg = <code>Msgs.planetEvent(locale, planet, time, event)</code>;
+    System.out.println(msg);
+  }
+}
     </code></pre>
 
     <p>
@@ -117,9 +127,9 @@
     </p>
 
     <pre><code>
-    module example.module.name {
-      requires static uk.autores;
-    }
+module example.module.name {
+  requires static uk.autores;
+}
     </code></pre>
 
     <h3>Apache Maven <a id="maven" href="#maven" class="link-symbol">&#x1f517;</a></h3>
@@ -130,13 +140,13 @@
     </p>
 
     <pre><code>
-    <em>&lt;!-- Maven 3 --&gt;</em>
-    &lt;dependency>
-      &lt;groupId>uk.autores&lt;/groupId>
-      &lt;artifactId>annotations&lt;/artifactId>
-      &lt;version>${autores.version}&lt;/version>
-      &lt;scope>provided&lt;/scope>
-    &lt;/dependency>
+<em>&lt;!-- Maven 3 --&gt;</em>
+&lt;dependency>
+  &lt;groupId>uk.autores&lt;/groupId>
+  &lt;artifactId>annotations&lt;/artifactId>
+  &lt;version>${autores.version}&lt;/version>
+  &lt;scope>provided&lt;/scope>
+&lt;/dependency>
     </code></pre>
 
     <p>
@@ -145,25 +155,25 @@
     </p>
 
     <pre><code>
-    <em>&lt;!-- Maven 3 --&gt;</em>
-    &lt;build>
-      &lt;plugins>
-          &lt;plugin>
-              &lt;groupId>org.apache.maven.plugins&lt;/groupId>
-              &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
-              &lt;version>${maven.compiler.plugin.version}&lt;/version>
-              &lt;configuration>
-                  &lt;annotationProcessorPaths>
-                      &lt;path>
-                          &lt;groupId>uk.autores&lt;/groupId>
-                          &lt;artifactId>annotations&lt;/artifactId>
-                          &lt;version>${autores.version}&lt;/version>
-                      &lt;/path>
-                  &lt;/annotationProcessorPaths>
-              &lt;/configuration>
-          &lt;/plugin>
-      &lt;/plugins>
-    &lt;/build>
+<em>&lt;!-- Maven 3 --&gt;</em>
+&lt;build>
+  &lt;plugins>
+      &lt;plugin>
+          &lt;groupId>org.apache.maven.plugins&lt;/groupId>
+          &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
+          &lt;version>${maven.compiler.plugin.version}&lt;/version>
+          &lt;configuration>
+              &lt;annotationProcessorPaths>
+                  &lt;path>
+                      &lt;groupId>uk.autores&lt;/groupId>
+                      &lt;artifactId>annotations&lt;/artifactId>
+                      &lt;version>${autores.version}&lt;/version>
+                  &lt;/path>
+              &lt;/annotationProcessorPaths>
+          &lt;/configuration>
+      &lt;/plugin>
+  &lt;/plugins>
+&lt;/build>
     </code></pre>
 
     <h3>Gradle <a id="gradle" href="#gradle" class="link-symbol">&#x1f517;</a></h3>
@@ -175,14 +185,14 @@
     </p>
 
     <pre><code>
-    <em>// Gradle 8; Kotlin syntax</em>
-    var autores = "uk.autores:annotations:" + autoresVersion
+<em>// Gradle 8; Kotlin syntax</em>
+var autores = "uk.autores:annotations:" + autoresVersion
 
-    dependencies {
-      compileOnly(files("src/main/resources"))
-      compileOnly(autores)
-      annotationProcessor(autores)
-    }
+dependencies {
+  compileOnly(files("src/main/resources"))
+  compileOnly(autores)
+  annotationProcessor(autores)
+}
     </code></pre>
 
     <nav>
