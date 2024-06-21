@@ -4,7 +4,7 @@
 /**
  * <h2>AutoRes.uk</h2>
  * <p>
- *     An alternative to {@link Class#getResourceAsStream(String)}.
+ *     Convenient alternative to {@link Class#getResourceAsStream(String)}.
  *     Use for compile-time resource verification or streamlining
  *     resource handling via code generation.
  * </p>
