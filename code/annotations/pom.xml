@@ -137,6 +137,7 @@
                     <doclint>all</doclint>
                     <failOnWarnings>true</failOnWarnings>
                     <serialwarn>true</serialwarn>
+                    <excludePackageNames>uk.autores.processors</excludePackageNames>
                 </configuration>
             </plugin>
             <!-- coverage -->
