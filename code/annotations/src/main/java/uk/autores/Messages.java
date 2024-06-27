@@ -31,10 +31,12 @@ import java.lang.annotation.*;
  * </p>
  * <p>
  *     This annotation is strict by default.
- *     Translations will likely lag software development and the addition or modification of natural language strings.
+ *     This helps build systems detect missing translations and bugs in translated format strings.
+ *     However, developers are likely add or modify strings during development before translations are available.
  *     The {@link #missingKey()} and {@link #incompatibleFormat()} properties can be set to {@link Severity#WARN}
  *     or {@link Severity#IGNORE} during development to avoid breaking builds.
  *     Create a single {@code static final Severity} variable and reference it in annotations to control this globally.
+ *     Set these to {@link Severity#ERROR} prior to release and/or in a "smoke test" branch.
  * </p>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})

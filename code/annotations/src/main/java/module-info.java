@@ -3,13 +3,19 @@
 
 /**
  * <h2>AutoRes.uk</h2>
- *
  * <p>
- *     An annotation driven <a href="https://dev.java/learn/modules/intro/">module</a>
- *     for working with classpath resource files.
+ *     Convenient alternative to {@link Class#getResourceAsStream(String)}.
+ *     Use for compile-time resource verification or streamlining
+ *     resource handling via code generation.
  * </p>
  * <p>
- *     Modules that only use the <code>uk.autores</code> package should generally use
+ *     See the {@link uk.autores} package for core functionality.
+ * </p>
+ *
+ * <h3>Modules</h3>
+ * <p>
+ *     <a href="https://dev.java/learn/modules/intro/">Modules</a>
+ *     that only use the <code>uk.autores</code> package should generally use
  *     the <code>requires static {@link uk.autores};</code> directive.
  *     This package is intended to be compile-time only.
  * </p>
