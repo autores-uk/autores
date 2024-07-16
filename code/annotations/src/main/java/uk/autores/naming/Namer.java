@@ -17,11 +17,11 @@ package uk.autores.naming;
  *     <li>Be available as compiled types on the compiler classpath</li>
  *  </ul>
  *
- *      <p>Sample usage:</p>
+ *      <p>Example of how this type is used in {@link uk.autores.handling.Handler} implementations:</p>
  *      <pre>
  *          Namer namer = new Namer();
- *          String simple = namer.simplifyResourceName("META-INF/foo/bar.baz.txt"); // "foo.bar"
- *          String className = namer.nameClass(simple);                             // "bar_baz"
+ *          String simple = namer.simplifyResourceName("/META-INF/foo/bar.baz.txt"); // "foo.bar"
+ *          String className = namer.nameClass(simple);                              // "bar_baz"
  *      </pre>
  */
 public class Namer {

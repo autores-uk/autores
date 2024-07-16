@@ -5,7 +5,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>11.0.31-beta</version>
+        <version>11.0.32-beta</version>
     </parent>
 
     <artifactId>examples</artifactId>
@@ -18,7 +18,7 @@
         <maven.jar.plugin.version>3.4.1</maven.jar.plugin.version>
         <exec.maven.plugin.version>3.2.0</exec.maven.plugin.version>
         <!-- unit test dependency versions -->
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.10.3</junit.version>
     </properties>
 
     <modules>
