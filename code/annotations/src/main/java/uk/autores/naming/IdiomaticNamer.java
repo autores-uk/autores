@@ -5,11 +5,9 @@ package uk.autores.naming;
 import java.util.Locale;
 import java.util.function.Function;
 
-// TODO: look at codepoint handling
-
 /**
  * Generates names that conform to Java naming conventions.
- * This type can generate more name collisions than the base type.
+ * This implementation is more likely to generate name collisions than {@link Namer}.
  * Case handling uses {@link Locale#ENGLISH}.
  */
 public final class IdiomaticNamer extends Namer {
