@@ -3,16 +3,15 @@
 package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.CfgVisibility;
-import uk.autores.handling.ConfigDef;
-import uk.autores.handling.GenerateConstantsFromProperties;
-import uk.autores.handling.Handler;
+import uk.autores.handling.*;
 import uk.autores.test.testing.HandlerResults;
 import uk.autores.test.testing.HandlerTester;
+import uk.autores.test.testing.Proxies;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GenerateConstantsFromPropertiesTest {
@@ -58,5 +57,24 @@ class GenerateConstantsFromPropertiesTest {
         tester().withResource("Foo.properties", data.getBytes(StandardCharsets.UTF_8))
                 .test()
                 .assertErrorMessagesReported();
+    }
+
+    @Test
+    void generatesBundleName() {
+        GCFP GenerateConstantsFromProperties = Proxies.utility(GCFP.class, "uk.autores.handling.GenerateConstantsFromProperties");
+        {
+            CharSequence expected = "com.bar.i18n";
+            CharSequence actual = GenerateConstantsFromProperties.bundleName("com.foo", "/com/bar/i18n.properties");
+            assertEquals(expected, actual.toString());
+        }
+        {
+            CharSequence expected = "com.foo.i18n";
+            CharSequence actual = GenerateConstantsFromProperties.bundleName("com.foo", "i18n.properties");
+            assertEquals(expected, actual.toString());
+        }
+    }
+
+    private interface GCFP {
+        CharSequence bundleName(CharSequence ctxt, CharSequence resource);
     }
 }
