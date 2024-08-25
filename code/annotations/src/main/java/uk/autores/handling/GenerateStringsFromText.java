@@ -232,7 +232,9 @@ public final class GenerateStringsFromText implements Handler {
             while (buf.receive(bufReader)) {
                 writer.indent().append("offset = ")
                         .append(gs.utilityTypeClassName)
-                        .append(".copy(").string(buf).append(", arr, offset);").nl();
+                        .append(".copy(");
+                writeLiteral(writer, buf);
+                writer.append(", arr, offset);").nl();
             }
             writer.indent().append("return new java.lang.String(arr);").nl();
         }
@@ -248,10 +250,27 @@ public final class GenerateStringsFromText implements Handler {
              Reader bufReader = new BufferedReader(reader, generationState.buffer.maxBuffer())) {
 
             generationState.buffer.receive(bufReader);
-            writer.indent().append("return ").string(generationState.buffer).append(";").nl();
+            writer.indent().append("return");
+            writeLiteral(writer, generationState.buffer);
+            writer.append(";").nl();
         }
 
         writeMethodClose(writer);
+    }
+
+    private static void writeLiteral(JavaWriter w, CharSequence cs) throws IOException {
+        final int len = cs.length();
+        final int LIMIT = 12;
+        int offset = 0;
+        String delim = "";
+        while (offset < cs.length()) {
+            int c = len - offset;
+            c = Math.min(c, LIMIT);
+            CharSequence sub = cs.subSequence(offset, offset + c);
+            offset += c;
+            w.nl().indent().indent().append(delim).string(sub);
+            delim = "+ ";
+        }
     }
 
     private static void writeLazyLoad(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {

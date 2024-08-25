@@ -79,6 +79,8 @@ public final class GenerateConstantsFromProperties implements Handler {
             Writer escaper = new UnicodeEscapeWriter(out);
             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
 
+            writeBundleName(ctxt, resource, writer);
+
             for (String key : keys) {
                 writeProperty(ctxt, resource, writer, key);
             }
@@ -97,5 +99,35 @@ public final class GenerateConstantsFromProperties implements Handler {
         }
 
         writer.indent().staticFinal("java.lang.String", field).string(key).append(";").nl();
+    }
+
+    private void writeBundleName(Context ctxt,
+                                 Resource resource,
+                                 JavaWriter writer) throws IOException {
+        CharSequence bundle = bundleName(ctxt.pkg(), resource);
+
+        writer.nl();
+        writer.indent().staticMember("java.lang.String", "bundle").append("() ").openBrace().nl();
+        writer.indent().append("return ").string(bundle).append(";").nl();
+        writer.closeBrace().nl().nl();
+    }
+
+    static CharSequence bundleName(CharSequence pkg, CharSequence resource) {
+        int end = resource.length() - EXTENSION.length();
+        if (resource.charAt(0) == '/') {
+            StringBuilder buf = new StringBuilder(resource.length());
+            for (int i = 1; i < end; i++) {
+                char ch = resource.charAt(i);
+                if (ch == '/') {
+                    buf.append('.');
+                } else {
+                    buf.append(ch);
+                }
+            }
+            return buf;
+        }
+        StringBuilder buf = new StringBuilder(pkg.length() + resource.length());
+        buf.append(pkg).append('.').append(resource.subSequence(0, end));
+        return buf;
     }
 }

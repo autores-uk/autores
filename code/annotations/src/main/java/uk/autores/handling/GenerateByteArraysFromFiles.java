@@ -123,7 +123,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
             try (Writer out = javaFile.openWriter();
                  Writer escaper = new UnicodeEscapeWriter(out);
                  JavaWriter writer = new JavaWriter(this, context, escaper, className, resource)) {
-                generator.generate(gs, writer, stats);
+                generator.generate(context, gs, writer, stats);
             }
         }
 
@@ -201,17 +201,17 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.closeBrace().nl();
     }
 
-    private static void writeAuto(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+    private static void writeAuto(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
         if (stats.size <= 128) {
-            writeInlineMethods(gs, writer, stats);
+            writeInlineMethods(ctxt, gs, writer, stats);
         } else if (stats.size <= 0xFFFF) {
-            writeStringMethods(gs, writer, stats);
+            writeStringMethods(ctxt, gs, writer, stats);
         } else {
-            writeLazyLoad(gs, writer, stats);
+            writeLazyLoad(ctxt, gs, writer, stats);
         }
     }
 
-    private static void writeInlineMethods(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+    private static void writeInlineMethods(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
         byte[] buf = gs.buffer;
         int methodCount = 0;
 
@@ -223,10 +223,18 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 }
                 writeInlineFillMethod(buf, r, writer, methodCount);
                 methodCount++;
+                checkConstSize(ctxt, stats, methodCount);
             }
         }
 
         writeInlineBytesMethod(writer, methodCount, (int) stats.size);
+    }
+
+    private static void checkConstSize(Context ctxt, FileStats stats, int count) {
+        if (count == 0xFFFF - 10) {
+            String msg = stats.resource + " too large - exceeding class constant pool size";
+            ctxt.printError(msg);
+        }
     }
 
     private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
@@ -273,7 +281,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    private static void writeLazyLoad(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+    private static void writeLazyLoad(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+        checkConstSize(ctxt, stats, 0);
+
         gs.needsLoadMethod = true;
 
         writeSignature(writer);
@@ -288,7 +298,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writeReturn(writer);
     }
 
-    private static void writeStringMethods(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
+    private static void writeStringMethods(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
         gs.needDecodeMethod = true;
 
         writeSignature(writer);
@@ -296,6 +306,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
         int size = (int) stats.size;
         writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
         writer.indent().append("int off = 0;").nl();
+
+        int constCount = 0;
 
         ByteHackReader odd;
         try (InputStream in = stats.resource.open();
@@ -308,9 +320,11 @@ public final class GenerateByteArraysFromFiles implements Handler {
             while (buf8.receive(br)) {
                 writer.indent().append("off = ")
                         .append(util)
-                        .append(".decode(")
-                        .string(buf8)
-                        .append(", barr, off);").nl();
+                        .append(".decode(");
+                writeLiteral(writer, buf8);
+                writer.append(", barr, off);").nl();
+                constCount++;
+                checkConstSize(ctxt, stats, constCount);
             }
         }
 
@@ -321,6 +335,21 @@ public final class GenerateByteArraysFromFiles implements Handler {
         }
 
         writeReturn(writer);
+    }
+
+    private static void writeLiteral(JavaWriter w, CharSequence cs) throws IOException {
+        final int len = cs.length();
+        final int LIMIT = 12;
+        int offset = 0;
+        String delim = "";
+        while (offset < cs.length()) {
+            int c = len - offset;
+            c = Math.min(c, LIMIT);
+            CharSequence sub = cs.subSequence(offset, offset + c);
+            offset += c;
+            w.nl().indent().indent().append(delim).string(sub);
+            delim = "+ ";
+        }
     }
 
     private static void writeSignature(JavaWriter writer) throws IOException {
@@ -363,7 +392,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
     @FunctionalInterface
     private interface ClassGenerator {
-        void generate(GenerationState gs, JavaWriter writer, FileStats stats) throws IOException;
+        void generate(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException;
     }
 
     private static class GenerationState {
