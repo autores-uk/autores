@@ -20,7 +20,7 @@ final class ClassNames {
                 buf.append(simple);
             }
         }
-        String name = String.format("AutoRes$%s$%x", buf, hash);
+        String name = String.format("AutoRes$C%s$C%x", buf, hash);
         return namer.nameType(name);
     }
 }

@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.34-beta</version>
+        <version>11.0.35-beta</version>
     </parent>
 
     <artifactId>create-checked-resource</artifactId>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.1-jre</version>
+            <version>33.3.1-jre</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
