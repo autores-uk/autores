@@ -275,7 +275,11 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
         writer.indent().append("int idx = 0;").nl();
         for (int i = 0; i < methodCount; i++) {
-            writer.indent().append("idx = fill").append(i).append("(barr, idx);").nl();
+            writer.indent();
+            if (i < methodCount - 1) {
+                writer.append("idx = ");
+            }
+            writer.append("fill").append(i).append("(barr, idx);").nl();
         }
 
         writeReturn(writer);
@@ -312,15 +316,17 @@ public final class GenerateByteArraysFromFiles implements Handler {
         ByteHackReader odd;
         try (InputStream in = stats.resource.open();
              ByteHackReader bhr = new ByteHackReader(in);
-             Reader br = new BufferedReader(bhr, 0xFFFF)) {
+             BufferedReader br = new BufferedReader(bhr, 0xFFFF)) {
             odd = bhr;
 
             String util = gs.utilityTypeClassName;
             ModifiedUtf8Buffer buf8 = gs.utf8Buffer();
             while (buf8.receive(br)) {
-                writer.indent().append("off = ")
-                        .append(util)
-                        .append(".decode(");
+                writer.indent();
+                if (!exhausted(br)) {
+                    writer.append("off = ");
+                }
+                writer.append(util).append(".decode(");
                 writeLiteral(writer, buf8);
                 writer.append(", barr, off);").nl();
                 constCount++;
@@ -335,6 +341,13 @@ public final class GenerateByteArraysFromFiles implements Handler {
         }
 
         writeReturn(writer);
+    }
+
+    private static boolean exhausted(BufferedReader br) throws IOException {
+        br.mark(1);
+        int value = br.read();
+        br.reset();
+        return value < 0;
     }
 
     private static void writeLiteral(JavaWriter w, CharSequence cs) throws IOException {
