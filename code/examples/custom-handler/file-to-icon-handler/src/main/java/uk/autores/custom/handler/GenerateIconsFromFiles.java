@@ -83,12 +83,20 @@ public class GenerateIconsFromFiles implements Handler {
         public final String className;
         public final String visibility;
 
-        private ImageTemplateContext(String pkg, String className, String visibility) {
+        public ImageTemplateContext(String pkg, String className, String visibility) {
             this.pkg = pkg;
             this.className = className;
             this.visibility = visibility;
         }
 
+        @Override
+        public String toString() {
+            return "ImageTemplateContext{" +
+                    "pkg='" + pkg + '\'' +
+                    ", className='" + className + '\'' +
+                    ", visibility='" + visibility + '\'' +
+                    '}';
+        }
     }
 
     private static final class InternalNamer extends Namer {

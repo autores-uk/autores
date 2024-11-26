@@ -7,11 +7,12 @@ import uk.autores.custom.app.icons.Woof;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class Animals {
 
-    public static void main(String...args) {
-        create().setVisible(true);
+    public static void main(String...args) throws InterruptedException, InvocationTargetException {
+        SwingUtilities.invokeAndWait(() -> create().setVisible(true));
     }
 
     public static JFrame create() {
