@@ -37,7 +37,13 @@ public @interface ByteArrays {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Generated code visibility.
+     * <p>
+     *     Generated code visibility.
+     * </p>
+     * <p>
+     *     Uses <code>public</code> declarations when set to true.
+     * </p>
+     *
      * @return visibility
      */
     boolean isPublic() default false;
