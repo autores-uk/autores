@@ -41,7 +41,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Move API docs
-        run: mv ./code/annotations/target/apidocs ./docs
+        run: mv ./code/annotations/target/reports/apidocs ./docs
       - name: Write Witemap
         run: sh ./scripts/sitemap.sh
       - name: Upload artifact
