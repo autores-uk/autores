@@ -9,7 +9,7 @@ import uk.autores.handling.CfgStrategy;
  * </p>
  * <p>
  *     The class file format can encapsulate several hundreds of megabytes of data but
- *     this can negatively affect compile time and memory usage.
+ *     this can negatively affect compile times and runtime memory usage.
  *     Use with caution.
  * </p>
  */
