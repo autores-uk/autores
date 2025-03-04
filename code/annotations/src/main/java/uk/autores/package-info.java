@@ -30,34 +30,51 @@
  *     <tr>
  *         <th>Annotation</th>
  *         <th>Consumes</th>
+ *         <th>Generates</th>
  *         <th>Description</th>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.ByteArrays}</td>
- *         <th>any file</th>
- *         <td>Generate one class per file that returns <code>byte[]</code>.</td>
+ *         <td>any file</td>
+ *         <td>class for all resources</td>
+ *         <td>Generate class with method per file that returns <code>byte[]</code>.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.InputStreams}</td>
- *         <th>any file</th>
+ *         <td>any file</td>
+ *         <td>class for all resources</td>
  *         <td>Generate single class with one {@link java.io.InputStream} method per file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Keys}</td>
- *         <th>properties</th>
+ *         <td>properties</td>
+ *         <td>class per resource</td>
  *         <td>Generate one constants class with keys per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Messages}</td>
- *         <th>properties</th>
+ *         <td>properties</td>
+ *         <td>class per resource</td>
  *         <td>Generate one localized, formatting message generator class per {@link java.util.Properties} file.</td>
  *     </tr>
  *     <tr>
  *         <td>{@link uk.autores.Texts}</td>
- *         <th>text files</th>
- *         <td>Generate one class per text file that returns {@link java.lang.String}.</td>
+ *         <td>text files</td>
+ *         <td>class for all resources</td>
+ *         <td>Generate class with method per text file that returns {@link java.lang.String}.</td>
  *     </tr>
  * </table>
+ *
+ * <h3>Names</h3>
+ *
+ * <p>
+ *     Generated type and member names are automatically derived from either the resource file name
+ *     or the annotated package name. Generated names can be influenced by either using "name"
+ *     properties (like {@link uk.autores.ByteArrays#name()}) or setting {@link uk.autores.Processing#namer()}.
+ * </p>
+ * <p>
+ *     Custom names may be required where collisions occur or derived names are not valid identifiers.
+ * </p>
  *
  * <h3>Links</h3>
  *

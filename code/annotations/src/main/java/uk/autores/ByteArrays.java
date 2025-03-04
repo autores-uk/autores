@@ -13,11 +13,11 @@ import java.lang.annotation.*;
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;ByteArrays("foo.bin")
+ *     &#64;ByteArrays(value = "foo.bin", name = "FooData")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     byte[] data = Foo.bytes();
+ *     byte[] data = FooData.foo();
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})

@@ -26,7 +26,7 @@ public @interface Processing {
      *     in order.
      * </p>
      * <p>
-     *     The defaults are {@link StandardLocation#CLASS_PATH} and {@link StandardLocation#CLASS_OUTPUT} names.
+     *     The defaults are {@link StandardLocation#CLASS_PATH} and {@link StandardLocation#CLASS_OUTPUT}.
      * </p>
      * <p>
      *     Tools are inconsistent in how they locate resources.

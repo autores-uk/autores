@@ -5,11 +5,12 @@ import uk.autores.handling.CfgStrategy;
 /**
  * <p>
  *     Code generation choices enum.
- *     Usage is {@link uk.autores.handling.Handler} specific.
+ *     Usage is specific to {@link ByteArrays} and {@link Texts}.
  * </p>
  * <p>
  *     The class file format can encapsulate several hundreds of megabytes of data but
  *     this can negatively affect compile time and memory usage.
+ *     Use with caution.
  * </p>
  */
 public enum Strategy {
