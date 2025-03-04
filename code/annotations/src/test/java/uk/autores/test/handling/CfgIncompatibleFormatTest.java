@@ -4,7 +4,6 @@ package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.handling.CfgIncompatibleFormat;
-import uk.autores.handling.CfgMissingKey;
 import uk.autores.handling.ConfigDef;
 
 import static java.util.Arrays.asList;

@@ -7,7 +7,10 @@ package {{pkg}};
 
   private {{className}}() {}
 
-  {{visibility}} static javax.swing.ImageIcon load() {
-    return new javax.swing.ImageIcon(Internal${{className}}.bytes());
+  {{#methods}}
+  {{visibility}} static javax.swing.ImageIcon {{.}}() {
+      return new javax.swing.ImageIcon(Internal${{className}}.{{.}}());
   }
+
+  {{/methods}}
 }

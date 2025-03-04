@@ -12,6 +12,7 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +39,21 @@ public class GenerateIconsFromFiles implements Handler {
         // visibility
         String visibility = context.option(CfgVisibility.DEF).orElse("");
 
+        // Class name
+        Namer namer = context.namer();
+        Pkg pkg = context.pkg();
+        String className = context.option(CfgName.DEF).orElse("");
+        if ("".equals(className)) {
+            // derive from package
+            String segment = pkg.lastSegment();
+            className = namer.nameType(segment);
+        }
+        if (!Namer.isIdentifier(className)) {
+            context.printError("'" + className + "' is not a valid class name");
+            return;
+        }
+        String qualifiedName = pkg.qualifiedClassName(className);
+
         // Reuse another handler to embed the bytes
         Namer nameDecorator = new InternalNamer(context.namer());
         Context delegate = context.rebuild()
@@ -48,33 +64,31 @@ public class GenerateIconsFromFiles implements Handler {
 
         // Context artifacts
         List<Resource> resources = context.resources();
-        Namer namer = context.namer();
-        Pkg pkg = context.pkg();
         Filer filer = context.env().getFiler();
         Element annotatedElement = context.annotated();
+
+        List<String> methods = new ArrayList<>();
+        for (Resource resource : resources) {
+            String simple = namer.simplifyResourceName(resource.toString());
+            String method = namer.nameMember(simple);
+            if (!Namer.isIdentifier(method)) {
+                context.printError("'" + className + "' is not a valid method name");
+                continue;
+            }
+            methods.add(method);
+        }
+
         // Mustache template
         String template = Resources.imageTemplate();
         // Init template engine
         Template engine = Mustache.compiler().compile(template);
+        // Template context
+        Object itc = new ImageTemplateContext(pkg.toString(), className, visibility, methods);
 
-        for (Resource resource : resources) {
-            String simple = namer.simplifyResourceName(resource.toString());
-            String className = namer.nameType(simple);
-            String qualifiedName = pkg.qualifiedClassName(className);
-
-            if (!Namer.isIdentifier(className)) {
-                context.printError(className + " is not a valid class name");
-                continue;
-            }
-
-            // Template context
-            Object itc = new ImageTemplateContext(pkg.toString(), className, visibility);
-
-            // Generate code
-            JavaFileObject jfo = filer.createSourceFile(qualifiedName, annotatedElement);
-            try (Writer writer = jfo.openWriter()) {
-                engine.execute(itc, writer);
-            }
+        // Generate code
+        JavaFileObject jfo = filer.createSourceFile(qualifiedName, annotatedElement);
+        try (Writer writer = jfo.openWriter()) {
+            engine.execute(itc, writer);
         }
     }
 
@@ -83,11 +97,13 @@ public class GenerateIconsFromFiles implements Handler {
         public final String pkg;
         public final String className;
         public final String visibility;
+        public final List<String> methods;
 
-        public ImageTemplateContext(String pkg, String className, String visibility) {
+        public ImageTemplateContext(String pkg, String className, String visibility, List<String> methods) {
             this.pkg = pkg;
             this.className = className;
             this.visibility = visibility;
+            this.methods = methods;
         }
 
         @Override
@@ -96,6 +112,7 @@ public class GenerateIconsFromFiles implements Handler {
                     "pkg='" + pkg + '\'' +
                     ", className='" + className + '\'' +
                     ", visibility='" + visibility + '\'' +
+                    ", methods=" + methods +
                     '}';
         }
     }

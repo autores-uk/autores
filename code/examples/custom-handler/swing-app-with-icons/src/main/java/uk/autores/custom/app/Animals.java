@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.custom.app;
 
-import uk.autores.custom.app.icons.Meow;
-import uk.autores.custom.app.icons.Woof;
+import uk.autores.custom.app.icons.Icons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +20,8 @@ public class Animals {
         Container panel = frame.getContentPane();
         panel.setLayout(new FlowLayout());
         panel.add(new JLabel("Click a button:"));
-        panel.add(button(Meow.load(), "Cat", "Meow!"));
-        panel.add(button(Woof.load(), "Dog", "Woof!"));
+        panel.add(button(Icons.meow(), "Cat", "Meow!"));
+        panel.add(button(Icons.woof(), "Dog", "Woof!"));
         frame.pack();
         return frame;
     }
