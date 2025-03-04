@@ -4,6 +4,7 @@ package uk.autores.custom.handler;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import uk.autores.Texts;
 import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 
@@ -22,7 +23,7 @@ import static java.util.Collections.emptyList;
  * It decorates {@link GenerateByteArraysFromFiles} to reuse its byte handling functionality
  * and uses {@link GenerateStringsFromText} to load the template.
  */
-@ResourceFiles(value = "ImageTemplate.txt", handler = GenerateStringsFromText.class)
+@Texts(value = "ImageTemplate.txt", name = "Resources")
 public class GenerateIconsFromFiles implements Handler {
 
     private final Handler byteArrayGenerator = new GenerateByteArraysFromFiles();
@@ -52,7 +53,7 @@ public class GenerateIconsFromFiles implements Handler {
         Filer filer = context.env().getFiler();
         Element annotatedElement = context.annotated();
         // Mustache template
-        String template = ImageTemplate.text();
+        String template = Resources.imageTemplate();
         // Init template engine
         Template engine = Mustache.compiler().compile(template);
 
