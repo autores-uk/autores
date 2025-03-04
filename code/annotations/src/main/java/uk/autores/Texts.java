@@ -37,6 +37,12 @@ public @interface Texts {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
+     * Generated class name.
+     * @return type name
+     */
+    String name() default "";
+
+    /**
      * Generated code visibility.
      * @return visibility
      */

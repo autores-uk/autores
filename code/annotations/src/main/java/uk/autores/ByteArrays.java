@@ -37,6 +37,12 @@ public @interface ByteArrays {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
+     * Generated class name.
+     * @return name
+     */
+    String name() default "";
+
+    /**
      * <p>
      *     Generated code visibility.
      * </p>

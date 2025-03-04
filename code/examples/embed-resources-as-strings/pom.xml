@@ -46,7 +46,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.strings.PrintRhymes</mainClass>
+                    <mainClass>uk.autores.rhymes.PrintRhymes</mainClass>
                 </configuration>
             </plugin>
         </plugins>

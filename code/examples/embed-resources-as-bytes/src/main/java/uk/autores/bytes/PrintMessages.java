@@ -11,16 +11,19 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 
 @ByteArrays(
+        name = "Lazy",
         value = "Utf16LazyMessage.xml",
         // loaded at runtime using Class.getResourceAsStream(String)
         strategy = Strategy.LAZY
 )
 @ByteArrays(
+        name = "Inline",
         value = "Utf16InlineMessage.xml",
         // stored in class file as byte code instructions
         strategy = Strategy.INLINE
 )
 @ByteArrays(
+        name = "Consts",
         value = { "Utf16EncodedMessage.xml", "Utf8EncodedMessage.xml", },
         // stored in class file as string constant
         strategy = Strategy.CONST
@@ -29,10 +32,10 @@ public class PrintMessages {
 
     public static void main(String...args) throws XPathExpressionException {
         // These are the generated classes; the XML parser will infer the text encoding of the files
-        parseAndPrint(Utf16LazyMessage.bytes());
-        parseAndPrint(Utf16InlineMessage.bytes());
-        parseAndPrint(Utf16EncodedMessage.bytes());
-        parseAndPrint(Utf8EncodedMessage.bytes());
+        parseAndPrint(Lazy.utf16LazyMessage());
+        parseAndPrint(Inline.utf16InlineMessage());
+        parseAndPrint(Consts.utf16EncodedMessage());
+        parseAndPrint(Consts.utf8EncodedMessage());
     }
 
     private static void parseAndPrint(byte[] raw) throws XPathExpressionException {

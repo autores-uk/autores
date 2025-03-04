@@ -3,7 +3,10 @@
 package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.*;
+import uk.autores.handling.CfgVisibility;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.GenerateConstantsFromProperties;
+import uk.autores.handling.Handler;
 import uk.autores.test.testing.HandlerResults;
 import uk.autores.test.testing.HandlerTester;
 import uk.autores.test.testing.Proxies;

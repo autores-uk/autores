@@ -1,28 +1,16 @@
-// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
-// SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
-import java.io.*;
-import java.util.Collections;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.Set;
 
-/**
- * <p>
- *     {@link Handler} that, for each resource, generates a class with a name derived from the resource name
- *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}.
- *     The class will have a static method called <code>bytes</code> that returns the resource
- *     as a new byte array.
- * </p>
- * <p>
- *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
- * </p>
- */
-public final class GenerateByteArraysFromFiles implements Handler {
+public class GenerateByteArraysFromFiles implements Handler {
 
     /**
      * <p>
@@ -43,123 +31,90 @@ public final class GenerateByteArraysFromFiles implements Handler {
      */
     private static final int MAX_BYTES_PER_METHOD = 65535 / 8;
 
+    /** Ctor */
+    public GenerateByteArraysFromFiles() {}
+
     private static byte[] inlineBuffer() {
         return new byte[MAX_BYTES_PER_METHOD];
     }
 
-    /** Ctor. */
-    public GenerateByteArraysFromFiles() {}
-
     /**
-     * <p>All configuration is optional.</p>
+     * Supported config.
      *
-     * <p>
-     *     Use "visibility" to make the generated classes public.
-     * </p>
-     *
-     * Strategy:
-     * <ul>
-     *     <li>
-     *         {@link CfgStrategy#AUTO}:
-     *         {@link CfgStrategy#INLINE} for files up to 128 bytes;
-     *         {@link CfgStrategy#CONST} for files up to 65535 bytes;
-     *         {@link CfgStrategy#LAZY} otherwise
-     *     </li>
-     *     <li>{@link CfgStrategy#INLINE}: files become bytecode instructions</li>
-     *     <li>{@link CfgStrategy#CONST}: files are encoded in string literals in the class constant pool</li>
-     *     <li>{@link CfgStrategy#LAZY}: files are loaded using using {@link Class#getResourceAsStream(String)}</li>
-     * </ul>
-     *
-     * <p>
-     *     The lazy strategy requires that the resource file be provided at runtime.
-     *     The inline strategy results in larger class files than the const strategy by a factor of about 8.
-     *     The inline strategy uses the stack to fill the byte array.
-     *     The const strategy copies from the heap to fill the byte array.
-     *     The inline and const strategies will break down as the resource file approaches 500MB
-     *     due to class file limitations.
-     * </p>
-     *
-     * @return visibility strategy
-     * @see CfgVisibility
-     * @see CfgStrategy
+     * @return visibility, strategy, name
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgStrategy.DEF);
+        return Sets.of(CfgVisibility.DEF, CfgStrategy.DEF, CfgName.DEF);
     }
 
     @Override
     public void handle(Context context) throws Exception {
-        List<Resource> resources = context.resources();
+        if (context.resources().isEmpty()) {
+            return;
+        }
+
         Namer namer = context.namer();
-        Pkg pkg = context.pkg();
-        Filer filer = context.env().getFiler();
+        String segment = context.pkg().lastSegment();
+        String base = context.option(CfgName.DEF).orElse(segment);
+        String className = namer.nameType(base);
 
-        ClassGenerator generator = generatorStrategy(context);
-
-        String utilityTypeClassName = ClassNames.generateClassName(context.resources());
-        GenerationState gs = new GenerationState(utilityTypeClassName);
-
-        for (Resource entry : resources) {
-            String resource = entry.toString();
-            String simple = namer.simplifyResourceName(resource);
-            String className = namer.nameType(simple);
-            String qualifiedName = pkg.qualifiedClassName(className);
-
-            if (!Namer.isIdentifier(className)) {
-                String msg = "Cannot transform resource name '" + resource + "' to class name";
-                context.printError(msg);
-                continue;
-            }
-
-            FileStats stats = stats(gs, entry);
-            if (stats.size > Integer.MAX_VALUE) {
-                String err = "Resource " + resource + " too big for byte array; max size is " + Integer.MAX_VALUE;
-                context.printError(err);
-                continue;
-            }
-
-            JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
-            try (Writer out = javaFile.openWriter();
-                 Writer escaper = new UnicodeEscapeWriter(out);
-                 JavaWriter writer = new JavaWriter(this, context, escaper, className, resource)) {
-                generator.generate(context, gs, writer, stats);
-            }
+        if (!Namer.isIdentifier(className)) {
+            context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
+            return;
         }
 
-        if (gs.needsLoadMethod || gs.needDecodeMethod) {
-            writeUtilityType(context, gs);
-        }
-    }
-
-    private ClassGenerator generatorStrategy(Context context) {
         String strategy = context.option(CfgStrategy.DEF).orElse(CfgStrategy.AUTO);
-        switch (strategy) {
-            case CfgStrategy.CONST: return GenerateByteArraysFromFiles::writeStringMethods;
-            case CfgStrategy.INLINE: return GenerateByteArraysFromFiles::writeInlineMethods;
-            case CfgStrategy.LAZY: return GenerateByteArraysFromFiles::writeLazyLoad;
-            default: return GenerateByteArraysFromFiles::writeAuto;
-        }
-    }
+        GenerationState gs = new GenerationState(className);
 
-    private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = context.rebuild()
-                .setConfig(Collections.emptyList())
-                .build();
+        String qualifiedName = context.pkg().qualifiedClassName(className);
 
-        Pkg pkg = context.pkg();
-        String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
         Filer filer = context.env().getFiler();
         JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
         try (Writer out = javaFile.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, copy, escaper, gs.utilityTypeClassName, "")) {
+             JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
+
+            for (Resource resource : context.resources()) {
+                String simple = namer.simplifyResourceName(resource.toString());
+                String name = namer.nameMember(simple);
+                FileStats stats = stats(gs, resource, name);
+
+                write(context, strategy, gs, stats, writer);
+            }
+
             if (gs.needDecodeMethod) {
                 writeUtilityDecode(writer);
             }
             if (gs.needsLoadMethod) {
                 writeUtilityLoad(writer);
             }
+        }
+    }
+
+    private static void write(Context ctxt, String strategy, GenerationState gs, FileStats stats, JavaWriter writer) throws IOException {
+        if (!Namer.isIdentifier(stats.name)) {
+            ctxt.printError("'" + stats.name + "' is not a valid method name.");
+            return;
+        }
+        if (stats.size > Integer.MAX_VALUE) {
+            String err = "Resource " + stats.resource + " too big for byte array; max size is " + Integer.MAX_VALUE;
+            ctxt.printError(err);
+            return;
+        }
+
+        switch (strategy) {
+            case CfgStrategy.LAZY:
+                writeLazyLoad(ctxt, gs, writer, stats);
+                return;
+            case CfgStrategy.INLINE:
+                writeInlineMethods(ctxt, gs, writer, stats);
+                return;
+            case CfgStrategy.CONST:
+                writeStringMethods(ctxt, gs, writer, stats);
+                return;
+            default:
+                writeAuto(ctxt, gs, writer, stats);
         }
     }
 
@@ -227,7 +182,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
             }
         }
 
-        writeInlineBytesMethod(writer, methodCount, (int) stats.size);
+        writeInlineBytesMethod(writer, methodCount, stats);
     }
 
     private static void checkConstSize(Context ctxt, FileStats stats, int count) {
@@ -269,8 +224,10 @@ public final class GenerateByteArraysFromFiles implements Handler {
         return limit - offset;
     }
 
-    private static void writeInlineBytesMethod(JavaWriter writer, int methodCount, int size) throws IOException {
-        writeSignature(writer);
+    private static void writeInlineBytesMethod(JavaWriter writer, int methodCount, FileStats stats) throws IOException {
+        writeSignature(writer, stats.name);
+
+        int size = (int) stats.size;
 
         writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
         writer.indent().append("int idx = 0;").nl();
@@ -290,7 +247,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
 
         gs.needsLoadMethod = true;
 
-        writeSignature(writer);
+        writeSignature(writer, stats.name);
 
         writer.indent().append("byte[] barr = ")
                 .append(gs.utilityTypeClassName)
@@ -305,7 +262,7 @@ public final class GenerateByteArraysFromFiles implements Handler {
     private static void writeStringMethods(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException {
         gs.needDecodeMethod = true;
 
-        writeSignature(writer);
+        writeSignature(writer, stats.name);
 
         int size = (int) stats.size;
         writer.indent().append("byte[] barr = new byte[").append(size).append("];").nl();
@@ -365,9 +322,9 @@ public final class GenerateByteArraysFromFiles implements Handler {
         }
     }
 
-    private static void writeSignature(JavaWriter writer) throws IOException {
+    private static void writeSignature(JavaWriter writer, String name) throws IOException {
         writer.nl();
-        writer.indent().staticMember("byte[]", "bytes").append("() ").openBrace().nl();
+        writer.indent().staticMember("byte[]", name).append("() ").openBrace().nl();
     }
 
     private static void writeReturn(JavaWriter writer) throws IOException {
@@ -375,7 +332,8 @@ public final class GenerateByteArraysFromFiles implements Handler {
         writer.closeBrace().nl().nl();
     }
 
-    private static FileStats stats(GenerationState gs, Resource resource) throws IOException {
+
+    private static FileStats stats(GenerationState gs, Resource resource, String name) throws IOException {
         byte[] buf = gs.buffer;
         long size = 0;
         try (InputStream in = resource.open()) {
@@ -391,21 +349,18 @@ public final class GenerateByteArraysFromFiles implements Handler {
                 }
             }
         }
-        return new FileStats(resource, size);
+        return new FileStats(resource, size, name);
     }
 
     private static final class FileStats {
         private final Resource resource;
         private final long size;
-        private FileStats(Resource resource, long size) {
+        private final String name;
+        private FileStats(Resource resource, long size, String name) {
             this.resource = resource;
             this.size = size;
+            this.name = name;
         }
-    }
-
-    @FunctionalInterface
-    private interface ClassGenerator {
-        void generate(Context ctxt, GenerationState gs, JavaWriter writer, FileStats stats) throws IOException;
     }
 
     private static class GenerationState {
