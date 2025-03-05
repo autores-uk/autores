@@ -10,6 +10,18 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.Set;
 
+/**
+ * <p>
+ *     Generates a class for loading byte data.
+ *     For each resource, generates a method with a name derived from the resource name
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameMember(String)} .
+ *     The class will have a static method called <code>bytes</code> that returns the resource
+ *     as a new byte array.
+ * </p>
+ * <p>
+ *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
+ * </p>
+ */
 public class GenerateByteArraysFromFiles implements Handler {
 
     /**
@@ -121,7 +133,7 @@ public class GenerateByteArraysFromFiles implements Handler {
     private static void writeUtilityLoad(JavaWriter writer) throws IOException {
         writer.nl();
         writer.indent()
-                .staticMember("byte[]", "load")
+                .staticMember("byte[]", "load$")
                 .append("(java.lang.String resource, int size) ")
                 .openBrace().nl();
 
@@ -146,7 +158,7 @@ public class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeUtilityDecode(JavaWriter writer) throws IOException {
-        writer.indent().append("static int decode(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
+        writer.indent().append("static int decode$(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
         writer.indent().append("for (int i = 0, len = s.length(); i < len; i++) ").openBrace().nl();
         writer.indent().append("char c = s.charAt(i);").nl();
         writer.indent().append("barr[off++] = (byte) (c >> 8);").nl();
@@ -176,7 +188,7 @@ public class GenerateByteArraysFromFiles implements Handler {
                 if (r < 0) {
                     break;
                 }
-                writeInlineFillMethod(buf, r, writer, methodCount);
+                writeInlineFillMethod(buf, r, writer, stats.name, methodCount);
                 methodCount++;
                 checkConstSize(ctxt, stats, methodCount);
             }
@@ -192,10 +204,11 @@ public class GenerateByteArraysFromFiles implements Handler {
         }
     }
 
-    private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, int index) throws IOException {
+    private static void writeInlineFillMethod(byte[] buf, int limit, JavaWriter writer, String name, int index) throws IOException {
         writer.nl();
         writer.indent()
-                .append("private static int fill")
+                .append("private static int fill$")
+                .append(name)
                 .append(index)
                 .append("(byte[] b, int i) ")
                 .openBrace()
@@ -236,7 +249,7 @@ public class GenerateByteArraysFromFiles implements Handler {
             if (i < methodCount - 1) {
                 writer.append("idx = ");
             }
-            writer.append("fill").append(i).append("(barr, idx);").nl();
+            writer.append("fill$").append(stats.name).append(i).append("(barr, idx);").nl();
         }
 
         writeReturn(writer);
@@ -251,7 +264,7 @@ public class GenerateByteArraysFromFiles implements Handler {
 
         writer.indent().append("byte[] barr = ")
                 .append(gs.utilityTypeClassName)
-                .append(".load(")
+                .append(".load$(")
                 .string(stats.resource.toString())
                 .append(", ")
                 .append((int) stats.size).append(");").nl();
@@ -283,7 +296,7 @@ public class GenerateByteArraysFromFiles implements Handler {
                 if (!exhausted(br)) {
                     writer.append("off = ");
                 }
-                writer.append(util).append(".decode(");
+                writer.append(util).append(".decode$(");
                 writeLiteral(writer, buf8);
                 writer.append(", barr, off);").nl();
                 constCount++;
