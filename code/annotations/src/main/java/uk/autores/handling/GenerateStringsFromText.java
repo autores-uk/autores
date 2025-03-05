@@ -81,13 +81,13 @@ public class GenerateStringsFromText implements Handler {
                 Stats stats = stats(resource, name, buf, decoder);
 
                 write(strategy, gs, stats, writer);
+            }
 
-                if (gs.needsCopyMethod) {
-                    writeUtilityCopyMethod(writer);
-                }
-                if (gs.needsLoadMethod) {
-                    writeUtilityLoadMethod(writer, gs.decoder.charset().name());
-                }
+            if (gs.needsCopyMethod) {
+                writeUtilityCopyMethod(writer);
+            }
+            if (gs.needsLoadMethod) {
+                writeUtilityLoadMethod(writer, gs.decoder.charset().name());
             }
         }
     }
