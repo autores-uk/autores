@@ -1,6 +1,8 @@
-package uk.autores.handling;
+package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
+import uk.autores.handling.Context;
+import uk.autores.handling.Pkg;
 import uk.autores.naming.IdiomaticNamer;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
