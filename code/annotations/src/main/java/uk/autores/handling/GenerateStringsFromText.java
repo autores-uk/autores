@@ -134,7 +134,7 @@ public class GenerateStringsFromText implements Handler {
             while (buf.receive(bufReader)) {
                 writer.indent().append("offset = ")
                         .append(gs.utilityTypeClassName)
-                        .append(".copy(");
+                        .append(".copy$(");
                 writeLiteral(writer, buf);
                 writer.append(", arr, offset);").nl();
             }
@@ -184,7 +184,7 @@ public class GenerateStringsFromText implements Handler {
 
         writer.indent().append("return ")
                 .append(generationState.utilityTypeClassName)
-                .append(".load(")
+                .append(".load$(")
                 .string(stats.resource)
                 .append(", ")
                 .append(size)
@@ -203,7 +203,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private static void writeUtilityCopyMethod(JavaWriter writer) throws IOException {
-        String decl = "static int copy(CharSequence src, char[] dest, int off) ";
+        String decl = "static int copy$(CharSequence src, char[] dest, int off) ";
 
         writer.nl();
         writer.indent().append(decl).openBrace().nl();
@@ -215,7 +215,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
-        String decl = "static String load(String resource, int size) ";
+        String decl = "static String load$(String resource, int size) ";
 
         writer.indent().append(decl).openBrace().nl();
         writer.indent()
