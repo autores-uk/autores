@@ -125,6 +125,8 @@ public class GenerateStringsFromText implements Handler {
         int len = (int) stats.utf16Size;
         ModifiedUtf8Buffer buf = gs.buffer;
 
+        writeMethodDeclaration(writer, stats.name);
+
         try (InputStream in = stats.resource.open();
              Reader reader = new InputStreamReader(in, gs.decoder);
              Reader bufReader = new BufferedReader(reader)) {
