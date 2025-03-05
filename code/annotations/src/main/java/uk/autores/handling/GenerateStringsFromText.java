@@ -305,9 +305,4 @@ public class GenerateStringsFromText implements Handler {
             this.utilityTypeClassName = utilityTypeClassName;
         }
     }
-
-    @FunctionalInterface
-    private interface ClassGenerator {
-        void generate(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException;
-    }
 }
