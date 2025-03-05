@@ -3,11 +3,11 @@
 Annotation driven Java code generation library for working with embedded resources.
 
 ```java
-@uk.autores.Texts({"Poule.txt", "Roses.txt"})
+@uk.autores.Texts(name = "Rhymes", value = {"Poule.txt", "Roses.txt"})
 public class PrintRhymes {
   public static void main(String...args)  {
-    System.out.println(Poule.text());
-    System.out.println(Roses.text());
+    System.out.println(Rhymes.poule());
+    System.out.println(Rhymes.roses());
   }
 }
 ```

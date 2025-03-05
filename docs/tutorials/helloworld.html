@@ -78,12 +78,12 @@ import uk.autores.Texts;
 @Texts("world.txt")
 public class Hello {
     public static void main( String[] args ) {
-        System.out.println("Hello " + World.text());
+        System.out.println("Hello " + Example.world());
     }
 }</code></pre>
         <p>
-            The <code>@Texts("world.txt")</code> annotation generates a class <code>World</code>
-            with a static method <code>text()</code> that returns the contents of the text file.
+            The <code>@Texts("world.txt")</code> annotation generates a class <code>Example</code>
+            with a static method <code>world()</code> that returns the contents of the text file.
         </p>
         <p>
             <code>class</code> and <code>package</code> elements can be the target of annotations.
@@ -103,20 +103,20 @@ public class Hello {
         <pre><code>// GENERATED CODE: uk.autores.handling.GenerateStringsFromText
 package com.example;
 
-/** "world.txt" */
-final class World {
+final class Example {
 
   private World() {}
 
-  static java.lang.String text() {
+  static java.lang.String world() {
     return "World!";
   }
 }
 </code></pre>
         <p>
-            This is the generated <code>World</code> class.
-            The class name is derived from the file name.
-            How class names are generated is configurable.
+            This is the generated <code>Example</code> class.
+            The class name is derived from the package.
+            The method name is derived from the resource name.
+            How names are generated is configurable.
         </p>
         <p>
             The <code>@Texts</code> annotation can generate different code depending on the chosen strategy.
