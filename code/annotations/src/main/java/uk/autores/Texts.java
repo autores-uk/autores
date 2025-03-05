@@ -13,11 +13,11 @@ import java.lang.annotation.*;
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;Texts("Roses.txt")
+ *     &#64;Texts(value = "Roses.txt", name = "Flowers")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     String roses = Roses.text();
+ *     String roses = Flowers.roses();
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
@@ -37,6 +37,12 @@ public @interface Texts {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
+     * Generated class name.
+     * @return type name
+     */
+    String name() default "";
+
+    /**
      * Generated code visibility.
      * @return visibility
      */
@@ -49,7 +55,7 @@ public @interface Texts {
     Strategy strategy() default Strategy.AUTO;
 
     /**
-     * Resource text encoding.
+     * Resource <a href="https://en.wikipedia.org/wiki/Character_encoding">character encoding</a>.
      * @return canonical encoding name
      */
     String encoding() default "UTF-8";

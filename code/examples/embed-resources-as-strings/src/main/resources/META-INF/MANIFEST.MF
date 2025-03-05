@@ -1,1 +1,1 @@
-Main-Class: uk.autores.strings.PrintRhymes
+Main-Class: uk.autores.rhymes.PrintRhymes

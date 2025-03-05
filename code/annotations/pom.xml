@@ -6,7 +6,7 @@
 
     <artifactId>annotations</artifactId>
     <groupId>uk.autores</groupId>
-    <version>11.0.35-beta</version>
+    <version>11.0.36-beta</version>
 
     <packaging>jar</packaging>
 
@@ -20,21 +20,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>5.11.1</junit.version>
+        <junit.version>5.12.0</junit.version>
 
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
-        <maven.javadoc.plugin.version>3.10.0</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
-        <spotbugs.maven.plugin.version>4.8.6.3</spotbugs.maven.plugin.version>
+        <spotbugs.maven.plugin.version>4.8.6.6</spotbugs.maven.plugin.version>
         <spotbugs.version>4.8.6</spotbugs.version>
-        <maven.surefire.plugin.version>3.5.0</maven.surefire.plugin.version>
-        <maven.pmd.plugin.version>3.25.0</maven.pmd.plugin.version>
+        <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
+        <maven.pmd.plugin.version>3.26.0</maven.pmd.plugin.version>
         <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
-        <maven.checkstyle.plugin.version>3.5.0</maven.checkstyle.plugin.version>
-        <maven.jxr.plugin.version>3.5.0</maven.jxr.plugin.version>
-        <maven.gpg.plugin.version>3.2.5</maven.gpg.plugin.version>
+        <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
+        <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
+        <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
         <nexus.staging.maven.plugin.version>1.7.0</nexus.staging.maven.plugin.version>
         <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
     </properties>

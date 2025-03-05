@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>custom-handler</artifactId>
-        <version>11.0.35-beta</version>
+        <version>11.0.36-beta</version>
     </parent>
 
     <artifactId>file-to-icon-handler</artifactId>
@@ -22,6 +22,13 @@
             <groupId>com.samskivert</groupId>
             <artifactId>jmustache</artifactId>
             <version>1.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

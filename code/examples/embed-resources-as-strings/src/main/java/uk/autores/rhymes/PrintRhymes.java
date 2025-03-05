@@ -1,6 +1,6 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores.strings;
+package uk.autores.rhymes;
 
 import uk.autores.Texts;
 
@@ -10,7 +10,7 @@ public class PrintRhymes {
 
     public static void main(String...args)  {
         // Just access text directly
-        System.out.println(Poule.text());
-        System.out.println(Roses.text());
+        System.out.println(Rhymes.poule());
+        System.out.println(Rhymes.roses());
     }
 }

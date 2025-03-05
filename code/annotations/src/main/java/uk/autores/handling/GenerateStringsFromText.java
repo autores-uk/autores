@@ -1,27 +1,25 @@
-// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
-// SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
-import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
  * <p>{@link Handler} that generates classes that returns file contents as {@link String}s.</p>
  * <p>
- *     For each resource, generates a class with a name derived from the resource name
- *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameType(String)}.
- *     The class will have a static method called <code>text</code> that returns the resource
- *     as a {@link String}.
+ *     Generates a class. Class name is derived from package name
+ *     using {@link Namer#nameType(String)} if the name property is unset.
+ * </p>
+ * <p>
+ *     For each resource, generates a method with a name derived from the resource name
+ *     using {@link Namer#simplifyResourceName(String)} and {@link Namer#nameMember(String)}
+ *     that returns the resource as a {@link String}.
  * </p>
  * <p>
  *     Resource files over {@link Integer#MAX_VALUE} in size will result in an error during compilation.
@@ -31,120 +29,60 @@ import java.util.Set;
  *     on malformed input or unmappable characters which will result in build failures.
  * </p>
  */
-public final class GenerateStringsFromText implements Handler {
-
+public class GenerateStringsFromText implements Handler {
     /** Ctor */
     public GenerateStringsFromText() {}
 
     /**
-     * <p>All configuration is optional.</p>
+     * Supported config.
      *
-     * <p>
-     *     "UTF-8" is assumed if "encoding" is not set and this is the recommended encoding.
-     * </p>
-     * <p>
-     *     Use "visibility" to make the generated classes public.
-     * </p>
-     *
-     * Strategy:
-     * <ul>
-     *     <li>{@link CfgStrategy#AUTO}: {@link CfgStrategy#INLINE} for files up to 65535B when encoded as modified UTF-8
-     *     - the limit for a String constant; {@link CfgStrategy#LAZY} otherwise</li>
-     *     <li>{@link CfgStrategy#INLINE}: files become {@link String} literals</li>
-     *     <li>{@link CfgStrategy#CONST}: alias for {@link CfgStrategy#INLINE}</li>
-     *     <li>{@link CfgStrategy#LAZY}: files are loaded using the {@link ClassLoader}</li>
-     * </ul>
-     *
-     * <p>
-     *     The lazy strategy requires that the resource file be provided at runtime.
-     *     The inline strategy will break down as the resource file approaches 500MB due to class file limitations.
-     * </p>
-     *
-     * @return visibility; encoding; strategy
-     * @see CfgVisibility
-     * @see CfgEncoding
-     * @see CfgStrategy
+     * @return visibility, encoding, strategy, name
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgEncoding.DEF, CfgStrategy.DEF);
+        return Sets.of(CfgVisibility.DEF, CfgEncoding.DEF, CfgStrategy.DEF, CfgName.DEF);
     }
 
     @Override
     public void handle(Context context) throws Exception {
-        List<Resource> resources = context.resources();
-        if (resources.isEmpty()) {
+        if (context.resources().isEmpty()) {
             return;
         }
 
         Namer namer = context.namer();
-        Pkg pkg = context.pkg();
-        Filer filer = context.env().getFiler();
-        Element annotated = context.annotated();
+        String segment = context.pkg().lastSegment();
+        String base = context.option(CfgName.DEF).orElse(segment);
+        String className = namer.nameType(base);
+
+        if (!Namer.isIdentifier(className)) {
+            context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
+            return;
+        }
 
         String encoding = context.option(CfgEncoding.DEF).orElse("UTF-8");
         CharsetDecoder decoder = decoder(encoding);
-
-        String util = ClassNames.generateClassName(context.resources());
-        GenerationState gs = new GenerationState(decoder, util);
-
-        ClassGenerator generator = strategy(context);
-
-        for (Resource res : resources) {
-            Stats stats = stats(res, gs.buffer, decoder);
-            if (stats.utf16Size > Integer.MAX_VALUE) {
-                String msg = "Resource " + res + " too large for String type";
-                context.printError(msg);
-                continue;
-            }
-
-            String simple = namer.simplifyResourceName(res.toString());
-            String className = namer.nameType(simple);
-            String qualifiedName = pkg.qualifiedClassName(className);
-
-            if (!Namer.isIdentifier(className)) {
-                String msg = "Cannot transform resource name '" + res + "' to class name";
-                context.printError(msg);
-                continue;
-            }
-
-            JavaFileObject javaFile = filer.createSourceFile(qualifiedName, annotated);
-
-            try (Writer out = javaFile.openWriter();
-                 Writer escaper = new UnicodeEscapeWriter(out);
-                 JavaWriter writer = new JavaWriter(this, context, escaper, className, res)) {
-
-                generator.generate(gs, stats, writer);
-            }
-        }
-
-        if (gs.needsLoadMethod || gs.needsCopyMethod) {
-            writeUtilityType(context, gs);
-        }
-    }
-
-    private ClassGenerator strategy(Context context) {
         String strategy = context.option(CfgStrategy.DEF).orElse(CfgStrategy.AUTO);
-        switch (strategy) {
-            case CfgStrategy.LAZY: return GenerateStringsFromText::writeLazyLoad;
-            case CfgStrategy.INLINE:
-            case CfgStrategy.CONST: return GenerateStringsFromText::writeInLine;
-            default: return GenerateStringsFromText::writeAuto;
-        }
-    }
 
-    private void writeUtilityType(Context context, GenerationState gs) throws IOException {
-        Context copy = context.rebuild()
-                .setConfig(Collections.emptyList())
-                .build();
+        GenerationState gs = new GenerationState(decoder, className);
 
-        Pkg pkg = context.pkg();
-        String qualifiedName = pkg.qualifiedClassName(gs.utilityTypeClassName);
+        String qualifiedName = context.pkg().qualifiedClassName(className);
+
+        ModifiedUtf8Buffer buf = new ModifiedUtf8Buffer();
+
         Filer filer = context.env().getFiler();
         JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
         try (Writer out = javaFile.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, copy, escaper, gs.utilityTypeClassName, "")) {
+             JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
+
+            for (Resource resource : context.resources()) {
+                String simple = namer.simplifyResourceName(resource.toString());
+                String name = namer.nameMember(simple);
+                Stats stats = stats(resource, name, buf, decoder);
+
+                write(strategy, gs, stats, writer);
+            }
+
             if (gs.needsCopyMethod) {
                 writeUtilityCopyMethod(writer);
             }
@@ -154,52 +92,18 @@ public final class GenerateStringsFromText implements Handler {
         }
     }
 
-    private static void writeUtilityCopyMethod(JavaWriter writer) throws IOException {
-        String decl = "static int copy(CharSequence src, char[] dest, int off) ";
-
-        writer.nl();
-        writer.indent().append(decl).openBrace().nl();
-        writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
-        writer.indent().append("dest[off++] = src.charAt(i);").nl();
-        writer.closeBrace().nl();
-        writer.indent().append("return off;").nl();
-        writer.closeBrace().nl();
-    }
-
-    private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
-        String decl = "static String load(String resource, int size) ";
-
-        writer.indent().append(decl).openBrace().nl();
-        writer.indent()
-                .append("java.nio.charset.Charset enc = java.nio.charset.Charset.forName(")
-                .string(encoding)
-                .append(");")
-                .nl();
-        writer.indent().append("char[] buf = new char[size];").nl();
-        writer.indent()
-                .append("try (")
-                .append("java.io.InputStream in = ")
-                .openResource("resource", false)
-                .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
-                .openBrace()
-                .nl();
-
-        writer.indent().append("int offset = 0;").nl();
-        writer.indent().append("while(true) ").openBrace().nl();
-        writer.indent().append("int r = reader.read(buf, offset, buf.length - offset);").nl();
-        writer.indent().append("if (r < 0) { break; }").nl();
-        writer.indent().append("offset += r;").nl();
-        writer.indent().append("if (offset == buf.length) { break; }").nl();
-        writer.closeBrace().nl();
-        writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
-        writer.closeBrace().nl();
-        writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(resource, e);").nl();
-        writer.closeBrace().nl();
-        writer.indent().append("return new java.lang.String(buf);").nl();
-
-        writer.closeBrace().nl();
+    private static void write(String strategy, GenerationState gs, Stats stats, JavaWriter writer) throws IOException {
+        switch (strategy) {
+            case CfgStrategy.LAZY:
+                writeLazyLoad(gs, stats, writer);
+                break;
+            case CfgStrategy.INLINE:
+            case CfgStrategy.CONST:
+                writeInLine(gs, stats, writer);
+                break;
+            default:
+                writeAuto(gs, stats, writer);
+        }
     }
 
     private static void writeAuto(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
@@ -221,7 +125,7 @@ public final class GenerateStringsFromText implements Handler {
         int len = (int) stats.utf16Size;
         ModifiedUtf8Buffer buf = gs.buffer;
 
-        writeMethodDeclaration(writer);
+        writeMethodDeclaration(writer, stats.name);
 
         try (InputStream in = stats.resource.open();
              Reader reader = new InputStreamReader(in, gs.decoder);
@@ -232,7 +136,7 @@ public final class GenerateStringsFromText implements Handler {
             while (buf.receive(bufReader)) {
                 writer.indent().append("offset = ")
                         .append(gs.utilityTypeClassName)
-                        .append(".copy(");
+                        .append(".copy$(");
                 writeLiteral(writer, buf);
                 writer.append(", arr, offset);").nl();
             }
@@ -243,7 +147,7 @@ public final class GenerateStringsFromText implements Handler {
     }
 
     private static void writeSimpleInline(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException {
-        writeMethodDeclaration(writer);
+        writeMethodDeclaration(writer, stats.name);
 
         try (InputStream in = stats.resource.open();
              Reader reader = new InputStreamReader(in, generationState.decoder);
@@ -278,11 +182,11 @@ public final class GenerateStringsFromText implements Handler {
 
         int size = (int) stats.utf16Size;
 
-        writeMethodDeclaration(writer);
+        writeMethodDeclaration(writer, stats.name);
 
         writer.indent().append("return ")
                 .append(generationState.utilityTypeClassName)
-                .append(".load(")
+                .append(".load$(")
                 .string(stats.resource)
                 .append(", ")
                 .append(size)
@@ -291,12 +195,60 @@ public final class GenerateStringsFromText implements Handler {
         writeMethodClose(writer);
     }
 
-    private static void writeMethodDeclaration(JavaWriter writer) throws IOException {
+    private static void writeMethodDeclaration(JavaWriter writer, String name) throws IOException {
         writer.nl();
-        writer.indent().staticMember("java.lang.String", "text").append("() ").openBrace().nl();
+        writer.indent().staticMember("java.lang.String", name).append("() ").openBrace().nl();
     }
 
     private static void writeMethodClose(JavaWriter writer) throws IOException {
+        writer.closeBrace().nl();
+    }
+
+    private static void writeUtilityCopyMethod(JavaWriter writer) throws IOException {
+        String decl = "static int copy$(CharSequence src, char[] dest, int off) ";
+
+        writer.nl();
+        writer.indent().append(decl).openBrace().nl();
+        writer.indent().append("for (int i = 0, len = src.length(); i < len; i++) ").openBrace().nl();
+        writer.indent().append("dest[off++] = src.charAt(i);").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return off;").nl();
+        writer.closeBrace().nl();
+    }
+
+    private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
+        String decl = "static String load$(String resource, int size) ";
+
+        writer.indent().append(decl).openBrace().nl();
+        writer.indent()
+                .append("java.nio.charset.Charset enc = java.nio.charset.Charset.forName(")
+                .string(encoding)
+                .append(");")
+                .nl();
+        writer.indent().append("char[] buf = new char[size];").nl();
+        writer.indent()
+                .append("try (")
+                .append("java.io.InputStream in = ")
+                .openResource("resource", false)
+                .append("; java.io.Reader reader = new java.io.InputStreamReader(in, enc)) ")
+                .openBrace()
+                .nl();
+
+        writer.indent().append("int offset = 0;").nl();
+        writer.indent().append("while(true) ").openBrace().nl();
+        writer.indent().append("int r = reader.read(buf, offset, buf.length - offset);").nl();
+        writer.indent().append("if (r < 0) { break; }").nl();
+        writer.indent().append("offset += r;").nl();
+        writer.indent().append("if (offset == buf.length) { break; }").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
+        writer.closeBrace().nl();
+        writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
+        writer.indent().append("throw new AssertionError(resource, e);").nl();
+        writer.closeBrace().nl();
+        writer.indent().append("return new java.lang.String(buf);").nl();
+
         writer.closeBrace().nl();
     }
 
@@ -307,7 +259,7 @@ public final class GenerateStringsFromText implements Handler {
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
     }
 
-    private Stats stats(Resource resource, ModifiedUtf8Buffer buf, CharsetDecoder decoder) throws IOException {
+    private Stats stats(Resource resource, String name, ModifiedUtf8Buffer buf, CharsetDecoder decoder) throws IOException {
         long utf16Size = 0L;
         long utf8Size = 0L;
         try (InputStream in = resource.open();
@@ -324,16 +276,18 @@ public final class GenerateStringsFromText implements Handler {
             }
         }
 
-        return new Stats(resource, utf16Size, utf8Size);
+        return new Stats(resource, name, utf16Size, utf8Size);
     }
 
     private static final class Stats {
         private final Resource resource;
+        private final String name;
         private final long utf16Size;
         private final long utf8Size;
 
-        private Stats(Resource resource, long utf16Size, long utf8Size) {
+        private Stats(Resource resource, String name, long utf16Size, long utf8Size) {
             this.resource = resource;
+            this.name = name;
             this.utf16Size = utf16Size;
             this.utf8Size = utf8Size;
         }
@@ -350,10 +304,5 @@ public final class GenerateStringsFromText implements Handler {
             this.decoder = decoder;
             this.utilityTypeClassName = utilityTypeClassName;
         }
-    }
-
-    @FunctionalInterface
-    private interface ClassGenerator {
-        void generate(GenerationState generationState, Stats stats, JavaWriter writer) throws IOException;
     }
 }

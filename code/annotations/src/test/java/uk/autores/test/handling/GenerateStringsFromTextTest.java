@@ -12,7 +12,7 @@ import uk.autores.test.testing.HandlerTester;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GenerateStringsFromTextTest {
@@ -25,18 +25,19 @@ class GenerateStringsFromTextTest {
 
     @Test
     void checkConfigDefs() {
-        Set<ConfigDef> supported = new GenerateStringsFromText().config();
+        Set<ConfigDef> supported = handler.config();
         assertTrue(supported.contains(CfgVisibility.DEF));
         assertTrue(supported.contains(CfgEncoding.DEF));
+        assertTrue(supported.contains(CfgName.DEF));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.CONST, CfgStrategy.LAZY})
     void canGenerateTextFromFiles(String strategy) throws Exception {
-        List<Config> cfg = singletonList(new Config(CfgStrategy.STRATEGY, strategy));
+        List<Config> cfg = asList(new Config(CfgStrategy.STRATEGY, strategy), new Config(CfgName.NAME, "Foo"));
         HandlerResults hr = tester().withLargeAndSmallTextFiles(0xFFFF + 1).withConfig(cfg).test();
         hr.assertNoErrorMessagesReported();
-        hr.assertAllGeneratedFilesCompile(3);
+        hr.assertAllGeneratedFilesCompile(1);
     }
 
     @Test

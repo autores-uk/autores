@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>11.0.35-beta</version>
+        <version>11.0.36-beta</version>
     </parent>
 
     <artifactId>embed-resources-as-strings</artifactId>
@@ -46,7 +46,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${exec.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>uk.autores.strings.PrintRhymes</mainClass>
+                    <mainClass>uk.autores.rhymes.PrintRhymes</mainClass>
                 </configuration>
             </plugin>
         </plugins>

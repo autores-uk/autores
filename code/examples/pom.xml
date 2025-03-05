@@ -5,7 +5,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>11.0.35-beta</version>
+        <version>11.0.36-beta</version>
     </parent>
 
     <artifactId>examples</artifactId>
@@ -16,9 +16,12 @@
         <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
-        <exec.maven.plugin.version>3.4.1</exec.maven.plugin.version>
+        <exec.maven.plugin.version>3.5.0</exec.maven.plugin.version>
         <!-- unit test dependency versions -->
-        <junit.version>5.11.1</junit.version>
+        <junit.version>5.12.0</junit.version>
+
+        <spotbugs.maven.plugin.version>4.8.6.6</spotbugs.maven.plugin.version>
+        <spotbugs.version>4.8.6</spotbugs.version>
     </properties>
 
     <modules>
@@ -46,6 +49,35 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.maven.plugin.version}</version>
+                <configuration>
+                    <fork>false</fork>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <failOnError>true</failOnError>
+<!--                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

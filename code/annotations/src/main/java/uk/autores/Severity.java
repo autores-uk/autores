@@ -4,7 +4,6 @@ import uk.autores.handling.CfgMissingKey;
 
 /**
  * Error handling choices enum.
- * Usage is {@link uk.autores.handling.Handler} specific.
  */
 public enum Severity {
     /** Processor is expected to fail compilation on error. */

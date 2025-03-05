@@ -29,6 +29,10 @@ final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByte
         if (byteArrays.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
+        String name = byteArrays.name();
+        if (!"".equals(name)) {
+            cfg.add(new Config(CfgName.NAME, name));
+        }
         cfg.add(new Config(CfgStrategy.STRATEGY, byteArrays.strategy().value()));
         return cfg;
     }

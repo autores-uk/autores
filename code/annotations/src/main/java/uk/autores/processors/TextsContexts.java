@@ -29,6 +29,10 @@ final class TextsContexts extends ContextFactory<Texts, RepeatableTexts> {
         if (byteArrayResources.isPublic()) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
+        String name = byteArrayResources.name();
+        if (!"".equals(name)) {
+            cfg.add(new Config(CfgName.NAME, name));
+        }
         cfg.add(new Config(CfgStrategy.STRATEGY, byteArrayResources.strategy().value()));
         cfg.add(new Config(CfgEncoding.ENCODING, byteArrayResources.encoding()));
         return cfg;

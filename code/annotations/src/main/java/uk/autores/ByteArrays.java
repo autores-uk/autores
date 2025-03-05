@@ -13,11 +13,11 @@ import java.lang.annotation.*;
  *
  * <pre><code>
  *     // EXAMPLE ANNOTATION
- *     &#64;ByteArrays("foo.bin")
+ *     &#64;ByteArrays(value = "foo.bin", name = "FooData")
  * </code></pre>
  * <pre><code>
  *     // EXAMPLE CODE
- *     byte[] data = Foo.bytes();
+ *     byte[] data = FooData.foo();
  * </code></pre>
  */
 @Target({ElementType.PACKAGE, ElementType.TYPE})
@@ -37,7 +37,19 @@ public @interface ByteArrays {
     Processing processing() default @Processing(namer = IdiomaticNamer.class);
 
     /**
-     * Generated code visibility.
+     * Generated class name.
+     * @return name
+     */
+    String name() default "";
+
+    /**
+     * <p>
+     *     Generated code visibility.
+     * </p>
+     * <p>
+     *     Uses <code>public</code> declarations when set to true.
+     * </p>
+     *
      * @return visibility
      */
     boolean isPublic() default false;
