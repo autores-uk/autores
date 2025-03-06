@@ -20,7 +20,7 @@ package uk.autores.naming;
  *      <p>Example of how this type is used in {@link uk.autores.handling.Handler} implementations:</p>
  *      <pre>
  *          Namer namer = new Namer();
- *          String simple = namer.simplifyResourceName("/META-INF/foo/bar.baz.txt"); // "foo.bar"
+ *          String simple = namer.simplifyResourceName("/META-INF/foo/bar.baz.txt"); // "bar.baz"
  *          String className = namer.nameClass(simple);                              // "bar_baz"
  *      </pre>
  */
