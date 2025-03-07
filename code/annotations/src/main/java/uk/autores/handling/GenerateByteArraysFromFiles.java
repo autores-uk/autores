@@ -66,10 +66,7 @@ public class GenerateByteArraysFromFiles implements Handler {
             return;
         }
 
-        Namer namer = context.namer();
-        String segment = context.pkg().lastSegment();
-        String base = context.option(CfgName.DEF).orElse(segment);
-        String className = namer.nameType(base);
+        String className = Naming.type(context);
 
         if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
@@ -88,8 +85,7 @@ public class GenerateByteArraysFromFiles implements Handler {
              JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
-                String simple = namer.simplifyResourceName(resource.toString());
-                String name = namer.nameMember(simple);
+                String name = Naming.member(context, resource);
                 FileStats stats = stats(gs, resource, name);
 
                 write(context, strategy, gs, stats, writer);

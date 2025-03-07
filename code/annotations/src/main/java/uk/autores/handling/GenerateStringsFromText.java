@@ -49,11 +49,7 @@ public class GenerateStringsFromText implements Handler {
             return;
         }
 
-        Namer namer = context.namer();
-        String segment = context.pkg().lastSegment();
-        String base = context.option(CfgName.DEF).orElse(segment);
-        String className = namer.nameType(base);
-
+        String className = Naming.type(context);
         if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
             return;
@@ -76,8 +72,7 @@ public class GenerateStringsFromText implements Handler {
              JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
-                String simple = namer.simplifyResourceName(resource.toString());
-                String name = namer.nameMember(simple);
+                String name = Naming.member(context, resource);
                 Stats stats = stats(resource, name, buf, decoder);
 
                 write(strategy, gs, stats, writer);

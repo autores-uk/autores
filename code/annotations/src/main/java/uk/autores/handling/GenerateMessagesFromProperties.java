@@ -210,32 +210,30 @@ public final class GenerateMessagesFromProperties implements Handler {
                                  Resource resource,
                                  Properties base,
                                  List<Localization> localizations) throws IOException {
-        Namer namer = ctxt.namer();
         Pkg pkg = ctxt.pkg();
         Filer filer = ctxt.env().getFiler();
 
         SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
 
-        String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameType(simple);
-        if (!Namer.isIdentifier(name)) {
+        String className = Naming.type(ctxt, resource);
+        if (!Namer.isIdentifier(className)) {
             String msg = "Cannot transform resource '" + resource + "' into class name";
             ctxt.printError(msg);
             return;
         }
-        String qualified = pkg.qualifiedClassName(name);
+        String qualified = pkg.qualifiedClassName(className);
 
-        String lookupName = String.format("pattern$%s$%x", name, name.hashCode());
+        String lookupName = String.format("pattern$%s$%x", className, className.hashCode());
 
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
              Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+             JavaWriter writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
 
             Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
 
             if (!localizations.isEmpty()) {
-                writeCache(writer, name, lookupName, localizations);
+                writeCache(writer, className, lookupName, localizations);
             }
 
             for (String key : keys) {
