@@ -44,14 +44,12 @@ public final class GenerateConstantsFromProperties implements Handler {
 
     @Override
     public void handle(Context context) throws Exception {
-
         for (Resource res : context.resources()) {
             if (!res.toString().endsWith(EXTENSION)) {
                 String msg = "Resource names must end in " + EXTENSION + " - got " + res;
                 context.printError(msg);
             } else {
                 Properties base = PropLoader.load(res);
-
                 writeProperties(context, res, base);
             }
         }
@@ -60,27 +58,24 @@ public final class GenerateConstantsFromProperties implements Handler {
     private void writeProperties(Context ctxt,
                                  Resource resource,
                                  Properties base) throws IOException {
-        SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
-
-        Namer namer = ctxt.namer();
-        String simple = namer.simplifyResourceName(resource.toString());
-        String name = namer.nameType(simple);
-        if (!Namer.isIdentifier(name)) {
+        String className = Naming.type(ctxt, resource);
+        if (!Namer.isIdentifier(className)) {
             String msg = "Cannot transform '" + resource + "' into class name.";
             ctxt.printError(msg);
             return;
         }
 
-        String qualified = ctxt.pkg().qualifiedClassName(name);
+        String qualified = ctxt.pkg().qualifiedClassName(className);
 
         Filer filer = ctxt.env().getFiler();
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
             Writer escaper = new UnicodeEscapeWriter(out);
-            JavaWriter writer = new JavaWriter(this, ctxt, escaper, name, resource)) {
+            JavaWriter writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
 
             writeBundleName(ctxt, resource, writer);
 
+            SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
             for (String key : keys) {
                 writeProperty(ctxt, resource, writer, key);
             }

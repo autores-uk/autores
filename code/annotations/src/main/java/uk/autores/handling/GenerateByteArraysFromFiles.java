@@ -66,10 +66,7 @@ public class GenerateByteArraysFromFiles implements Handler {
             return;
         }
 
-        Namer namer = context.namer();
-        String segment = context.pkg().lastSegment();
-        String base = context.option(CfgName.DEF).orElse(segment);
-        String className = namer.nameType(base);
+        String className = Naming.type(context);
 
         if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
@@ -88,8 +85,7 @@ public class GenerateByteArraysFromFiles implements Handler {
              JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
-                String simple = namer.simplifyResourceName(resource.toString());
-                String name = namer.nameMember(simple);
+                String name = Naming.member(context, resource);
                 FileStats stats = stats(gs, resource, name);
 
                 write(context, strategy, gs, stats, writer);
@@ -147,10 +143,10 @@ public class GenerateByteArraysFromFiles implements Handler {
         writer.indent().append("if (offset == barr.length) { break; }").nl();
         writer.closeBrace().nl();
         writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
+        writer.indent().append("throw new java.lang.AssertionError(\"Modified after compilation:\"+resource);").nl();
         writer.closeBrace().nl();
         writer.closeBrace().append(" catch(java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(resource, e);").nl();
+        writer.indent().append("throw new java.lang.AssertionError(resource, e);").nl();
         writer.closeBrace().nl();
         writer.indent().append("return barr;").nl();
 
