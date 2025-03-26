@@ -82,73 +82,57 @@ final class GenerateMessages {
     }
 
     private static void date(JavaWriter w, FormatVariable v) throws IOException {
-        final String jud = "java.util.Date";
         int i = v.index();
 
         w.indent().openBrace().nl();
 
-        w.indent().append(jud).append(" date = ").append(jud).append(".from(arg").append(i).append(".toInstant());").nl();
-        w.indent().append("java.time.ZoneId zoneId = arg").append(i).append(".getZone();").nl();
-        w.indent().append("java.util.TimeZone zone = java.util.TimeZone.getTimeZone(zoneId);").nl();
-
-        w.indent().append("java.text.DateFormat format = ");
+        w.indent().append("java.time.format.DateTimeFormatter");
         switch (v.style()) {
             case SHORT:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, l);");
+                w.append(".ofLocalizedDate(java.time.format.FormatStyle.SHORT).withLocale(l)");
                 break;
             case LONG:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, l);");
+                w.append(".ofLocalizedDate(java.time.format.FormatStyle.LONG).withLocale(l)");
                 break;
             case FULL:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, l);");
+                w.append(".ofLocalizedDate(java.time.format.FormatStyle.FULL).withLocale(l)");
                 break;
             case SUBFORMAT:
-                w.append("new java.text.SimpleDateFormat(").string(v.subformat()).append(", l);");
+                w.append(".ofPattern(").string(v.subformat()).append(", l)");
                 break;
             case MEDIUM:
             default:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.DEFAULT, l);");
+                w.append(".ofLocalizedDate(java.time.format.FormatStyle.MEDIUM).withLocale(l)");
         }
-        w.nl();
-
-        w.indent().append("format.setTimeZone(zone);").nl();
-        w.indent().append("format.format(date, buf, new java.text.FieldPosition(0));").nl();
+        w.append(".formatTo(arg").append(i).append(", buf);").nl();
 
         w.closeBrace().nl();
     }
 
     private static void time(JavaWriter w, FormatVariable v) throws IOException {
-        final String jud = "java.util.Date";
         int i = v.index();
 
         w.indent().openBrace().nl();
 
-        w.indent().append(jud).append(" date = ").append(jud).append(".from(arg").append(i).append(".toInstant());").nl();
-        w.indent().append("java.time.ZoneId zoneId = arg").append(i).append(".getZone();").nl();
-        w.indent().append("java.util.TimeZone zone = java.util.TimeZone.getTimeZone(zoneId);").nl();
-
-        w.indent().append("java.text.DateFormat format = ");
+        w.indent().append("java.time.format.DateTimeFormatter");
         switch (v.style()) {
             case SHORT:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, l);");
+                w.append(".ofLocalizedTime(java.time.format.FormatStyle.SHORT).withLocale(l)");
                 break;
             case LONG:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.LONG, l);");
+                w.append(".ofLocalizedTime(java.time.format.FormatStyle.LONG).withLocale(l)");
                 break;
             case FULL:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.FULL, l);");
+                w.append(".ofLocalizedTime(java.time.format.FormatStyle.FULL).withLocale(l)");
                 break;
             case SUBFORMAT:
-                w.append("new java.text.SimpleDateFormat(").string(v.subformat()).append(", l);");
+                w.append(".ofPattern(").string(v.subformat()).append(", l)");
                 break;
             case MEDIUM:
             default:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.DEFAULT, l);");
+                w.append(".ofLocalizedTime(java.time.format.FormatStyle.MEDIUM).withLocale(l)");
         }
-        w.nl();
-
-        w.indent().append("format.setTimeZone(zone);").nl();
-        w.indent().append("format.format(date, buf, new java.text.FieldPosition(0));").nl();
+        w.append(".formatTo(arg").append(i).append(", buf);").nl();
 
         w.closeBrace().nl();
     }
