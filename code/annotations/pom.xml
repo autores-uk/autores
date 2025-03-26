@@ -19,6 +19,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <format.version>8.0.1-beta</format.version>
+
         <joor.version>0.9.15</joor.version>
         <junit.version>5.12.0</junit.version>
 
@@ -63,7 +65,7 @@
         <dependency>
             <groupId>uk.autores</groupId>
             <artifactId>format</artifactId>
-            <version>8.0.1-beta</version>
+            <version>${format.version}</version>
         </dependency>
 
         <dependency>

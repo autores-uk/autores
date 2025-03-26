@@ -1,8 +1,10 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores.handling;
+package uk.autores;
 
-import uk.autores.Processing;
+import uk.autores.handling.AssertResourceExists;
+import uk.autores.handling.ConfigDef;
+import uk.autores.handling.Handler;
 import uk.autores.naming.Namer;
 import uk.autores.repeat.RepeatableResources;
 
@@ -71,7 +73,6 @@ public @interface ResourceFiles {
      *
      * @return configured options
      * @see Handler#config()
-     * @see Sets
      */
     Cfg[] config() default {};
 

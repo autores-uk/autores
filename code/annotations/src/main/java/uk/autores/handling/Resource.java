@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.ResourceFiles;
+
 import javax.tools.FileObject;
 import java.io.IOException;
 import java.io.InputStream;

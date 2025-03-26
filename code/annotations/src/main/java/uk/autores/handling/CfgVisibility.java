@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.ResourceFiles;
+
 /** "visibility": set to "public" to generate public instead of package visible artefacts. */
 public final class CfgVisibility {
 
