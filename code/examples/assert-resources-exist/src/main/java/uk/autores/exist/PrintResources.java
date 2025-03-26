@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.exist;
 
-import uk.autores.handling.ResourceFiles;
+import uk.autores.ResourceFiles;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

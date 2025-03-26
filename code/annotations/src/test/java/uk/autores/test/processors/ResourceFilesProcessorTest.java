@@ -8,7 +8,7 @@ import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.*;
-import uk.autores.handling.ResourceFiles;
+import uk.autores.ResourceFiles;
 import uk.autores.processors.ResourceFilesProcessor;
 import uk.autores.repeat.*;
 import uk.autores.test.testing.env.TestProcessingEnvironment;

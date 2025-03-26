@@ -5,7 +5,7 @@ package uk.autores.processors;
 import uk.autores.Processing;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
-import uk.autores.handling.ResourceFiles;
+import uk.autores.ResourceFiles;
 import uk.autores.repeat.RepeatableResources;
 
 import javax.annotation.processing.ProcessingEnvironment;

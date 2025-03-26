@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.ResourceFiles;
+
 /**
  * "format": whether to generate format methods. "true" or "false".
  */
