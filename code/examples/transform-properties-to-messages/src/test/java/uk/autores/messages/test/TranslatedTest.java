@@ -33,8 +33,6 @@ class TranslatedTest {
 
     @Test
     void printTodayIs() {
-        Instant now = Instant.EPOCH;
-        TimeZone gmt = TimeZone.getTimeZone("gmt");
         ZoneId zoneId = ZoneId.of("GMT");
         ZonedDateTime epoch = ZonedDateTime.ofInstant(Instant.EPOCH, zoneId);
         assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.US, epoch), "Today is Thursday.");
