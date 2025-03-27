@@ -65,7 +65,11 @@ class GenerateMessagesFromPropertiesTest {
         s += "time-long={0,time,long}\n";
         s += "time-full={0,time,full}\n";
         s += "time={0,time,EEEE}\n";
-        s += "choice=\"There {0,choice,0#are no files|1#is one file|1<are {0,number,integer} files}.\"";
+        s += "choice=\"There {0,choice,0#are no files|1#is one file|1<are {0,number,integer} files}.\"\n";
+        s += "dtf-date-short={0,dtf_date,short}\n";
+        s += "dtf-time-long={0,time,long}\n";
+        s += "dtf-datetime-full={0,dtf_datetime,full}\n";
+        s += "RFC_1123_DATE_TIME={0,RFC_1123_DATE_TIME}\n";
         return s;
     }
 

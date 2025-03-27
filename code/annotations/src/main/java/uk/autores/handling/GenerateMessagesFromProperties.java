@@ -43,15 +43,17 @@ import java.util.stream.Collectors;
  *     <li>q
  *         A second method is generated if "format" is true and format expressions have been detected in the value.
  *         <ul>
- *             <li>{@link Locale} is the first argument if "localize" is true and localized files have been detected and number/choice/date us used.</li>
+ *             <li>{@link Locale} is the first argument if "localize" is true and localized files have been detected and/or number/choice/date us used.</li>
  *             <li>
  *                 Format expressions form the remaining arguments in index order.
  *                 {@link MessageFormat} expressions are mapped as follows.
  *                 <ul>
  *                     <li>number or choice: {@link Number}</li>
- *                     <li>date or time: {@link java.time.ZonedDateTime}</li>
+ *                     <li>date expressions: {@link java.time.temporal.TemporalAccessor}</li>
  *                     <li>none: {@link String}</li>
  *                 </ul>
+ *                 All the date expressions in JDK23 are supported.
+ *                 The list expression is not supported.
  *             </li>
  *         </ul>
  *     </li>
@@ -61,13 +63,13 @@ import java.util.stream.Collectors;
  *     Example file <code>Cosmic.properties</code>:
  * </p>
  *
- * <pre>planet-event=At {1,time} on {2,date}, there was {3} on planet {0,number,integer}.</pre>
+ * <pre>planet-event=At {1,dtf-time} on {2,dtf-date}, there was {3} on planet {0,number,integer}.</pre>
  *
  * <p>
  *     This will generate a class <code>Cosmic</code> with the method signature:
  * </p>
  *
- * <pre>static String planet_event(Locale l, Number v0, ZonedDateTime v1, ZonedDateTime v2, String v3)</pre>
+ * <pre>static String planet_event(Locale l, Number v0, TemporalAccessor v1, TemporalAccessor v2, String v3)</pre>
  *
  * <p>
  *     Usage:
