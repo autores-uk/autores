@@ -5,7 +5,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>8.0.37-beta-SNAPSHOT</version>
+        <version>8.0.37-beta</version>
     </parent>
 
     <artifactId>custom-handler</artifactId>
