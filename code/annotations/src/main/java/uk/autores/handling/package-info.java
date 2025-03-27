@@ -17,10 +17,10 @@
  *          </li></ul>
  *     </li>
  *     <li>
- *         Annotate a type or package declaration with {@link uk.autores.handling.ResourceFiles}.
+ *         Annotate a type or package declaration with {@link uk.autores.ResourceFiles}.
  *     </li>
  *     <li>
- *         Set the resource file name in the {@link uk.autores.handling.ResourceFiles#value()} array.
+ *         Set the resource file name in the {@link uk.autores.ResourceFiles#value()} array.
  *     </li>
  *     <li>
  *         Specify a {@link uk.autores.handling.Handler} for non-default behaviour.

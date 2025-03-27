@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
+import uk.autores.ResourceFiles;
+
 /**
  * "localize": whether to search for localized resources. "true" or "false".
  */

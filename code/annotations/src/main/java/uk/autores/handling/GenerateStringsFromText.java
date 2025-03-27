@@ -49,11 +49,7 @@ public class GenerateStringsFromText implements Handler {
             return;
         }
 
-        Namer namer = context.namer();
-        String segment = context.pkg().lastSegment();
-        String base = context.option(CfgName.DEF).orElse(segment);
-        String className = namer.nameType(base);
-
+        String className = Naming.type(context);
         if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
             return;
@@ -76,8 +72,7 @@ public class GenerateStringsFromText implements Handler {
              JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
-                String simple = namer.simplifyResourceName(resource.toString());
-                String name = namer.nameMember(simple);
+                String name = Naming.member(context, resource);
                 Stats stats = stats(resource, name, buf, decoder);
 
                 write(strategy, gs, stats, writer);
@@ -205,7 +200,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private static void writeUtilityCopyMethod(JavaWriter writer) throws IOException {
-        String decl = "static int copy$(CharSequence src, char[] dest, int off) ";
+        String decl = "static int copy$(java.lang.CharSequence src, char[] dest, int off) ";
 
         writer.nl();
         writer.indent().append(decl).openBrace().nl();
@@ -217,7 +212,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
-        String decl = "static String load$(String resource, int size) ";
+        String decl = "static java.lang.String load$(java.lang.String resource, int size) ";
 
         writer.indent().append(decl).openBrace().nl();
         writer.indent()
@@ -242,10 +237,10 @@ public class GenerateStringsFromText implements Handler {
         writer.indent().append("if (offset == buf.length) { break; }").nl();
         writer.closeBrace().nl();
         writer.indent().append("if ((offset != size) || (in.read() >= 0)) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(\"Modified after compilation:\"+resource);").nl();
+        writer.indent().append("throw new java.lang.AssertionError(\"Modified after compilation:\"+resource);").nl();
         writer.closeBrace().nl();
         writer.closeBrace().append(" catch (java.io.IOException e) ").openBrace().nl();
-        writer.indent().append("throw new AssertionError(resource, e);").nl();
+        writer.indent().append("throw new java.lang.AssertionError(resource, e);").nl();
         writer.closeBrace().nl();
         writer.indent().append("return new java.lang.String(buf);").nl();
 

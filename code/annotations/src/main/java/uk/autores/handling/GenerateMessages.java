@@ -2,16 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.format.FormatLiteral;
-import uk.autores.format.FormatSegment;
-import uk.autores.format.FormatVariable;
-import uk.autores.format.Formatting;
+import uk.autores.format.*;
 
 import java.io.IOException;
 import java.util.List;
 
 final class GenerateMessages {
-
     private GenerateMessages() {}
 
     public static void write(JavaWriter w, List<FormatSegment> expression) throws IOException {
@@ -32,24 +28,19 @@ final class GenerateMessages {
 
     private static void add(JavaWriter writer, int argCount, FormatVariable v) throws IOException {
         switch (v.type()) {
+            case NONE:
+                none(writer, v);
+                break;
             case NUMBER:
                 number(writer, v);
-                break;
-            case DATE:
-                date(writer, v);
-                break;
-            case TIME:
-                time(writer, v);
                 break;
             case CHOICE:
                 choice(writer, argCount, v);
                 break;
             default:
-                none(writer, v);
-                break;
+                temporal(writer, v);
         }
     }
-
 
     private static void none(JavaWriter w, FormatVariable v) throws IOException {
         int i = v.index();
@@ -81,78 +72,6 @@ final class GenerateMessages {
         w.append(".format(arg").append(i).append(", buf, new java.text.FieldPosition(0));").nl();
     }
 
-    private static void date(JavaWriter w, FormatVariable v) throws IOException {
-        final String jud = "java.util.Date";
-        int i = v.index();
-
-        w.indent().openBrace().nl();
-
-        w.indent().append(jud).append(" date = ").append(jud).append(".from(arg").append(i).append(".toInstant());").nl();
-        w.indent().append("java.time.ZoneId zoneId = arg").append(i).append(".getZone();").nl();
-        w.indent().append("java.util.TimeZone zone = java.util.TimeZone.getTimeZone(zoneId);").nl();
-
-        w.indent().append("java.text.DateFormat format = ");
-        switch (v.style()) {
-            case SHORT:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, l);");
-                break;
-            case LONG:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, l);");
-                break;
-            case FULL:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, l);");
-                break;
-            case SUBFORMAT:
-                w.append("new java.text.SimpleDateFormat(").string(v.subformat()).append(", l);");
-                break;
-            case MEDIUM:
-            default:
-                w.append("java.text.DateFormat.getDateInstance(java.text.DateFormat.DEFAULT, l);");
-        }
-        w.nl();
-
-        w.indent().append("format.setTimeZone(zone);").nl();
-        w.indent().append("format.format(date, buf, new java.text.FieldPosition(0));").nl();
-
-        w.closeBrace().nl();
-    }
-
-    private static void time(JavaWriter w, FormatVariable v) throws IOException {
-        final String jud = "java.util.Date";
-        int i = v.index();
-
-        w.indent().openBrace().nl();
-
-        w.indent().append(jud).append(" date = ").append(jud).append(".from(arg").append(i).append(".toInstant());").nl();
-        w.indent().append("java.time.ZoneId zoneId = arg").append(i).append(".getZone();").nl();
-        w.indent().append("java.util.TimeZone zone = java.util.TimeZone.getTimeZone(zoneId);").nl();
-
-        w.indent().append("java.text.DateFormat format = ");
-        switch (v.style()) {
-            case SHORT:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, l);");
-                break;
-            case LONG:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.LONG, l);");
-                break;
-            case FULL:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.FULL, l);");
-                break;
-            case SUBFORMAT:
-                w.append("new java.text.SimpleDateFormat(").string(v.subformat()).append(", l);");
-                break;
-            case MEDIUM:
-            default:
-                w.append("java.text.DateFormat.getTimeInstance(java.text.DateFormat.DEFAULT, l);");
-        }
-        w.nl();
-
-        w.indent().append("format.setTimeZone(zone);").nl();
-        w.indent().append("format.format(date, buf, new java.text.FieldPosition(0));").nl();
-
-        w.closeBrace().nl();
-    }
-
     private static void choice(JavaWriter w, int argCount, FormatVariable v) throws IOException {
         final String cf = "java.text.ChoiceFormat";
         final String nfp = "new java.text.FieldPosition(0)";
@@ -178,5 +97,38 @@ final class GenerateMessages {
         w.closeBrace().nl();
 
         w.closeBrace().nl();
+    }
+
+    public static void temporal(JavaWriter w, FormatVariable v) throws IOException {
+        int i = v.index();
+        w.indent().append("java.time.format.DateTimeFormatter.");
+
+        if (v.style() == FmtStyle.SUBFORMAT) {
+            w.append("ofPattern(").string(v.subformat()).append(", l)");
+            w.append(".formatTo(arg").append(i).append(", buf);").nl();
+            return;
+        }
+
+        String fs = "java.time.format.FormatStyle.";
+        String style = (v.style() == FmtStyle.NONE)
+                ? "MEDIUM"
+                : v.style().toString();
+        switch (v.type()) {
+            case DTF_DATETIME:
+                w.append("ofLocalizedDateTime(").append(fs).append(style).append(").withLocale(l)");
+                break;
+            case DATE:
+            case DTF_DATE:
+                w.append("ofLocalizedDate(").append(fs).append(style).append(").withLocale(l)");
+                break;
+            case TIME:
+            case DTF_TIME:
+                w.append("ofLocalizedTime(").append(fs).append(style).append(").withLocale(l)");
+                break;
+            default:
+                String standard = v.type().toString();
+                w.append(standard);
+        }
+        w.append(".formatTo(arg").append(i).append(", buf);").nl();
     }
 }

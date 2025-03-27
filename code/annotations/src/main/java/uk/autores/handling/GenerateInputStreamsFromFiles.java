@@ -48,10 +48,7 @@ public final class GenerateInputStreamsFromFiles implements Handler {
             return;
         }
 
-        Namer namer = context.namer();
-        String segment = context.pkg().lastSegment();
-        String base = context.option(CfgName.DEF).orElse(segment);
-        String className = namer.nameType(base);
+        String className = Naming.type(context);
 
         if (!Namer.isIdentifier(className)) {
             context.printError("Invalid class name: '" + className + "' - set \"name\" configuration option");
@@ -59,7 +56,6 @@ public final class GenerateInputStreamsFromFiles implements Handler {
         }
 
         String qualifiedName = context.pkg().qualifiedClassName(className);
-
         Filer filer = context.env().getFiler();
         JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
         try (Writer out = javaFile.openWriter();
@@ -67,14 +63,13 @@ public final class GenerateInputStreamsFromFiles implements Handler {
              JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
-                writeOpenMethod(namer, resource, writer);
+                writeOpenMethod(context, resource, writer);
             }
         }
     }
 
-    private void writeOpenMethod(Namer namer, Resource resource, JavaWriter writer) throws IOException {
-        String simple = namer.simplifyResourceName(resource.toString());
-        String method = namer.nameMember(simple);
+    private void writeOpenMethod(Context ctxt, Resource resource, JavaWriter writer) throws IOException {
+        String method = Naming.member(ctxt, resource);
 
         writer.nl();
         writer.indent().staticMember("java.io.InputStream", method).append("() throws java.io.IOException ").openBrace().nl();
