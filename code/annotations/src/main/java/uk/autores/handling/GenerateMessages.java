@@ -6,7 +6,6 @@ import uk.autores.format.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 final class GenerateMessages {
     private GenerateMessages() {}
@@ -42,7 +41,6 @@ final class GenerateMessages {
                 temporal(writer, v);
         }
     }
-
 
     private static void none(JavaWriter w, FormatVariable v) throws IOException {
         int i = v.index();
@@ -128,7 +126,7 @@ final class GenerateMessages {
                 w.append("ofLocalizedTime(").append(fs).append(style).append(").withLocale(l)");
                 break;
             default:
-                String standard = v.style().toString();
+                String standard = v.type().toString();
                 w.append(standard);
         }
         w.append(".formatTo(arg").append(i).append(", buf);").nl();

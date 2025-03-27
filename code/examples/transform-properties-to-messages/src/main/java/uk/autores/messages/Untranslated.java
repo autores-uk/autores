@@ -20,6 +20,7 @@ public class Untranslated implements MessagePrinter {
         printPlanetEvent(out, l, time);
         printYouSay(out);
         printTimeInTokyo(out, l, time);
+        printRFC1123DateTime(out, l, time);
     }
 
     public void printAppName(PrintStream out) {
@@ -52,5 +53,10 @@ public class Untranslated implements MessagePrinter {
         ZonedDateTime timeInTokyo = time.withZoneSameInstant(tokyo);
         String msg = NonNls.timeInTokyo(l, timeInTokyo, time, time.getZone().getDisplayName(TextStyle.FULL, l));
         out.println(msg);
+    }
+
+    public void printRFC1123DateTime(PrintStream out, Locale l, ZonedDateTime time) {
+        String s = NonNls.rfc1123DateTime(l, time);
+        out.println(s);
     }
 }
