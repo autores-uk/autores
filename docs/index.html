@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Automated Resource Handling for Java&trade; - AutoRes.uk</title>
+    <title>Automated Resource File Loading for Java&trade; - AutoRes.uk</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <meta name="description" content="Simple access to embeded resource files from Java code. Open source library.">
     <link rel="icon" href="icons/favicon.png">
@@ -20,6 +20,15 @@
           <li><a href="https://github.com/autores-uk/autores">SOURCE CODE</a></li>
           <li><a href="screenshots.html">SCREENSHOTS</a></li>
         </ul>
+        <span>
+          <ul>
+            <li><a href="#dist">distribution</a></li>
+            <li><a href="#compat">compatibility</a></li>
+            <li><a href="#modules">Java module system support</a></li>
+            <li><a href="#maven">Maven configuration</a></li>
+            <li><a href="#gradle">Gradle configuration</a></li>
+          </ul>
+        </span>
       </nav>
     </header>
 
@@ -62,18 +71,10 @@
         Annotate a type or package and specify the resource files.
       </p>
 
-      <p>
-        <em>You can skip to <a href="#dist">distribution</a>,
-        <a href="#compat">compatibility</a>,
-        <a href="#modules">Java module system support</a>,
-        <a href="#maven">Maven configuration</a> or
-        <a href="#gradle">Gradle configuration</a>.</em>
-      </p>
-
       <h3>Sample Code <a id="samples" href="#samples" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
-        <code>@Texts</code> creates one class per text file that provides the file content as a <code>String</code>.
+        <code>@Texts</code> creates a class per that provides text file content as <code>String</code>s.
       </p>
 
       <pre><code>
@@ -87,7 +88,7 @@ public class PrintRhymes {
       </code></pre>
 
       <p>
-        <code>@Messages</code> generates typed methods from properties files that localize and format strings.
+        <code>@Messages</code> generates typed methods from properties files that format localized strings.
       </p>
 
       <pre><code>
@@ -132,7 +133,11 @@ public class PrintMessage {
 
       <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
 
-      <p>Versions are split into three integers: Java version; major version; minor version.</p>
+      <p>
+        Versions are split into three integers: Java version; major version; minor version.
+        Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a>
+        to see available versions.
+      </p>
 
       <p>
         Functionally identical Java 8 and Java 11 versions are published.
@@ -164,7 +169,7 @@ module example.module.name {
 &lt;dependency>
   &lt;groupId>uk.autores&lt;/groupId>
   &lt;artifactId>annotations&lt;/artifactId>
-  &lt;version>${autores.version}&lt;/version>
+  &lt;version><em>${autores.version}</em>&lt;/version>
   &lt;scope>provided&lt;/scope>
 &lt;/dependency>
       </code></pre>
@@ -180,14 +185,14 @@ module example.module.name {
   &lt;plugins>
       &lt;plugin>
           &lt;groupId>org.apache.maven.plugins&lt;/groupId>
-          &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
-          &lt;version>${maven.compiler.plugin.version}&lt;/version>
+          &lt;artifactId><a href="https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-compiler-plugin">maven-compiler-plugin</a>&lt;/artifactId>
+          &lt;version><em>${maven.compiler.plugin.version}</em>&lt;/version>
           &lt;configuration>
               &lt;annotationProcessorPaths>
                   &lt;path>
                       &lt;groupId>uk.autores&lt;/groupId>
                       &lt;artifactId>annotations&lt;/artifactId>
-                      &lt;version>${autores.version}&lt;/version>
+                      &lt;version><em>${autores.version}</em>&lt;/version>
                   &lt;/path>
               &lt;/annotationProcessorPaths>
           &lt;/configuration>
@@ -206,7 +211,7 @@ module example.module.name {
 
       <pre><code>
 <em>// Gradle 8; Kotlin syntax</em>
-var autores = "uk.autores:annotations:" + autoresVersion
+var autores = "uk.autores:annotations:" + <em>autoresVersion</em>
 
 dependencies {
   compileOnly(files("src/main/resources"))
