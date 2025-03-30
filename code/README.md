@@ -2,18 +2,18 @@
 
 ## TOOLS
 
-Building from source requires [Maven](https://maven.apache.org) and a [Java Development Kit](https://sdkman.io/jdks).
+Building from source requires a [Java Development Kit](https://sdkman.io/jdks).
 
  - Java Development Kit
    - e.g. [Temurin JDK](https://adoptium.net)
    - minimum version defined by `maven.compiler.target` property in pom
- - [Maven 3](https://maven.apache.org/users/index.html)
-   - minimum version defined by `maven-enforcer-plugin` in pom
 
 ## BUILD
 
+Use the [Maven wrapper](https://maven.apache.org/wrapper/) scripts (`mvnw`/`mvnw.cmd`) to build:
+
 ```shell
-mvn clean install
+./mvnw clean install
 ```
 
 ### OUTPUTS
