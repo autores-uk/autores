@@ -102,7 +102,7 @@ public class PrintMessage {
     int planet = 4;
     var time = java.time.ZonedDateTime.now();
     var event = "a meteor strike";
-    <em>// planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</em>
+    <em>// planet-event=At {1,dtf-time} on {1,dtf-date}, there was {2} on planet {0,number,integer}.</em>
     <em>// ...becomes signature...</em>
     <em>// static String planetEvent(Locale l, Number arg0, TemporalAccessor arg1, String arg2)</em>
     String msg = <code>Msgs.planetEvent(locale, planet, time, event)</code>;
@@ -123,8 +123,8 @@ public class PrintMessage {
 
       <ul>
         <li><a href="tutorials/helloworld.html">How to Set Up, Compile and Run an AutoRes Project</a></li>
-        <li><a href="tutorials/verify.html">How to Verify Java Resource Paths with the Compiler</a></li>
-        <li><a href="tutorials/l10n.html">How to Improve Localized String Formatting in Java</a></li>
+        <li><a href="tutorials/verify.html">How to Verify Java Resource File Paths with the Compiler</a></li>
+        <li><a href="tutorials/l10n.html">How to Improve Localized String Formatting in Java with Code Generation</a></li>
       </ul>
 
       <h3>Binaries <a id="dist" href="#dist" class="link-symbol">&#x1f517;</a></h3>
