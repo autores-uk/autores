@@ -6,13 +6,14 @@ import uk.autores.format.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 final class GenerateMessages {
     private GenerateMessages() {}
 
-    public static void write(JavaWriter w, List<FormatSegment> expression) throws IOException {
+    static void write(JavaWriter w, Locale l, List<FormatSegment> expression) throws IOException {
         int argCount = Formatting.argumentCount(expression);
-        int est = Formatting.estimateLength(expression);
+        int est = Formatting.estimateLength(l, expression);
         w.indent().append("java.lang.StringBuffer buf = new java.lang.StringBuffer(").append(est).append(");").nl();
         for (FormatSegment segment : expression) {
             if (segment instanceof FormatLiteral) {

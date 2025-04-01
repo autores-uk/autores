@@ -400,7 +400,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         if (hasLocalizedMsg) {
             writeTranslatedExpressions(ctxt, msgs, writer, key, expression);
         } else {
-            GenerateMessages.write(writer, expression);
+            GenerateMessages.write(writer, locales.locale(""), expression);
         }
 
         writer.closeBrace().nl();
@@ -434,12 +434,12 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
             String pattern = l.pattern.substring(1);
             writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
-            GenerateMessages.write(writer, lExpression);
+            GenerateMessages.write(writer, locales.locale(l.pattern), lExpression);
             writer.closeBrace().nl();
         }
 
         writer.indent().append("default:").openBrace().nl();
-        GenerateMessages.write(writer, expression);
+        GenerateMessages.write(writer, locales.locale(""), expression);
         writer.closeBrace().nl();
 
         writer.closeBrace().nl();
