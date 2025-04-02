@@ -3,6 +3,7 @@
 
 module uk.autores.test {
     requires uk.autores;
+    requires uk.autores.format;
     requires java.compiler;
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.engine;
