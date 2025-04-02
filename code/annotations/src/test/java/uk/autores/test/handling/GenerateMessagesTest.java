@@ -54,7 +54,6 @@ class GenerateMessagesTest {
                 .build();
 
         Class<?> JavaWriter = cl.loadClass("uk.autores.handling.JavaWriter");
-        System.out.println(Arrays.asList(JavaWriter.getDeclaredConstructors()));
         Constructor<?> ctor = JavaWriter.getDeclaredConstructor(Object.class, Context.class, Writer.class, String.class, CharSequence.class);
         ctor.setAccessible(true);
         return (Closeable) ctor.newInstance("X", ctxt, w, "Foo", "ignored");
