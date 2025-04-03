@@ -8,10 +8,7 @@ import uk.autores.naming.IdiomaticNamer;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.lang.model.element.Element;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.Collections;
 import java.util.Locale;
@@ -26,7 +23,8 @@ class GenerateMessagesTest {
         // Need JDK22 to use java.text.ListFormat so just exercise code for now
         FormatExpression expression = FormatExpression.parse("{0,list} {0,list,or} {0,list,unit}");
         StringWriter buf = new StringWriter();
-        try (Closeable jw = JavaWriter(buf)) {
+        try (Writer w = new PrintWriter(System.out);
+                Closeable jw = JavaWriter(w)) {
             write(jw, Locale.US, expression, false);
         } catch (IOException e) {
             fail(e);

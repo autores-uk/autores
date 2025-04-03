@@ -158,7 +158,7 @@ final class GenerateMessages {
         w.indent().append(lf)
                 .append(".getInstance(l, ")
                 .append(lf)
-                .string(".Type.")
+                .append(".Type.")
                 .append(type)
                 .append(", ")
                 .append(lf)
