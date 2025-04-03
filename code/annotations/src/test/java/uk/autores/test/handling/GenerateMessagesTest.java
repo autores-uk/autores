@@ -1,8 +1,7 @@
 package uk.autores.test.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.format.FormatSegment;
-import uk.autores.format.Formatting;
+import uk.autores.format.FormatExpression;
 import uk.autores.handling.Context;
 import uk.autores.handling.Pkg;
 import uk.autores.naming.IdiomaticNamer;
@@ -14,19 +13,18 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.*;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class GenerateMessagesTest {
 
     @Test
     void exerciseListCode() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         // Need JDK22 to use java.text.ListFormat so just exercise code for now
-        List<FormatSegment> expression = Formatting.parse("{0,list} {0,list,or} {0,list,unit}");
+        FormatExpression expression = FormatExpression.parse("{0,list} {0,list,or} {0,list,unit}");
         StringWriter buf = new StringWriter();
         try (Closeable jw = JavaWriter(buf)) {
             write(jw, Locale.US, expression, false);
@@ -59,11 +57,11 @@ class GenerateMessagesTest {
         return (Closeable) ctor.newInstance("X", ctxt, w, "Foo", "ignored");
     }
 
-    private static void write(Closeable w, Locale l, List<FormatSegment> expression, boolean estLength) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static void write(Closeable w, Locale l, FormatExpression expression, boolean estLength) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ClassLoader cl = GenerateMessagesTest.class.getClassLoader();
         Class<?> JavaWriter = cl.loadClass("uk.autores.handling.JavaWriter");
         Class<?> GenerateMessages = cl.loadClass("uk.autores.handling.GenerateMessages");
-        Method write = GenerateMessages.getDeclaredMethod("write", JavaWriter, Locale.class, List.class, Boolean.TYPE);
+        Method write = GenerateMessages.getDeclaredMethod("write", JavaWriter, Locale.class, FormatExpression.class, Boolean.TYPE);
         write.setAccessible(true);
         write.invoke(null, w, l, expression, estLength);
     }

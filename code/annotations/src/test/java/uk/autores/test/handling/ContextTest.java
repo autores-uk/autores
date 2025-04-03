@@ -7,12 +7,11 @@ import uk.autores.naming.IdiomaticNamer;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.lang.model.element.Element;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ContextTest {
 
