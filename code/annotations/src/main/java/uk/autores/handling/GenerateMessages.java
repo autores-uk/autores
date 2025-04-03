@@ -162,7 +162,7 @@ final class GenerateMessages {
                 .append(type)
                 .append(", ")
                 .append(lf)
-                .append(".Style.FULL).formatTo(arg")
+                .append(".Style.FULL).format(arg")
                 .append(i)
                 .append(", buf, new java.text.FieldPosition(0));").nl();
     }

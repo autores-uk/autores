@@ -23,8 +23,7 @@ class GenerateMessagesTest {
         // Need JDK22 to use java.text.ListFormat so just exercise code for now
         FormatExpression expression = FormatExpression.parse("{0,list} {0,list,or} {0,list,unit}");
         StringWriter buf = new StringWriter();
-        try (Writer w = new PrintWriter(System.out);
-                Closeable jw = JavaWriter(w)) {
+        try (Closeable jw = JavaWriter(buf)) {
             write(jw, Locale.US, expression, false);
         } catch (IOException e) {
             fail(e);
