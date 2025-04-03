@@ -5,21 +5,20 @@ package uk.autores.handling;
 import uk.autores.format.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 final class GenerateMessages {
     private GenerateMessages() {}
 
-    static void write(JavaWriter w, Locale l, List<FormatSegment> expression) throws IOException {
+    static void write(JavaWriter w, Locale l, FormatExpression expression) throws IOException {
         write(w, l, expression, true);
     }
 
-    static void write(JavaWriter w, Locale l, List<FormatSegment> expression, boolean estLength) throws IOException {
-        int argCount = Formatting.argumentCount(expression);
-        int est = estLength ? Formatting.estimateLength(l, expression) : 16;
+    static void write(JavaWriter w, Locale l, FormatExpression expression, boolean estLength) throws IOException {
+        int argCount = expression.argCount();
+        int est = estLength ? expression.estimateLen(l) : 16;
         w.indent().append("java.lang.StringBuffer buf = new java.lang.StringBuffer(").append(est).append(");").nl();
-        for (FormatSegment segment : expression) {
+        for (Formatter segment : expression) {
             if (segment instanceof FormatLiteral) {
                 FormatLiteral lit = (FormatLiteral) segment;
                 w.indent().append("buf.append(").string(lit.processed()).append(");").nl();
@@ -159,11 +158,11 @@ final class GenerateMessages {
         w.indent().append(lf)
                 .append(".getInstance(l, ")
                 .append(lf)
-                .string(".Type.")
+                .append(".Type.")
                 .append(type)
                 .append(", ")
                 .append(lf)
-                .append(".Style.FULL).formatTo(arg")
+                .append(".Style.FULL).format(arg")
                 .append(i)
                 .append(", buf, new java.text.FieldPosition(0));").nl();
     }
