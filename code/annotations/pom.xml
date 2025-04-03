@@ -6,7 +6,7 @@
 
     <artifactId>annotations</artifactId>
     <groupId>uk.autores</groupId>
-    <version>11.0.38-beta-SNAPSHOT</version>
+    <version>11.0.38-beta</version>
 
     <packaging>jar</packaging>
 
