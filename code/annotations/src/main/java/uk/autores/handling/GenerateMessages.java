@@ -5,16 +5,20 @@ package uk.autores.handling;
 import uk.autores.format.*;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Locale;
 
 final class GenerateMessages {
     private GenerateMessages() {}
 
-    public static void write(JavaWriter w, List<FormatSegment> expression) throws IOException {
-        int argCount = Formatting.argumentCount(expression);
-        int est = Formatting.estimateLength(expression);
+    static void write(JavaWriter w, Locale l, FormatExpression expression) throws IOException {
+        write(w, l, expression, true);
+    }
+
+    static void write(JavaWriter w, Locale l, FormatExpression expression, boolean estLength) throws IOException {
+        int argCount = expression.argCount();
+        int est = estLength ? expression.estimateLen(l) : 16;
         w.indent().append("java.lang.StringBuffer buf = new java.lang.StringBuffer(").append(est).append(");").nl();
-        for (FormatSegment segment : expression) {
+        for (Formatter segment : expression) {
             if (segment instanceof FormatLiteral) {
                 FormatLiteral lit = (FormatLiteral) segment;
                 w.indent().append("buf.append(").string(lit.processed()).append(");").nl();
@@ -36,6 +40,9 @@ final class GenerateMessages {
                 break;
             case CHOICE:
                 choice(writer, argCount, v);
+                break;
+            case LIST:
+                list(writer, v);
                 break;
             default:
                 temporal(writer, v);
@@ -99,7 +106,7 @@ final class GenerateMessages {
         w.closeBrace().nl();
     }
 
-    public static void temporal(JavaWriter w, FormatVariable v) throws IOException {
+    private static void temporal(JavaWriter w, FormatVariable v) throws IOException {
         int i = v.index();
         w.indent().append("java.time.format.DateTimeFormatter.");
 
@@ -130,5 +137,33 @@ final class GenerateMessages {
                 w.append(standard);
         }
         w.append(".formatTo(arg").append(i).append(", buf);").nl();
+    }
+
+    private static void list(JavaWriter w, FormatVariable v) throws IOException {
+        int i = v.index();
+        String type;
+        switch (v.style()) {
+            case OR:
+                type = "OR";
+                break;
+            case UNIT:
+                type = "UNIT";
+                break;
+            default:
+                type = "STANDARD";
+                break;
+        }
+
+        String lf = "java.text.ListFormat";
+        w.indent().append(lf)
+                .append(".getInstance(l, ")
+                .append(lf)
+                .append(".Type.")
+                .append(type)
+                .append(", ")
+                .append(lf)
+                .append(".Style.FULL).format(arg")
+                .append(i)
+                .append(", buf, new java.text.FieldPosition(0));").nl();
     }
 }

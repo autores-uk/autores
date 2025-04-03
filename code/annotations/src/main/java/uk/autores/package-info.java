@@ -63,6 +63,12 @@
  *         <td>class for all resources</td>
  *         <td>Generate class with method per text file that returns {@link java.lang.String}.</td>
  *     </tr>
+ *     <tr>
+ *         <td>{@link uk.autores.ResourceFiles}</td>
+ *         <td>any file</td>
+ *         <td>nothing (default)</td>
+ *         <td>Validates the resource exists. Can be used to specify a {@link uk.autores.handling.Handler} with custom behaviour.</td>
+ *     </tr>
  * </table>
  *
  * <h3>Names</h3>

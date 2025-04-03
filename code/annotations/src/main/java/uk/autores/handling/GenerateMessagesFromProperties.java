@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.handling;
 
-import uk.autores.format.FormatSegment;
-import uk.autores.format.Formatting;
+import uk.autores.format.FormatExpression;
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;
@@ -16,6 +15,7 @@ import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -351,9 +351,8 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        List<FormatSegment> expression = Formatting.parse(baseValue);
-        int args = Formatting.argumentCount(expression);
-        if (args != 0) {
+        FormatExpression expression = FormatExpression.parse(baseValue);
+        if (expression.argCount() != 0) {
             writeFormat(ctxt, msgs, writer, key, expression, method);
         }
     }
@@ -373,12 +372,11 @@ public final class GenerateMessagesFromProperties implements Handler {
                              Msgs msgs,
                              JavaWriter writer,
                              String key,
-                             List<FormatSegment> expression,
+                             FormatExpression expression,
                              String method) throws IOException {
 
-        List<Class<?>> args = Formatting.argumentTypesByIndex(expression);
-
-        boolean needsLocaleForFormat = Formatting.needsLocale(expression);
+        Class<?>[] args = expression.argTypes();
+        boolean needsLocaleForFormat = expression.needsLocale();
         boolean hasLocalizedMsg = hasTranslations(msgs, key);
 
         writer.nl().comment(key);
@@ -388,11 +386,11 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.append("java.util.Locale l");
             delim = ", ";
         }
-        for (int i = 0; i < args.size(); i++) {
+        for (int i = 0; i < args.length; i++) {
             writer.append(delim);
             delim = ", ";
 
-            String vt = args.get(i).getName();
+            String vt = args[i].getName();
             writer.append(vt).append(" arg").append(Integer.toString(i));
         }
         writer.append(") ").openBrace().nl();
@@ -400,7 +398,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         if (hasLocalizedMsg) {
             writeTranslatedExpressions(ctxt, msgs, writer, key, expression);
         } else {
-            GenerateMessages.write(writer, expression);
+            GenerateMessages.write(writer, locales.locale(""), expression);
         }
 
         writer.closeBrace().nl();
@@ -410,23 +408,23 @@ public final class GenerateMessagesFromProperties implements Handler {
                                             Msgs msgs,
                                             JavaWriter writer,
                                             String key,
-                                            List<FormatSegment> expression) throws IOException {
+                                            FormatExpression expression) throws IOException {
         String lookupName = msgs.lookupName;
         writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
 
-        List<Class<?>> args = Formatting.argumentTypesByIndex(expression);
+        Class<?>[] args = expression.argTypes();
 
         for (Localization l : msgs.localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
             }
-            List<FormatSegment> lExpression = Formatting.parse(localizedValue);
-            List<Class<?>> locVars = Formatting.argumentTypesByIndex(lExpression);
-            if (!locVars.equals(args)) {
-                String have = locVars.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
-                String need = args.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+            FormatExpression lExpression = FormatExpression.parse(localizedValue);
+            Class<?>[] locVars = lExpression.argTypes();
+            if (!Arrays.equals(locVars, args)) {
+                String have = Stream.of(locVars).map(Class::getSimpleName).collect(Collectors.joining(", "));
+                String need = Stream.of(args).map(Class::getSimpleName).collect(Collectors.joining(", "));
                 String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
                 msg += "key=" + key + " have {" + have + "} need {" + need + "}";
                 Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
@@ -434,12 +432,12 @@ public final class GenerateMessagesFromProperties implements Handler {
             }
             String pattern = l.pattern.substring(1);
             writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
-            GenerateMessages.write(writer, lExpression);
+            GenerateMessages.write(writer, locales.locale(l.pattern), lExpression);
             writer.closeBrace().nl();
         }
 
         writer.indent().append("default:").openBrace().nl();
-        GenerateMessages.write(writer, expression);
+        GenerateMessages.write(writer, locales.locale(""), expression);
         writer.closeBrace().nl();
 
         writer.closeBrace().nl();

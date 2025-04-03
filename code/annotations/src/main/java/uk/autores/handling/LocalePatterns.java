@@ -10,6 +10,7 @@ import static java.util.Collections.unmodifiableSortedMap;
 final class LocalePatterns {
 
     private SortedMap<String, String[]> relationships;
+    private Map<String, Locale> locales = new HashMap<>();
 
     private Map<String, String[]> relationships() {
         if (relationships == null) {
@@ -22,13 +23,14 @@ final class LocalePatterns {
                 String pattern = ctrl.toBundleName("", l);
                 String[] candidates = candidates(ctrl, l, pattern);
                 relationships.put(pattern, candidates);
+                locales.put(pattern, l);
             }
             relationships = unmodifiableSortedMap(relationships);
         }
         return relationships;
     }
 
-    Set<String> patterns() {
+    Iterable<String> patterns() {
         return relationships().keySet();
     }
 
@@ -67,5 +69,9 @@ final class LocalePatterns {
             list.add(candidatePattern);
         }
         return list.toArray(new String[0]);
+    }
+
+    Locale locale(String pattern) {
+        return locales.getOrDefault(pattern, Locale.US);
     }
 }

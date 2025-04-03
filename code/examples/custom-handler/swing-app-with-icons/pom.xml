@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>custom-handler</artifactId>
-        <version>11.0.37-beta</version>
+        <version>11.0.38-beta</version>
     </parent>
 
     <artifactId>swing-app-with-icons</artifactId>
