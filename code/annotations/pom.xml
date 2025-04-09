@@ -19,10 +19,10 @@
         <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <format.version>8.0.4-beta</format.version>
+        <format.version>8.1.0</format.version>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>5.12.0</junit.version>
+        <junit.version>5.12.1</junit.version>
 
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
