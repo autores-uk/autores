@@ -245,6 +245,12 @@
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <parallel>all</parallel>
+                    <argLine>
+                        --add-opens uk.autores/uk.autores.handling=uk.autores.test
+                        --add-opens uk.autores/uk.autores.processors=uk.autores.test
+                        --add-opens uk.autores/uk.autores.naming=uk.autores.test
+                        --add-exports uk.autores/uk.autores.processors=uk.autores.test
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>
