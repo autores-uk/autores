@@ -8,12 +8,13 @@ import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.autores.*;
-import uk.autores.processors.ResourceFilesProcessor;
 import uk.autores.repeat.*;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
+import javax.annotation.processing.Processor;
 import javax.lang.model.SourceVersion;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,8 +27,12 @@ class ResourceFilesProcessorTest {
   private DecoratedProcessor processor;
 
   @BeforeEach
-  void before() {
-    processor = new DecoratedProcessor(new ResourceFilesProcessor());
+  void before() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    ClassLoader cl = ResourceFilesProcessorTest.class.getClassLoader();
+    Class<?> rfp = cl.loadClass("uk.autores.processors.ResourceFilesProcessor");
+    Processor p = (Processor) rfp.getConstructor()
+            .newInstance();
+    processor = new DecoratedProcessor(p);
   }
 
   @Test

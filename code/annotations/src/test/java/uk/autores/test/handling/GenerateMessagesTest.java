@@ -8,7 +8,10 @@ import uk.autores.naming.IdiomaticNamer;
 import uk.autores.test.testing.env.TestProcessingEnvironment;
 
 import javax.lang.model.element.Element;
-import java.io.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.*;
 import java.util.Collections;
 import java.util.Locale;
