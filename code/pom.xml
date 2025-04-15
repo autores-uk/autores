@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.autores</groupId>
-    <artifactId>autores</artifactId>
+    <artifactId>code</artifactId>
     <packaging>pom</packaging>
     <version>11.0.39-beta-SNAPSHOT</version>
 
