@@ -6,7 +6,7 @@
     <parent>
         <artifactId>autores</artifactId>
         <groupId>uk.autores</groupId>
-        <version>11.0.40-beta</version>
+        <version>11.0.41-beta-SNAPSHOT</version>
     </parent>
 
     <artifactId>processing</artifactId>
