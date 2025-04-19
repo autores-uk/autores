@@ -8,7 +8,7 @@ import uk.autores.processing.handlers.CfgEncoding;
 
 import java.nio.charset.Charset;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class CfgEncodingTest {
 
