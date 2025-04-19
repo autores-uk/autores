@@ -18,6 +18,7 @@
     <description>
         Annotation driven library for handling embedded resources
     </description>
+    <url>https://autores.uk</url>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
