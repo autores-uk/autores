@@ -8,6 +8,9 @@ import uk.autores.repeat.RepeatableKeys;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ *     Directive to generate key constants from {@link java.util.Properties} files.
+ * </p>
  * <pre><code>
  *     // EXAMPLE ANNOTATION
  *     // she-wolf=Cinco lobitos tiene la loba

@@ -8,6 +8,9 @@ import uk.autores.repeat.RepeatableInputStreams;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ *      Directive to generate classpath {@link java.io.InputStream} opening methods from files.
+ * </p>
  * <pre><code>
  *     // EXAMPLE ANNOTATION
  *     &#64;InputStreams(value = "foo.bin", name = "Data")

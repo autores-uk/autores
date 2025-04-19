@@ -8,6 +8,9 @@ import uk.autores.repeat.RepeatableTexts;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ *     Directive to generate strings from text files.
+ * </p>
  * <pre><code>
  *     // EXAMPLE ANNOTATION
  *     &#64;Texts(value = "Roses.txt", name = "Flowers")

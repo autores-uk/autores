@@ -26,7 +26,7 @@ public enum Strategy {
      */
     CONST("const"),
     /**
-     * Generated code loads data at runtime.
+     * Generated code loads data from classpath at runtime.
      * This generally means using mechanisms like {@link Class#getResourceAsStream(String)}.
      */
     LAZY("lazy");

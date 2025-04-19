@@ -8,6 +8,9 @@ import uk.autores.repeat.RepeatableByteArrays;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ *     Directive to generate byte arrays from files.
+ * </p>
  * <pre><code>
  *     // EXAMPLE ANNOTATION
  *     &#64;ByteArrays(value = "foo.bin", name = "FooData")

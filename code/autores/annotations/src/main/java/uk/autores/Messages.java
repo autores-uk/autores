@@ -8,6 +8,9 @@ import uk.autores.repeat.RepeatableMessages;
 import java.lang.annotation.*;
 
 /**
+ * <p>
+ *     Directive to generate localized format methods from {@link java.util.Properties} files.
+ * </p>
  * <pre><code>
  *     // EXAMPLE ANNOTATION
  *     // planets.properties
@@ -67,7 +70,7 @@ public @interface Messages {
     boolean localize() default true;
 
     /**
-     * Generate format signatures.
+     * Treat values as {@link java.text.MessageFormat} expressions and generate typed method format methods.
      *
      * @return whether to format
      */
