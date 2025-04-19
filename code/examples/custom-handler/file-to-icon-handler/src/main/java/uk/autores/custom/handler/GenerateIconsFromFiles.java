@@ -6,6 +6,7 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import uk.autores.Texts;
 import uk.autores.handling.*;
+import uk.autores.processing.handlers.*;
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Filer;

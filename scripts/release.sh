@@ -33,12 +33,12 @@ RELEASEBRANCH="release/${CURRENT}"
 
 upversion() {
   mvn --file "${BASE}/code/pom.xml" versions:set -DnewVersion="$1"
-  mvn --file "${BASE}/code/annotations/pom.xml" versions:set -DnewVersion="$1"
+  mvn --file "${BASE}/code/autores/pom.xml" versions:set -DnewVersion="$1"
 }
 
 echo "Test current state"
 
-mvn --file "${BASE}/code/annotations/pom.xml" clean package -P release
+mvn --file "${BASE}/code/autores/pom.xml" clean package -P release
 
 echo "Releasing version ${CURRENT} on branch ${BRANCH}"
 
@@ -51,7 +51,7 @@ git checkout -b "${RELEASEBRANCH}"
 git push origin "${RELEASEBRANCH}"
 git checkout "${BRANCH}"
 
-mvn --file "${BASE}/code/annotations/pom.xml" clean deploy -P release
+mvn --file "${BASE}/code/autores/pom.xml" clean deploy -P release
 
 echo "${NEXTMINOR}" > "${HERE}/scripts/versions/minor.txt"
 upversion "${NEXT}-SNAPSHOT"

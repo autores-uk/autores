@@ -18,6 +18,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>uk.autores</groupId>
+            <artifactId>processing</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.4.8-jre</version>

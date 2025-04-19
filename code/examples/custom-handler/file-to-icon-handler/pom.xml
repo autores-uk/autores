@@ -17,6 +17,11 @@
             <artifactId>annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>uk.autores</groupId>
+            <artifactId>processing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.samskivert/jmustache -->
         <dependency>
             <groupId>com.samskivert</groupId>
