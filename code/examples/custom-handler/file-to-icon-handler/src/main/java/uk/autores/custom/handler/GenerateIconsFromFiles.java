@@ -6,9 +6,9 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import uk.autores.Texts;
 import uk.autores.handling.*;
+import uk.autores.naming.Namer;
 import uk.autores.processing.handlers.CfgName;
 import uk.autores.processing.handlers.CfgVisibility;
-import uk.autores.naming.Namer;
 import uk.autores.processing.handlers.GenerateByteArraysFromFiles;
 
 import javax.annotation.processing.Filer;
