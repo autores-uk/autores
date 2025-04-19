@@ -23,7 +23,7 @@ import static java.util.Collections.emptyList;
  * This {@link Handler} example generates a class from a
  * <a href="https://mustache.github.io/mustache.5.html">Mustache</a> template.
  * It decorates {@link GenerateByteArraysFromFiles} to reuse its byte handling functionality
- * and uses {@link GenerateStringsFromText} to load the template.
+ * and uses {@link uk.autores.processing.handlers.GenerateStringsFromText} to load the template.
  */
 @Texts(value = "ImageTemplate.txt", name = "Resources")
 public class GenerateIconsFromFiles implements Handler {
