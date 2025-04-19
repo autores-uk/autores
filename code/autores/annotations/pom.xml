@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>8.0.41-beta-SNAPSHOT</version>
+        <version>8.0.41-beta</version>
     </parent>
 
     <artifactId>annotations</artifactId>
