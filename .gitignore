@@ -5,4 +5,6 @@ code/.idea/
 code/target/
 code/**/target/
 **/pom.xml.versionsBackup
-**/.flattened-pom.xml
+
+# Merge code
+**/*.orig
