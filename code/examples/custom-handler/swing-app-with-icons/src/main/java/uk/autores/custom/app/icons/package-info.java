@@ -17,8 +17,8 @@ package uk.autores.custom.app.icons;
 
 import uk.autores.Processing;
 import uk.autores.custom.handler.GenerateIconsFromFiles;
-import uk.autores.handling.CfgVisibility;
+import uk.autores.processing.handlers.CfgVisibility;
 import uk.autores.ResourceFiles;
 import uk.autores.naming.IdiomaticNamer;
 
-import static uk.autores.handling.CfgVisibility.VISIBILITY;
+import static uk.autores.processing.handlers.CfgVisibility.VISIBILITY;

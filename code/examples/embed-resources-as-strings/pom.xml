@@ -21,6 +21,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>uk.autores</groupId>
+            <artifactId>processing</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
