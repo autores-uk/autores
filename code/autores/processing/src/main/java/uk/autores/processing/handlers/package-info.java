@@ -2,32 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Use these types to extend the API.
+ * Resource handler implementations.
  *
- * <h2>Usage</h2>
- *
- * <ol>
- *     <li>
- *         Place resource files in the appropriate place for the chosen build system.
- *         <ul><li>
- *             In Apache Maven this is typically under
- *             <a href="https://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html">
- *             <code>src/main/resources</code>
- *             </a>
- *          </li></ul>
- *     </li>
- *     <li>
- *         Annotate a type or package declaration with {@link uk.autores.ResourceFiles}.
- *     </li>
- *     <li>
- *         Set the resource file name in the {@link uk.autores.ResourceFiles#value()} array.
- *     </li>
- *     <li>
- *         Specify a {@link uk.autores.handling.Handler} for non-default behaviour.
- *     </li>
- * </ol>
- *
- * <h3>Resource Handlers</h3>
+ * <h2>Resource Handlers</h2>
  *
  * <table border="1">
  *     <caption>provided handlers</caption>
