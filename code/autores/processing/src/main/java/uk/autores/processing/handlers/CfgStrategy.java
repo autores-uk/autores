@@ -24,13 +24,13 @@ public final class CfgStrategy {
     public static final String STRATEGY = "strategy";
 
     /** Value */
-    public static final String AUTO = Strategy.AUTO.value();
+    public static final String AUTO = "auto";
     /** Value */
-    public static final String INLINE = Strategy.INLINE.value();
+    public static final String INLINE = "inline";
     /** Value */
-    public static final String LAZY = Strategy.LAZY.value();
+    public static final String LAZY = "lazy";
     /** Value */
-    public static final String CONST = Strategy.CONST.value();
+    public static final String CONST = "const";
 
     private static final String REGEX = regex();
 

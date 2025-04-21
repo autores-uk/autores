@@ -3,7 +3,6 @@
 package uk.autores.processing.handlers;
 
 import uk.autores.ResourceFiles;
-import uk.autores.Severity;
 import uk.autores.handling.ConfigDef;
 
 import java.util.Properties;
@@ -18,11 +17,11 @@ public final class CfgMissingKey {
     public static final String MISSING_KEY = "missing-key";
 
     /** Value */
-    public static final String ERROR = Severity.ERROR.value();
+    public static final String ERROR = "error";
     /** Value */
-    public static final String WARN = Severity.WARN.value();
+    public static final String WARN = "warn";
     /** Value */
-    public static final String IGNORE = Severity.IGNORE.value();
+    public static final String IGNORE = "ignore";
 
     /**
      * Config definition.
