@@ -40,8 +40,14 @@ jobs:
         run: mvn --file code/autores/pom.xml --batch-mode install
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Create API directory
+        run: mkdir -p docs/api
+      - name: Create IMPL directory
+        run: mkdir -p docs/impl
       - name: Move API docs
-        run: mv ./code/autores/annotations/target/reports/apidocs ./docs
+        run: mv ./code/autores/annotations/target/reports/apidocs ./docs/api
+      - name: Move API docs
+        run: mv ./code/autores/processing/target/reports/apidocs ./docs/api
       - name: Write Sitemap
         run: sh ./scripts/sitemap.sh
       - name: Upload artifact
