@@ -47,7 +47,7 @@ jobs:
       - name: Move API docs
         run: mv ./code/autores/annotations/target/reports/apidocs ./docs/api
       - name: Move API docs
-        run: mv ./code/autores/processing/target/reports/apidocs ./docs/api
+        run: mv ./code/autores/processing/target/reports/apidocs ./docs/impl
       - name: Write Sitemap
         run: sh ./scripts/sitemap.sh
       - name: Upload artifact
