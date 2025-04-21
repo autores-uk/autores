@@ -18,12 +18,6 @@
  *     </thead>
  *     <tbody>
  *         <tr>
- *             <td>{@link uk.autores.handling.AssertResourceExists}</td>
- *             <td>any files</td>
- *             <td><em>(none)</em></td>
- *             <td>Default {@link uk.autores.handling.Handler} that validates resources exist.</td>
- *         </tr>
- *         <tr>
  *             <td>{@link uk.autores.processing.handlers.GenerateByteArraysFromFiles}</td>
  *             <td>any files</td>
  *             <td>{@link uk.autores.processing.handlers.CfgVisibility} {@link uk.autores.processing.handlers.CfgStrategy}</td>
