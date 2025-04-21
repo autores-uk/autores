@@ -6,4 +6,4 @@ HERE="$(dirname $0)"
 
 cd "${HERE}/.."
 
-mvn -f code/annotations/pom.xml clean deploy
+mvn -f code/autores/pom.xml clean deploy

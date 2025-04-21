@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.autores</groupId>
-    <artifactId>autores</artifactId>
+    <artifactId>code</artifactId>
     <packaging>pom</packaging>
-    <version>11.0.38-beta</version>
+    <version>11.0.41-beta</version>
 
     <modules>
         <!-- aggregates -->
-        <module>annotations</module>
+        <module>autores</module>
         <!-- parents -->
         <module>examples</module>
     </modules>
