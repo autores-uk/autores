@@ -130,8 +130,11 @@ public class PrintMessage {
       <h3>Binaries <a id="dist" href="#dist" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
-        Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
-        for a build system import snippet for the <code>uk.autores:annotations</code> library.
+        Browse the central repository 
+        for build system import snippets for the
+        <a href="https://central.sonatype.com/artifact/uk.autores/annotations">uk.autores:annotations</a>
+        and <a href="https://central.sonatype.com/artifact/uk.autores/processing">uk.autores:processing</a>
+        libraries.
       </p>
 
       <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
@@ -178,7 +181,7 @@ module example.module.name {
       </code></pre>
 
       <p>
-        If necessary make the compiler aware of the annotation processor using
+        Make the compiler aware of the annotation processor using
         <a href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html">annotationProcessorPaths</a>.
       </p>
 
@@ -194,7 +197,7 @@ module example.module.name {
               &lt;annotationProcessorPaths>
                   &lt;path>
                       &lt;groupId>uk.autores&lt;/groupId>
-                      &lt;artifactId>annotations&lt;/artifactId>
+                      &lt;artifactId>processing&lt;/artifactId>
                       &lt;version><em>${autores.version}</em>&lt;/version>
                   &lt;/path>
               &lt;/annotationProcessorPaths>
@@ -208,18 +211,16 @@ module example.module.name {
 
       <p>
         <a href="https://gradle.org/">Gradle</a> projects must add resource files to the classpath.
-        The library must be exposed to the
+        The processing library must be exposed to the
         <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">annotation processor</a>.
       </p>
 
       <pre><code>
 <em>// Gradle 8; Kotlin syntax</em>
-var autores = "uk.autores:annotations:" + <em>autoresVersion</em>
-
 dependencies {
   compileOnly(files("src/main/resources"))
-  compileOnly(autores)
-  annotationProcessor(autores)
+  compileOnly("uk.autores:annotations:" + <em>autoresVersion</em>)
+  annotationProcessor("uk.autores:processing:" + <em>autoresVersion</em>)
 }
       </code></pre>
 
