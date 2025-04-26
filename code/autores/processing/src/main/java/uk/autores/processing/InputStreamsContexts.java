@@ -4,6 +4,7 @@ package uk.autores.processing;
 
 import uk.autores.InputStreams;
 import uk.autores.Processing;
+import uk.autores.Visibility;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
 import uk.autores.processing.handlers.CfgName;
@@ -30,7 +31,7 @@ final class InputStreamsContexts extends ContextFactory<InputStreams, Repeatable
     @Override
     List<Config> config(InputStreams r) {
         List<Config> cfg = new ArrayList<>();
-        if (r.isPublic()) {
+        if (r.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
         if (!r.name().isEmpty()) {

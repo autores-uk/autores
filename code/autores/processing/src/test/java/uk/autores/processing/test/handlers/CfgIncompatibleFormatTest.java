@@ -29,7 +29,7 @@ class CfgIncompatibleFormatTest {
     void matches() {
         for (String enc : asList(CfgIncompatibleFormat.WARN, CfgIncompatibleFormat.IGNORE, CfgIncompatibleFormat.ERROR)) {
             boolean found = Stream.of(Severity.values())
-                    .map(Severity::value)
+                    .map(Severity::token)
                     .anyMatch(enc::equals);
             assertTrue(found);
         }

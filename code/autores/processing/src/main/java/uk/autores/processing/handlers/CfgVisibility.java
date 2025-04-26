@@ -12,6 +12,9 @@ public final class CfgVisibility {
     public static final String VISIBILITY = "visibility";
 
     /** Value */
+    public static final String PACKAGE = "";
+
+    /** Value */
     public static final String PUBLIC = "public";
 
     /**
@@ -19,7 +22,11 @@ public final class CfgVisibility {
      * @see ConfigDef
      * @see ResourceFiles#config()
      */
-    public static final ConfigDef DEF= new ConfigDef(VISIBILITY, PUBLIC::equals);
+    public static final ConfigDef DEF= new ConfigDef(VISIBILITY, CfgVisibility::valid);
 
     private CfgVisibility() {}
+
+    private static boolean valid(String value) {
+        return PACKAGE.equals(value) || PUBLIC.equals(value);
+    }
 }
