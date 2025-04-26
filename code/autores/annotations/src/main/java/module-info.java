@@ -23,6 +23,14 @@
  *     Modules that extend the API via the <code>{@link uk.autores.handling}</code> package
  *     should generally use the <code>requires {@link uk.autores};</code> directive.
  *  </p>
+ *  <h3>Processing Annotations</h3>
+ *  <p>
+ *      A separate module, <code>uk.autores.processing</code>,
+ *      performs the work of processing annotations.
+ *      This library must be present on the annotation processor classpath at compile time.
+ *      See <a target="_blank" href="https://github.com/autores-uk/autores">source code</a>
+ *      for more information.
+ *  </p>
  */
 module uk.autores {
     // provides annotation processing library
