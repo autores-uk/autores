@@ -28,7 +28,7 @@
  *      A separate module, <code>uk.autores.processing</code>,
  *      performs the work of processing annotations.
  *      This library must be present on the annotation processor classpath at compile time.
- *      See <a target="_blank" href="https://github.com/autores-uk/autores">source code</a>
+ *      See <a target="_blank" href="https://github.com/autores-uk/autores">source project</a>
  *      for more information.
  *  </p>
  */
