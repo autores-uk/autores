@@ -7,7 +7,6 @@ import uk.autores.Severity;
 import uk.autores.handling.ConfigDef;
 import uk.autores.processing.handlers.CfgIncompatibleFormat;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;

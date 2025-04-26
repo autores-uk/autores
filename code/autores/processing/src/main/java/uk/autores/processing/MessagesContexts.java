@@ -10,12 +10,8 @@ import uk.autores.processing.handlers.*;
 import uk.autores.repeat.RepeatableMessages;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages> {
     private final Handler handler = new GenerateMessagesFromProperties();

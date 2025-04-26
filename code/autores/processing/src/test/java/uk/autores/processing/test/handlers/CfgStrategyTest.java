@@ -3,10 +3,8 @@
 package uk.autores.processing.test.handlers;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.Severity;
 import uk.autores.Strategy;
 import uk.autores.handling.ConfigDef;
-import uk.autores.processing.handlers.CfgIncompatibleFormat;
 import uk.autores.processing.handlers.CfgStrategy;
 
 import java.util.stream.Stream;
