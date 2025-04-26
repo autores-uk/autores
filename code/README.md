@@ -2,11 +2,8 @@
 
 ## TOOLS
 
-Building from source requires a [Java Development Kit](https://sdkman.io/jdks).
-
- - Java Development Kit
-   - e.g. [Temurin JDK](https://adoptium.net)
-   - minimum version defined by `maven.compiler.target` property in pom
+Building from source requires a [Java Development Kit](https://whichjdk.com/).
+The minimum version is defined by the `maven.compiler.target` property in [pom.xml](pom.xml).
 
 ## BUILD
 
