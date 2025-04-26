@@ -10,8 +10,12 @@ import uk.autores.processing.handlers.*;
 import uk.autores.repeat.RepeatableMessages;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages> {
     private final Handler handler = new GenerateMessagesFromProperties();
@@ -35,6 +39,9 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages
         cfg.add(new Config(CfgLocalize.LOCALIZE, m.localize() ? CfgLocalize.TRUE : CfgLocalize.FALSE));
         cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().value()));
         cfg.add(new Config(CfgIncompatibleFormat.INCOMPATIBLE_FORMAT, m.incompatibleFormat().value()));
+        cfg.add(new Config(CfgMessageTypes.NONE_TYPE, name(m::noneType)));
+        cfg.add(new Config(CfgMessageTypes.NUMBER_TYPE, name(m::numberType)));
+        cfg.add(new Config(CfgMessageTypes.DATE_TIME_TYPE, name(m::dateTimeType)));
 
         return cfg;
     }

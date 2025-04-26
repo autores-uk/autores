@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.text.MessageFormat;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -111,10 +112,12 @@ public final class GenerateMessagesFromProperties implements Handler {
      * @see CfgMissingKey
      * @see CfgFormat
      * @see CfgIncompatibleFormat
+     * @see CfgMessageTypes
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF);
+        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF,
+                CfgMessageTypes.DEF_NONE, CfgMessageTypes.DEF_NUMBER, CfgMessageTypes.DEF_DATE_TIME);
     }
 
     @Override
@@ -376,7 +379,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              FormatExpression expression,
                              String method) throws IOException {
 
-        Class<?>[] args = expression.argTypes();
+        String[] args = args(ctxt, expression);
         boolean needsLocaleForFormat = expression.needsLocale();
         boolean hasLocalizedMsg = hasTranslations(msgs, key);
 
@@ -391,8 +394,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             writer.append(delim);
             delim = ", ";
 
-            String vt = args[i].getName();
-            writer.append(vt).append(" arg").append(Integer.toString(i));
+            writer.append(args[i]).append(" arg").append(Integer.toString(i));
         }
         writer.append(") ").openBrace().nl();
 
@@ -403,6 +405,32 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         writer.closeBrace().nl();
+    }
+
+    private String[] args(Context ctxt, FormatExpression expression) {
+        Class<?>[] args = expression.argTypes();
+        String[] result = new String[args.length];
+        for (int i = 0; i < args.length; i++) {
+            String name = args[i].getName();
+            switch (name) {
+                case "java.lang.Number":
+                    result[i] = argOp(ctxt, CfgMessageTypes.DEF_NUMBER, Number.class);
+                    break;
+                case "java.time.temporal.TemporalAccessor":
+                    result[i] = argOp(ctxt, CfgMessageTypes.DEF_NUMBER, TemporalAccessor.class);
+                    break;
+                case "java.lang.Object":
+                    result[i] = argOp(ctxt, CfgMessageTypes.DEF_NONE, Object.class);
+                    break;
+                default:
+                    result[i] = name;
+            }
+        }
+        return result;
+    }
+
+    private String argOp(Context ctxt, ConfigDef key, Class<?> defaultType) {
+        return ctxt.option(key).orElse(defaultType.getName());
     }
 
     private void writeTranslatedExpressions(Context ctxt,
