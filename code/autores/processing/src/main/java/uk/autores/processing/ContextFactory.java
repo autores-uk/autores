@@ -11,8 +11,10 @@ import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
@@ -112,6 +114,13 @@ abstract class ContextFactory<S extends Annotation, R extends Annotation> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected String name(Supplier<Class<?>> s) {
+        TypeMirror tm = mirror(s);
+        Types types = env.getTypeUtils();
+        TypeElement element = (TypeElement) types.asElement(tm);
+        return element.getQualifiedName().toString();
     }
 
     private TypeMirror mirror(Supplier<?> s) {

@@ -18,12 +18,6 @@
  *     </thead>
  *     <tbody>
  *         <tr>
- *             <td>{@link uk.autores.handling.AssertResourceExists}</td>
- *             <td>any files</td>
- *             <td><em>(none)</em></td>
- *             <td>Default {@link uk.autores.handling.Handler} that validates resources exist.</td>
- *         </tr>
- *         <tr>
  *             <td>{@link uk.autores.processing.handlers.GenerateByteArraysFromFiles}</td>
  *             <td>any files</td>
  *             <td>{@link uk.autores.processing.handlers.CfgVisibility} {@link uk.autores.processing.handlers.CfgStrategy}</td>
@@ -44,7 +38,7 @@
  *         <tr>
  *             <td>{@link uk.autores.processing.handlers.GenerateMessagesFromProperties}</td>
  *             <td>{@link java.util.Properties} files</td>
- *             <td>{@link uk.autores.processing.handlers.CfgVisibility} {@link uk.autores.processing.handlers.CfgLocalize} {@link uk.autores.processing.handlers.CfgMissingKey} {@link uk.autores.processing.handlers.CfgFormat}</td>
+ *             <td>{@link uk.autores.processing.handlers.CfgVisibility} {@link uk.autores.processing.handlers.CfgLocalize} {@link uk.autores.processing.handlers.CfgMissingKey} {@link uk.autores.processing.handlers.CfgFormat} {@link uk.autores.processing.handlers.CfgIncompatibleFormat}</td>
  *             <td>Generates classes with methods for returning property values including support for localization and message formatting.</td>
  *         </tr>
  *         <tr>

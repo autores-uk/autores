@@ -35,6 +35,9 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages
         cfg.add(new Config(CfgLocalize.LOCALIZE, m.localize() ? CfgLocalize.TRUE : CfgLocalize.FALSE));
         cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().value()));
         cfg.add(new Config(CfgIncompatibleFormat.INCOMPATIBLE_FORMAT, m.incompatibleFormat().value()));
+        cfg.add(new Config(CfgMessageTypes.NONE_TYPE, name(m::noneType)));
+        cfg.add(new Config(CfgMessageTypes.NUMBER_TYPE, name(m::numberType)));
+        cfg.add(new Config(CfgMessageTypes.DATE_TIME_TYPE, name(m::dateTimeType)));
 
         return cfg;
     }
