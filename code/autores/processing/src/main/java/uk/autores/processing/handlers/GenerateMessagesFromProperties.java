@@ -417,7 +417,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                     result[i] = argOp(ctxt, CfgMessageTypes.DEF_NUMBER, Number.class);
                     break;
                 case "java.time.temporal.TemporalAccessor":
-                    result[i] = argOp(ctxt, CfgMessageTypes.DEF_NUMBER, TemporalAccessor.class);
+                    result[i] = argOp(ctxt, CfgMessageTypes.DEF_DATE_TIME, TemporalAccessor.class);
                     break;
                 case "java.lang.Object":
                     result[i] = argOp(ctxt, CfgMessageTypes.DEF_NONE, Object.class);
