@@ -1,7 +1,6 @@
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.Strategy;
 import uk.autores.Visibility;
 
 import java.util.Set;
