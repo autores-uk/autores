@@ -7,7 +7,7 @@
     <groupId>uk.autores</groupId>
     <artifactId>code</artifactId>
     <packaging>pom</packaging>
-    <version>11.0.42-beta-SNAPSHOT</version>
+    <version>11.0.42-beta</version>
 
     <modules>
         <!-- aggregates -->
