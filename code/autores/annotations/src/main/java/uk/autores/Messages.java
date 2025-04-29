@@ -59,10 +59,9 @@ public @interface Messages {
 
     /**
      * Generated code visibility.
-     *
      * @return visibility
      */
-    boolean isPublic() default false;
+    Visibility visibility() default Visibility.PACKAGE;
 
     /**
      * Search for localized properties.

@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class StrategyTest {
 
     @Test
-    void value() {
+    void token() {
         Strategy[] all = Strategy.values();
         Set<String> names = Stream.of(all)
-                .map(Strategy::value)
+                .map(Strategy::token)
                 .collect(Collectors.toSet());
         assertEquals(all.length, names.size());
     }

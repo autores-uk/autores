@@ -11,10 +11,10 @@ public enum Severity {
     /** Processor is expected to silently ignore problem. */
     IGNORE("ignore");
 
-    private final String value;
+    private final String token;
 
-    Severity(String value) {
-        this.value = value;
+    Severity(String token) {
+        this.token = token;
     }
 
     /**
@@ -22,7 +22,7 @@ public enum Severity {
      *
      * @return configuration string
      */
-    public String value() {
-        return value;
+    public String token() {
+        return token;
     }
 }

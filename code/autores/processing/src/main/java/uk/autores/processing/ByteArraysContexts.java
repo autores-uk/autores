@@ -4,6 +4,7 @@ package uk.autores.processing;
 
 import uk.autores.ByteArrays;
 import uk.autores.Processing;
+import uk.autores.Visibility;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
 import uk.autores.processing.handlers.CfgName;
@@ -31,14 +32,14 @@ final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByte
     @Override
     List<Config> config(ByteArrays byteArrays) {
         List<Config> cfg = new ArrayList<>();
-        if (byteArrays.isPublic()) {
+        if (byteArrays.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
         String name = byteArrays.name();
         if (!"".equals(name)) {
             cfg.add(new Config(CfgName.NAME, name));
         }
-        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrays.strategy().value()));
+        cfg.add(new Config(CfgStrategy.STRATEGY, byteArrays.strategy().token()));
         return cfg;
     }
 

@@ -42,5 +42,5 @@ public @interface Keys {
      * Generated code visibility.
      * @return visibility
      */
-    boolean isPublic() default false;
+    Visibility visibility() default Visibility.PACKAGE;
 }

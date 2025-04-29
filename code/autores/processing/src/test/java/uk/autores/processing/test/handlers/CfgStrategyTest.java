@@ -29,7 +29,7 @@ class CfgStrategyTest {
     void matches() {
         for (String enc : asList(CfgStrategy.AUTO, CfgStrategy.INLINE, CfgStrategy.LAZY, CfgStrategy.CONST)) {
             boolean found = Stream.of(Strategy.values())
-                    .map(Strategy::value)
+                    .map(Strategy::token)
                     .anyMatch(enc::equals);
             assertTrue(found, enc);
         }
