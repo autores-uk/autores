@@ -1,7 +1,8 @@
 package uk.autores.test;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.Severity;
+import uk.autores.Strategy;
+import uk.autores.Visibility;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,13 +10,13 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SeverityTest {
+class VisibilityTest {
 
     @Test
     void token() {
-        Severity[] all = Severity.values();
+        Visibility[] all = Visibility.values();
         Set<String> names = Stream.of(all)
-                .map(Severity::token)
+                .map(Visibility::token)
                 .collect(Collectors.toSet());
         assertEquals(all.length, names.size());
     }

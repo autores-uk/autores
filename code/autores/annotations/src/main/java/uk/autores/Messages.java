@@ -6,6 +6,8 @@ import uk.autores.naming.IdiomaticNamer;
 import uk.autores.repeat.RepeatableMessages;
 
 import java.lang.annotation.*;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
 
 /**
  * <p>
@@ -57,10 +59,9 @@ public @interface Messages {
 
     /**
      * Generated code visibility.
-     *
      * @return visibility
      */
-    boolean isPublic() default false;
+    Visibility visibility() default Visibility.PACKAGE;
 
     /**
      * Search for localized properties.
@@ -91,4 +92,31 @@ public @interface Messages {
      * @return error severity
      */
     Severity incompatibleFormat() default Severity.ERROR;
+
+    /**
+     * Signature type where format expression has no type.
+     * Set this to broaden to {@link Object#toString()}
+     * or narrow to {@link String}.
+     *
+     * @return type used in generated methods
+     */
+    Class<?> noneType() default CharSequence.class;
+
+    /**
+     * Signature type where format expression is "number" or "choice" type.
+     * Set this to use stricter {@link Number} types.
+     *
+     * @return type used in generated methods
+     */
+    Class<? extends Number> numberType() default Number.class;
+
+    /**
+     * Signature type where format expression is date/time type.
+     * Set this to relax rules on input.
+     * Using inappropriate {@link TemporalAccessor} types with some expressions
+     * can result in {@link java.time.DateTimeException}.
+     *
+     * @return type used in generated methods
+     */
+    Class<? extends TemporalAccessor> dateTimeType() default ZonedDateTime.class;
 }

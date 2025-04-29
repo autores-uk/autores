@@ -43,16 +43,10 @@ public @interface ByteArrays {
     String name() default "";
 
     /**
-     * <p>
-     *     Generated code visibility.
-     * </p>
-     * <p>
-     *     Uses <code>public</code> declarations when set to true.
-     * </p>
-     *
+     * Generated code visibility.
      * @return visibility
      */
-    boolean isPublic() default false;
+    Visibility visibility() default Visibility.PACKAGE;
 
     /**
      * Code generation strategy.

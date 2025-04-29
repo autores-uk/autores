@@ -4,6 +4,7 @@ package uk.autores.processing;
 
 import uk.autores.Messages;
 import uk.autores.Processing;
+import uk.autores.Visibility;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
 import uk.autores.processing.handlers.*;
@@ -28,13 +29,16 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages
     @Override
     List<Config> config(Messages m) {
         List<Config> cfg = new ArrayList<>();
-        if (m.isPublic()) {
+        if (m.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
         cfg.add(new Config(CfgFormat.FORMAT, m.format() ? CfgFormat.TRUE : CfgFormat.FALSE));
         cfg.add(new Config(CfgLocalize.LOCALIZE, m.localize() ? CfgLocalize.TRUE : CfgLocalize.FALSE));
-        cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().value()));
-        cfg.add(new Config(CfgIncompatibleFormat.INCOMPATIBLE_FORMAT, m.incompatibleFormat().value()));
+        cfg.add(new Config(CfgMissingKey.MISSING_KEY, m.missingKey().token()));
+        cfg.add(new Config(CfgIncompatibleFormat.INCOMPATIBLE_FORMAT, m.incompatibleFormat().token()));
+        cfg.add(new Config(CfgMessageTypes.NONE_TYPE, name(m::noneType)));
+        cfg.add(new Config(CfgMessageTypes.NUMBER_TYPE, name(m::numberType)));
+        cfg.add(new Config(CfgMessageTypes.DATE_TIME_TYPE, name(m::dateTimeType)));
 
         return cfg;
     }

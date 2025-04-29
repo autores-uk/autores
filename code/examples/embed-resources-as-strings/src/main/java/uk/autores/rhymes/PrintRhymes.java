@@ -4,8 +4,10 @@ package uk.autores.rhymes;
 
 import uk.autores.Texts;
 
+import static uk.autores.Visibility.PUBLIC;
+
 // UTF-8 encoded text files containing nursery rhymes
-@Texts(value = {"Poule.txt", "Roses.txt"}, isPublic = true)
+@Texts(value = {"Poule.txt", "Roses.txt"}, visibility = PUBLIC)
 public class PrintRhymes {
 
     public static void main(String...args)  {

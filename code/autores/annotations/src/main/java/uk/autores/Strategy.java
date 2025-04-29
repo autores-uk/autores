@@ -31,10 +31,10 @@ public enum Strategy {
      */
     LAZY("lazy");
 
-    private final String value;
+    private final String token;
 
-    Strategy(String value) {
-        this.value = value;
+    Strategy(String token) {
+        this.token = token;
     }
 
     /**
@@ -42,7 +42,7 @@ public enum Strategy {
      *
      * @return configuration string
      */
-    public String value() {
-        return value;
+    public String token() {
+        return token;
     }
 }

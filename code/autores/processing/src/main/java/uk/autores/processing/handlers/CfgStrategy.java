@@ -45,7 +45,7 @@ public final class CfgStrategy {
 
     private static String regex() {
         return Stream.of(Strategy.values())
-                .map(Strategy::value)
+                .map(Strategy::token)
                 .collect(Collectors.joining("|"));
     }
 }

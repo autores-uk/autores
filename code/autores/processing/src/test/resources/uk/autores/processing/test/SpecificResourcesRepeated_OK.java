@@ -2,15 +2,15 @@ package uk.autores.processing.test;
 
 import uk.autores.*;
 
-@ByteArrays(isPublic = true)
+@ByteArrays(visibility = Visibility.PUBLIC)
 @ByteArrays(value = "SpecificResourcesRepeated_OK.java", strategy = Strategy.INLINE)
-@InputStreams(isPublic = true)
+@InputStreams(visibility = Visibility.PUBLIC)
 @InputStreams(name = "Foo")
-@Messages(isPublic = true, format = false, localize = false)
+@Messages(visibility = Visibility.PUBLIC, format = false, localize = false)
 @Messages
-@Keys(isPublic = true)
+@Keys(visibility = Visibility.PUBLIC)
 @Keys
-@Texts(isPublic = true)
+@Texts(visibility = Visibility.PUBLIC)
 @Texts
 class SpecificResourcesRepeated_OK {
 }

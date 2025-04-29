@@ -4,6 +4,7 @@ package uk.autores.processing;
 
 import uk.autores.Keys;
 import uk.autores.Processing;
+import uk.autores.Visibility;
 import uk.autores.handling.Config;
 import uk.autores.handling.Handler;
 import uk.autores.processing.handlers.CfgVisibility;
@@ -29,7 +30,7 @@ final class KeysContexts extends ContextFactory<Keys, RepeatableKeys> {
     @Override
     List<Config> config(Keys m) {
         List<Config> cfg = new ArrayList<>();
-        if (m.isPublic()) {
+        if (m.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }
 

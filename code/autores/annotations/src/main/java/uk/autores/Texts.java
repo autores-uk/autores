@@ -46,7 +46,7 @@ public @interface Texts {
      * Generated code visibility.
      * @return visibility
      */
-    boolean isPublic() default false;
+    Visibility visibility() default Visibility.PACKAGE;
 
     /**
      * Code generation strategy.
