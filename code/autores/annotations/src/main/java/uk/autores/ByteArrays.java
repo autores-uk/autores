@@ -38,6 +38,8 @@ public @interface ByteArrays {
 
     /**
      * Generated class name.
+     * The final segment of the package name is used when not set.
+     *
      * @return name
      */
     String name() default "";

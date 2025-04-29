@@ -48,7 +48,9 @@ public @interface InputStreams {
 
     /**
      * Generated class name.
-     * @return class name
+     * The final segment of the package name is used when not set.
+     *
+     * @return name
      */
     String name() default "";
 }

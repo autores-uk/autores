@@ -38,7 +38,9 @@ public @interface Texts {
 
     /**
      * Generated class name.
-     * @return type name
+     * The final segment of the package name is used when not set.
+     *
+     * @return name
      */
     String name() default "";
 
@@ -55,7 +57,10 @@ public @interface Texts {
     Strategy strategy() default Strategy.AUTO;
 
     /**
-     * Resource <a href="https://en.wikipedia.org/wiki/Character_encoding">character encoding</a>.
+     * Resource <a href="https://en.wikipedia.org/wiki/Character_encoding" target="_">character encoding</a>.
+     * Character decoding is strict.
+     * Malformed characters result in errors.
+     *
      * @return canonical encoding name
      */
     String encoding() default "UTF-8";
