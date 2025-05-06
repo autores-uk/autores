@@ -36,12 +36,19 @@ public class TestFiler implements Filer {
 
     @Override
     public JavaFileObject createClassFile(CharSequence name, Element... originatingElements) throws IOException {
-        throw new UnsupportedEncodingException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public FileObject createResource(JavaFileManager.Location location, CharSequence pkg, CharSequence relativeName, Element... originatingElements) throws IOException {
-        throw new UnsupportedEncodingException();
+        if (files.containsKey(relativeName)) {
+            throw new IOException("Already exists: " + relativeName);
+        }
+        // this isn't very safe - allows over-write where real env wouldn't
+        TestFileObject file = new TestFileObject(false);
+        Map<String, TestFileObject> map = files.computeIfAbsent(StandardLocation.CLASS_OUTPUT, k -> new HashMap<>());
+        map.put(relativeName.toString(), file);
+        return file;
     }
 
     @Override
