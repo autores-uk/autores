@@ -13,6 +13,7 @@ module uk.autores.processing.test {
 
     opens uk.autores.processing.test to org.junit.platform.commons;
     opens uk.autores.processing.test.handlers to org.junit.platform.commons;
+    opens uk.autores.processing.test.handlers.debug to org.junit.platform.commons;
 
     exports uk.autores.processing.test;
 }

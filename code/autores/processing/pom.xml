@@ -191,6 +191,7 @@
                     <argLine>
                         --add-opens uk.autores.processing/uk.autores.processing=uk.autores.processing.test
                         --add-opens uk.autores.processing/uk.autores.processing.handlers=uk.autores.processing.test
+                        --add-opens uk.autores.processing/uk.autores.processing.handlers.debug=uk.autores.processing.test
                         --add-exports uk.autores.processing/uk.autores.processing=uk.autores.processing.test
                     </argLine>
                 </configuration>
