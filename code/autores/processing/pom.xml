@@ -92,6 +92,7 @@
                     <doclint>all</doclint>
                     <failOnWarnings>true</failOnWarnings>
                     <serialwarn>true</serialwarn>
+                    <excludePackageNames>uk.autores.processing.handlers.debug</excludePackageNames>
                 </configuration>
             </plugin>
             <!-- coverage -->
