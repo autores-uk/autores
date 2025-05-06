@@ -4,7 +4,7 @@ package uk.autores.processing.test.handlers.debug;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.handling.ConfigDef;
-import uk.autores.processing.handlers.*;
+import uk.autores.processing.handlers.debug.DebugReport;
 import uk.autores.processing.test.testing.HandlerResults;
 import uk.autores.processing.test.testing.HandlerTester;
 
