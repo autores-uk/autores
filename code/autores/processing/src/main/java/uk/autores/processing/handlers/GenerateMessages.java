@@ -68,6 +68,12 @@ final class GenerateMessages {
             case PERCENT:
                 w.append("java.text.NumberFormat.getPercentInstance(l)");
                 break;
+            case COMPACT_LONG:
+                w.append("java.text.NumberFormat.getCompactNumberInstance(l, java.text.NumberFormat.Style.LONG)");
+                break;
+            case COMPACT_SHORT:
+                w.append("java.text.NumberFormat.getCompactNumberInstance(l, java.text.NumberFormat.Style.SHORT)");
+                break;
             case SUBFORMAT:
                 String symbols = "java.text.DecimalFormatSymbols.getInstance(l)";
                 String sf = v.subformat();

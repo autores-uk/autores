@@ -1,4 +1,4 @@
-// Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
+// Copyright 2025 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
 
 import javax.annotation.processing.Processor;
@@ -17,6 +17,7 @@ module uk.autores.processing {
     // public packages
     exports uk.autores.processing;
     exports uk.autores.processing.handlers;
+    exports uk.autores.processing.handlers.debug;
     // annotation processor
     provides Processor with uk.autores.processing.ResourceFilesProcessor;
 }
