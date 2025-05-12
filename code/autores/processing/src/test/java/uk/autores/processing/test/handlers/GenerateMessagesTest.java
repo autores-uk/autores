@@ -35,6 +35,20 @@ class GenerateMessagesTest {
         assertFalse(buf.toString().isEmpty());
     }
 
+    @Test
+    void exerciseCompactNumberCode() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        // Need JDK12 to use java.text.NumberFormat.getCompactNumberInstance so just exercise code for now
+        FormatExpression expression = FormatExpression.parse("{0,number,compact_short} {0,number,compact_long}");
+        StringWriter buf = new StringWriter();
+        try (Closeable jw = JavaWriter(buf)) {
+            write(jw, Locale.US, expression, false);
+        } catch (IOException e) {
+            fail(e);
+        }
+
+        assertFalse(buf.toString().isEmpty());
+    }
+
     private static Closeable JavaWriter(Writer w) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         ClassLoader cl = GenerateMessagesTest.class.getClassLoader();
         Class<?>[] c = {Element.class};
