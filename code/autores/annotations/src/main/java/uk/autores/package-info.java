@@ -82,6 +82,13 @@
  *     Custom names may be required where collisions occur or derived names are not valid identifiers.
  * </p>
  *
+ * <h3>Retention</h3>
+ *
+ * <p>
+ *     Annotations in this package have {@link java.lang.annotation.RetentionPolicy#SOURCE} retention.
+ *     They are compile-time only.
+ * </p>
+ *
  * <h3>Links</h3>
  *
  * <ul>
