@@ -1,5 +1,5 @@
 body { font-size: calc(0.6em + 0.6vw); font-family: sans-serif; max-width: 60em; margin: 0 auto; color: black; background-color:white; }
-code { font-weight: bolder; color: rgb(207, 55, 0); }
+code { font-weight: bolder; color: rgb(207, 55, 0); white-space: nowrap; }
 code code { font-weight: bolder; color: black; }
 code em { font-weight: bolder; color: dimgrey; }
 pre { border-radius: 10px; border-style: groove; border-color: gainsboro; overflow: scroll; }
