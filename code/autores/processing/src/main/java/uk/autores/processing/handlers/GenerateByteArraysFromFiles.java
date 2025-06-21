@@ -78,7 +78,7 @@ public class GenerateByteArraysFromFiles implements Handler {
         }
 
         String strategy = context.option(CfgStrategy.DEF).orElse(CfgStrategy.AUTO);
-        GenerationState gs = new GenerationState(className);
+        GenerationState gs = new GenerationState();
 
         String qualifiedName = context.pkg().qualifiedClassName(className);
 
@@ -133,6 +133,7 @@ public class GenerateByteArraysFromFiles implements Handler {
     private static void writeUtilityLoad(JavaWriter writer) throws IOException {
         writer.nl();
         writer.indent()
+                .append("private ")
                 .staticMember("byte[]", "load$")
                 .append("(java.lang.String resource, int size) ")
                 .openBrace().nl();
@@ -158,7 +159,7 @@ public class GenerateByteArraysFromFiles implements Handler {
     }
 
     private static void writeUtilityDecode(JavaWriter writer) throws IOException {
-        writer.indent().append("static int decode$(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
+        writer.indent().append("private static int decode$(java.lang.String s, byte[] barr, int off) ").openBrace().nl();
         writer.indent().append("for (int i = 0, len = s.length(); i < len; i++) ").openBrace().nl();
         writer.indent().append("char c = s.charAt(i);").nl();
         writer.indent().append("barr[off++] = (byte) (c >> 8);").nl();
@@ -263,8 +264,7 @@ public class GenerateByteArraysFromFiles implements Handler {
         writeSignature(writer, stats.name);
 
         writer.indent().append("byte[] barr = ")
-                .append(gs.utilityTypeClassName)
-                .append(".load$(")
+                .append("load$(")
                 .string(stats.resource.toString())
                 .append(", ")
                 .append((int) stats.size).append(");").nl();
@@ -289,14 +289,13 @@ public class GenerateByteArraysFromFiles implements Handler {
              BufferedReader br = new BufferedReader(bhr, 0xFFFF)) {
             odd = bhr;
 
-            String util = gs.utilityTypeClassName;
             ModifiedUtf8Buffer buf8 = gs.utf8Buffer();
             while (buf8.receive(br)) {
                 writer.indent();
                 if (!exhausted(br)) {
                     writer.append("off = ");
                 }
-                writer.append(util).append(".decode$(");
+                writer.append("decode$(");
                 writeLiteral(writer, buf8);
                 writer.append(", barr, off);").nl();
                 constCount++;
@@ -381,11 +380,6 @@ public class GenerateByteArraysFromFiles implements Handler {
         boolean needsLoadMethod;
         boolean needDecodeMethod;
         ModifiedUtf8Buffer utf8Buffer;
-        final String utilityTypeClassName;
-
-        GenerationState(String utilityTypeClassName) {
-            this.utilityTypeClassName = utilityTypeClassName;
-        }
 
         ModifiedUtf8Buffer utf8Buffer() {
             if (utf8Buffer == null) {
