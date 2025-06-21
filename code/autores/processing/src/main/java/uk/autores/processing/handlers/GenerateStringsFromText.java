@@ -184,8 +184,7 @@ public class GenerateStringsFromText implements Handler {
         writeMethodDeclaration(writer, stats.name);
 
         writer.indent().append("return ")
-                .append(generationState.utilityTypeClassName)
-                .append(".load$(")
+                .append("load$(")
                 .string(stats.resource)
                 .append(", ")
                 .append(size)
@@ -216,7 +215,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private static void writeUtilityLoadMethod(JavaWriter writer, String encoding) throws IOException {
-        String decl = "static java.lang.String load$(java.lang.String resource, int size) ";
+        String decl = "private static java.lang.String load$(java.lang.String resource, int size) ";
 
         writer.indent().append(decl).openBrace().nl();
         writer.indent()
