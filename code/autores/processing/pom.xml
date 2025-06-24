@@ -93,6 +93,7 @@
                     <failOnWarnings>true</failOnWarnings>
                     <serialwarn>true</serialwarn>
                     <excludePackageNames>uk.autores.processing.handlers.debug</excludePackageNames>
+                    <additionalOptions>--allow-script-in-comments</additionalOptions>
                 </configuration>
             </plugin>
             <!-- coverage -->

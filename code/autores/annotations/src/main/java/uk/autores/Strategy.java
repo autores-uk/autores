@@ -17,7 +17,7 @@ public enum Strategy {
     /**
      * Generated code embeds data in class.
      * This generally means embedding data in class files as
-     * <a href="https://docs.oracle.com/javase/specs/index.html">bytecode</a>.
+     * <a href="https://docs.oracle.com/javase/specs/index.html" target="_blank">bytecode</a>.
      */
     INLINE("inline"),
     /**
