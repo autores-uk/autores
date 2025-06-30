@@ -28,7 +28,7 @@
         <format.version>8.1.4</format.version>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>5.13.1</junit.version>
+        <junit.version>5.13.2</junit.version>
 
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
@@ -38,7 +38,7 @@
         <spotbugs.maven.plugin.version>4.8.6.6</spotbugs.maven.plugin.version>
         <spotbugs.version>4.8.6</spotbugs.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
-        <maven.pmd.plugin.version>3.26.0</maven.pmd.plugin.version>
+        <maven.pmd.plugin.version>3.27.0</maven.pmd.plugin.version>
         <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
         <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
@@ -47,8 +47,19 @@
         <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
         <javadoc.bottom><![CDATA[
-                        Copyright 2023-2025
+                        Copyright 2023-2025<br>
                         <a target="_blank" href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
+                        <script>
+                        (() => {
+                            const anchors = document.querySelectorAll("a");
+                            anchors.forEach((a) => {
+                                const href = a.getAttribute("href");
+                                if (href && href.startsWith("https://")) {
+                                    a.setAttribute("target", "_top");
+                                }
+                            });
+                        })();
+                        </script>
                         ]]></javadoc.bottom>
     </properties>
 

@@ -28,7 +28,7 @@ import java.time.temporal.TemporalAccessor;
  * </code></pre>
  *
  * <p>
- *     See <a href="https://docs.oracle.com/javase/tutorial/i18n/resbundle/propfile.html"
+ *     See <a href="https://docs.oracle.com/javase/tutorial/i18n/resbundle/propfile.html" target="_blank"
  *     >Backing a {@link java.util.ResourceBundle} with Properties Files</a> for more information on localization.
  * </p>
  * <p>

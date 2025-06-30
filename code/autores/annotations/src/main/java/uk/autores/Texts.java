@@ -57,7 +57,7 @@ public @interface Texts {
     Strategy strategy() default Strategy.AUTO;
 
     /**
-     * Resource <a href="https://en.wikipedia.org/wiki/Character_encoding" target="_">character encoding</a>.
+     * Resource <a href="https://en.wikipedia.org/wiki/Character_encoding" target="_blank">character encoding</a>.
      * Character decoding is strict.
      * Malformed characters result in errors.
      *
