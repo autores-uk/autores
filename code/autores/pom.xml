@@ -28,7 +28,7 @@
         <format.version>8.1.4</format.version>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>5.13.2</junit.version>
+        <junit.version>5.13.3</junit.version>
 
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
@@ -39,10 +39,10 @@
         <spotbugs.version>4.8.6</spotbugs.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <maven.pmd.plugin.version>3.27.0</maven.pmd.plugin.version>
-        <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
+        <maven.enforcer.plugin.version>3.6.0</maven.enforcer.plugin.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
         <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
-        <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
+        <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
         <nexus.staging.maven.plugin.version>1.7.0</nexus.staging.maven.plugin.version>
         <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
