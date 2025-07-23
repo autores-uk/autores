@@ -10,7 +10,7 @@ import static java.util.Collections.unmodifiableSortedMap;
 final class LocalePatterns {
 
     private SortedMap<String, String[]> relationships;
-    private Map<String, Locale> locales = new HashMap<>();
+    private final Map<String, Locale> locales = new HashMap<>();
 
     private Map<String, String[]> relationships() {
         if (relationships == null) {
@@ -30,7 +30,7 @@ final class LocalePatterns {
         return relationships;
     }
 
-    Iterable<String> patterns() {
+    Set<String> patterns() {
         return relationships().keySet();
     }
 
