@@ -178,10 +178,6 @@
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <parallel>all</parallel>
-<!--                    <argLine>-->
-<!--                        &#45;&#45;add-opens uk.autores/uk.autores.processors=uk.autores.test-->
-<!--                        &#45;&#45;add-opens uk.autores/uk.autores.naming=uk.autores.test-->
-<!--                    </argLine>-->
                 </configuration>
             </plugin>
             <plugin>
