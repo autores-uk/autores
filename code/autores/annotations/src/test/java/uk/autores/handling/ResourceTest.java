@@ -1,7 +1,6 @@
-package uk.autores.test.handling;
+package uk.autores.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.Resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

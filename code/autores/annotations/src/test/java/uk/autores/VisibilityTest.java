@@ -1,7 +1,6 @@
-package uk.autores.test;
+package uk.autores;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.Visibility;
 
 import java.util.Set;
 import java.util.stream.Collectors;

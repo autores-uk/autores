@@ -1,10 +1,6 @@
-package uk.autores.test.handling;
+package uk.autores.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.Config;
-import uk.autores.handling.ConfigDef;
-import uk.autores.handling.Context;
-import uk.autores.handling.Handler;
 
 import java.util.ArrayList;
 import java.util.List;

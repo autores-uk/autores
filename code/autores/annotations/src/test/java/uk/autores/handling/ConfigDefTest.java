@@ -1,7 +1,6 @@
-package uk.autores.test.handling;
+package uk.autores.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.ConfigDef;
 
 import java.util.Objects;
 

@@ -1,7 +1,6 @@
-package uk.autores.test.handling;
+package uk.autores.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 
 import javax.annotation.processing.Messager;

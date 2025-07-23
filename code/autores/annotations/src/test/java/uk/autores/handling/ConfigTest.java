@@ -1,7 +1,6 @@
-package uk.autores.test.handling;
+package uk.autores.handling;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.handling.Config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
