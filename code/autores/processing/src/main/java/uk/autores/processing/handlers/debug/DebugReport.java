@@ -47,7 +47,7 @@ public final class DebugReport implements Handler {
             filer.getResource(l, context.pkg(), r);
             buf.append(l).append(" OK\n");
         } catch (Exception e) {
-            buf.append(l).append(" ").append(e.toString()).append("\n");
+            buf.append(l).append(" ").append(e).append("\n");
         }
     }
 
