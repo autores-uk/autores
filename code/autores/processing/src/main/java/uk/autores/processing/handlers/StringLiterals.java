@@ -29,17 +29,14 @@ final class StringLiterals {
         return arr;
     }
 
-    private static void write(Writer w, char ch) throws IOException {
-        if (ch < ESCS.length) {
-            w.append(ESCS[ch]);
-        } else {
-            w.append(ch);
-        }
-    }
-
     public static void write(CharSequence cs, Writer w) throws IOException {
         for (int i = 0, len = cs.length(); i < len; i++) {
-            write(w, cs.charAt(i));
+            char ch = cs.charAt(i);
+            if (ch < ESCS.length) {
+                w.append(ESCS[ch]);
+            } else {
+                w.append(ch);
+            }
         }
     }
 }

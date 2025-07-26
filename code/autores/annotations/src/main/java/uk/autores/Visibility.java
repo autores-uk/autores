@@ -9,10 +9,10 @@ public enum Visibility {
     /** Public. Elements are declared with the <code>public</code> keyword. */
     PUBLIC("public");
 
-    private final String id;
+    private final String token;
 
-    Visibility(String id) {
-        this.id = id;
+    Visibility(String token) {
+        this.token = token;
     }
 
     /**
@@ -21,6 +21,6 @@ public enum Visibility {
      * @return configuration string
      */
     public String token() {
-        return id;
+        return token;
     }
 }
