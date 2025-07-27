@@ -6,7 +6,7 @@
     <parent>
         <artifactId>autores</artifactId>
         <groupId>uk.autores</groupId>
-        <version>11.1.5</version>
+        <version>17.1.0</version>
     </parent>
 
     <artifactId>processing</artifactId>
@@ -15,12 +15,6 @@
     <description>
         Annotation driven library for handling embedded resources.
     </description>
-
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
