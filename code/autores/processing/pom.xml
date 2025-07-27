@@ -6,7 +6,7 @@
     <parent>
         <artifactId>autores</artifactId>
         <groupId>uk.autores</groupId>
-        <version>17.1.1-SNAPSHOT</version>
+        <version>17.1.1</version>
     </parent>
 
     <artifactId>processing</artifactId>
