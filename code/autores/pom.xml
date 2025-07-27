@@ -7,7 +7,7 @@
     <groupId>uk.autores</groupId>
     <artifactId>autores</artifactId>
     <packaging>pom</packaging>
-    <version>11.1.2</version>
+    <version>11.1.5</version>
 
     <modules>
         <module>annotations</module>
@@ -28,7 +28,7 @@
         <format.version>8.1.4</format.version>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>5.13.1</junit.version>
+        <junit.version>5.13.3</junit.version>
 
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
@@ -38,17 +38,28 @@
         <spotbugs.maven.plugin.version>4.8.6.6</spotbugs.maven.plugin.version>
         <spotbugs.version>4.8.6</spotbugs.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
-        <maven.pmd.plugin.version>3.26.0</maven.pmd.plugin.version>
-        <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
+        <maven.pmd.plugin.version>3.27.0</maven.pmd.plugin.version>
+        <maven.enforcer.plugin.version>3.6.1</maven.enforcer.plugin.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
         <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
-        <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
-        <nexus.staging.maven.plugin.version>1.7.0</nexus.staging.maven.plugin.version>
+        <maven.gpg.plugin.version>3.2.8</maven.gpg.plugin.version>
+        <central.publishing.maven.plugin>0.8.0</central.publishing.maven.plugin>
         <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
         <javadoc.bottom><![CDATA[
-                        Copyright 2023-2025
+                        Copyright 2023-2025<br>
                         <a target="_blank" href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
+                        <script>
+                        (() => {
+                            const anchors = document.querySelectorAll("a");
+                            anchors.forEach((a) => {
+                                const href = a.getAttribute("href");
+                                if (href && href.startsWith("https://")) {
+                                    a.setAttribute("target", "_top");
+                                }
+                            });
+                        })();
+                        </script>
                         ]]></javadoc.bottom>
     </properties>
 
@@ -98,10 +109,13 @@
     </reporting>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+        <repository>
+            <id>central</id>
+            <url>https://central.sonatype.com</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </distributionManagement>
 
     <profiles>
@@ -133,14 +147,14 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>${nexus.staging.maven.plugin.version}</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central.publishing.maven.plugin}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <!-- waitUntil>published</waitUntil-->
                         </configuration>
                     </plugin>
                 </plugins>

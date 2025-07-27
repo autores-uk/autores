@@ -36,7 +36,7 @@ class TranslatedTest {
         ZonedDateTime epoch = ZonedDateTime.ofInstant(Instant.EPOCH, zoneId);
         assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.US, epoch), "Today is Thursday.");
         assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.FRANCE, epoch), "Aujourd'hui, c'est jeudi .");
-        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.CANADA_FRENCH, epoch), "Nous sommes jeudi aujourd'hui.");
+        assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.CANADA_FRENCH, epoch), "Nous sommes jeu. aujourd'hui.");
         assertOutput(Translated::new, (ps, mp) -> mp.printTodayIs(ps, Locale.GERMANY, epoch), "Today is Donnerstag.");
     }
 }

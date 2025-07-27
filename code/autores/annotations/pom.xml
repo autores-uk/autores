@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>11.1.2</version>
+        <version>11.1.5</version>
     </parent>
 
     <artifactId>annotations</artifactId>
@@ -80,6 +80,7 @@
                     <failOnWarnings>true</failOnWarnings>
                     <serialwarn>true</serialwarn>
                     <excludePackageNames>uk.autores.repeat</excludePackageNames>
+                    <additionalOptions>--allow-script-in-comments</additionalOptions>
                 </configuration>
             </plugin>
             <!-- coverage -->
@@ -177,10 +178,6 @@
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <parallel>all</parallel>
-<!--                    <argLine>-->
-<!--                        &#45;&#45;add-opens uk.autores/uk.autores.processors=uk.autores.test-->
-<!--                        &#45;&#45;add-opens uk.autores/uk.autores.naming=uk.autores.test-->
-<!--                    </argLine>-->
                 </configuration>
             </plugin>
             <plugin>
