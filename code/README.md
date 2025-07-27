@@ -2,7 +2,7 @@
 
 ## TOOLS
 
-Building from source requires a [Java Development Kit](https://whichjdk.com/).
+Building from source requires [JDK17+](https://whichjdk.com/).
 
 The required version is defined by the `maven.compiler.target` property in
 [autores/pom.xml](autores/pom.xml).

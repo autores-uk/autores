@@ -154,18 +154,18 @@ public class PrintMessage {
 
       <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
 
+        <p>
+            The current version of this library requires JDK17.
+            Some features of the <code>@Messages</code> annotation require JDK23 or above.
+        </p>
+
       <p>
         Versions are split into three integers: Java version; major version; minor version.
         Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a>
         to see available versions.
       </p>
 
-      <p>
-        Functionally identical Java 8 and Java 11 versions are published.
-        <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
-      </p>
-
-      <h3>Java Module System <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
+      <h3>Java Platform Module System <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
         Use <code>requires static uk.autores</code> in 
