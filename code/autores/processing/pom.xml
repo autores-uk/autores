@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>8.1.5</version>
+        <version>8.1.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>processing</artifactId>
