@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Set Up, Compile and Run an AutoRes.uk Project</title>
+    <link rel="stylesheet" href="../styles.css" type="text/css">
+    <meta name="description" content="Tutorial demonstrating how to use uk.autores">
+    <link rel="icon" href="../icons/favicon.png">
+</head>
+
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="..">HOME</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <h1>How to Set Up, Compile and Run an AutoRes.uk Project</h1>
+
+        <p>
+            This tutorial demonstrates a minimal application that uses the <code>uk.autores</code> package
+            to easily load embedded resource files in Java applications.
+            Prior experience with git, Java and Maven is assumed.
+        </p>
+
+        <h2>Prerequisites</h2>
+
+        <p>Install:</p>
+
+        <ul>
+            <li><a href="https://git-scm.com/downloads">git client</a></li>
+            <li><a href="https://whichjdk.com/">Java Development Kit</a> 8+</li>
+        </ul>
+
+        <p>
+            The tutorial uses <a href="https://maven.apache.org/">Apache Maven</a> but this does not need to be
+            installed.
+            The <a href="https://maven.apache.org/wrapper/">Maven Wrapper</a> scripts will download Maven if required.
+        </p>
+
+        <h2>Steps</h2>
+
+        <ol>
+            <li>
+                <h3>Check out the <a href="https://github.com/autores-uk/tutorial">tutorial</a> project</h3>
+                <pre><code>git clone https://github.com/autores-uk/tutorial.git</code></pre>
+            </li>
+            <li>
+                <h3>Compile and run the program</h3>
+                <pre><code>./mvnw --quiet compile exec:java</code></pre>
+                <p>The program prints <code>Hello World!</code> to the command line.</p>
+                <p>On Microsoft Windows use <code>mvnw.cmd</code> instead of <code>./mvnw</code>.</p>
+            </li>
+        </ol>
+
+        <h2>Explore the Project</h2>
+
+        <h3>pom.xml</h3>
+        <p>
+            The
+            <a href="https://maven.apache.org/pom.html">Project Object Model</a>
+            specifies <code>uk.autores:annotations</code> in the <code>dependencies</code>.
+            It also defines two plugins.
+            <code>maven-compiler-plugin</code> is configured to load the library into the compiler.
+            <code>exec-maven-plugin</code> is configured to execute the <code>main</code> class.
+        </p>
+
+        <h3>src/main/java/com/example/Hello.java</h3>
+        <pre><code>package com.example;
+
+import uk.autores.Texts;
+
+@Texts("world.txt")
+public class Hello {
+    public static void main( String[] args ) {
+        System.out.println("Hello " + Example.world());
+    }
+}</code></pre>
+        <p>
+            The <code>@Texts("world.txt")</code> annotation generates a class <code>Example</code>
+            with a static method <code>world()</code> that returns the contents of the text file.
+        </p>
+        <p>
+            <code>class</code> and <code>package</code> elements can be the target of annotations.
+        </p>
+
+        <h3>src/main/resources/com/example/world.txt</h3>
+        <p>
+            This is the target of the <code>@Texts("world.txt")</code> annotation.
+            Note that the relative resource path is the same as the Java path.
+            Absolute paths may be specified instead.
+        </p>
+        <p>
+            Try editing the file contents and running the code again.
+        </p>
+
+        <h3>target/generated-sources/annotations/com/example/World.java</h3>
+        <pre><code>// GENERATED CODE: uk.autores.handling.GenerateStringsFromText
+package com.example;
+
+final class Example {
+
+  private Example() {}
+
+  static java.lang.String world() {
+    return "World!";
+  }
+}
+</code></pre>
+        <p>
+            This is the generated <code>Example</code> class.
+            The class name is derived from the package.
+            The method name is derived from the resource name.
+            How names are generated is configurable.
+        </p>
+        <p>
+            The <code>@Texts</code> annotation can generate different code depending on the chosen strategy.
+            Try changing the annotation to <code>@Texts(value = "world.txt", strategy = Strategy.LAZY)</code>,
+            recompiling, and examining the code again.
+        </p>
+        <p>
+            IDEs might complain if this class is absent prior to compiling with Maven.
+            See your IDE documentation for how to configure annotation processing.
+        </p>
+
+    </main>
+
+    <footer>
+        <nav>
+            <ul>
+                <li>Next: <a href="verify.html">How to Verify Java Resource Paths with the Compiler</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+
+</html>

@@ -3,21 +3,36 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Automated Resource Handling for Java&trade; - AutoRes.uk</title>
+    <title>Automated Resource File Loading for Java&trade; - AutoRes.uk</title>
     <link rel="stylesheet" href="styles.css" type="text/css">
     <meta name="description" content="Simple access to embeded resource files from Java code. Open source library.">
     <link rel="icon" href="icons/favicon.png">
   </head>
   <body>
 
+    <script>
+      this.top.location !== this.location && (this.top.location = this.location);
+    </script>
+
     <header>
       <nav>
         <ul>
-          <li><a href="apidocs/index.html">API</a></li>
-          <li><a href="screenshots.html">SCREENSHOTS</a></li>
+          <li>AutoRes.uk</li>
+          <li><a href="#tutorials">TUTORIALS</a></li>
           <li><a href="https://github.com/autores-uk/autores/tree/main/code/examples">EXAMPLES</a></li>
+          <li><a href="api/apidocs/index.html">API</a>/<a href="impl/apidocs/index.html">PROC</a></li>
           <li><a href="https://github.com/autores-uk/autores">SOURCE CODE</a></li>
+          <li><a href="screenshots.html">SCREENSHOTS</a></li>
         </ul>
+        <span>
+          <ul>
+            <li><a href="#dist">binaries</a></li>
+            <li><a href="#compat">versioning &amp; compatibility</a></li>
+            <li><a href="#modules">Java module system</a></li>
+            <li><a href="#maven">Maven configuration</a></li>
+            <li><a href="#gradle">Gradle configuration</a></li>
+          </ul>
+        </span>
       </nav>
     </header>
 
@@ -52,6 +67,11 @@
             src="https://javadoc.io/badge2/uk.autores/annotations/javadoc.svg"
             alt="javadoc.io"
           ></a>
+          <a 
+          href="https://javadoc.io/doc/uk.autores/processing"><img
+            src="https://javadoc.io/badge2/uk.autores/processing/javadoc.svg"
+            alt="javadoc.io"
+          ></a>
       </p>
 
       <h2>Usage <a id="usage" href="#usage" class="link-symbol">&#x1f517;</a></h2>
@@ -59,33 +79,34 @@
       <p>
         Annotate a type or package and specify the resource files.
       </p>
-
       <p>
-        <em>You can skip to <a href="#dist">distribution</a>,
-        <a href="#compat">compatibility</a>,
-        <a href="#modules">Java module system support</a>,
-        <a href="#maven">Maven configuration</a> or
-        <a href="#gradle">Gradle configuration</a>.</em>
+        The <code>processing</code> library must be exposed to the compiler's annotation processor.
+        With the
+        <a href="https://dev.java/learn/jvm/tools/core/javac/">javac</a>
+        compiler this can be done with the <nobr><code>-processorpath</code></nobr> flag.
       </p>
 
-      <h3>Examples <a id="examples" href="#examples" class="link-symbol">&#x1f517;</a></h3>
+      <h3>Sample Code <a id="samples" href="#samples" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
-        <code>@Texts</code> creates one class per text file that provides the file content as a <code>String</code>.
+        <code>@Texts</code> generates a class that provides text file content as <code>String</code>s.
       </p>
 
       <pre><code>
-<code>@uk.autores.@Texts({"Poule.txt", "Roses.txt"})</code>
+<code>@uk.autores.Texts(
+  name = "Rhymes",
+  value = {"Poule.txt", "Roses.txt"}
+)</code>
 public class PrintRhymes {
   public static void main(String...args)  {
-    System.out.println(<code>Poule.text()</code>);
-    System.out.println(<code>Roses.text()</code>);
+    System.out.println(<code>Rhymes.poule()</code>);
+    System.out.println(<code>Rhymes.roses()</code>);
   }
 }
       </code></pre>
 
       <p>
-        <code>@Messages</code> generates typed methods from properties files that localize and format strings.
+        <code>@Messages</code> generates typed methods from properties files that format localized strings.
       </p>
 
       <pre><code>
@@ -96,9 +117,9 @@ public class PrintMessage {
     int planet = 4;
     var time = java.time.ZonedDateTime.now();
     var event = "a meteor strike";
-    <em>// planet-event=At {1,time} on {1,date}, there was {2} on planet {0,number,integer}.</em>
+    <em>// planet-event=At {1,dtf-time} on {1,dtf-date}, there was {2} on planet {0,number,integer}.</em>
     <em>// ...becomes signature...</em>
-    <em>// static String planetEvent(Locale l, Number arg0, ZonedDateTime arg1, String arg2)</em>
+    <em>// static String planetEvent(Locale l, Number arg0, ZonedDateTime arg1, CharSequence arg2)</em>
     String msg = <code>Msgs.planetEvent(locale, planet, time, event)</code>;
     System.out.println(msg);
   }
@@ -113,23 +134,38 @@ public class PrintMessage {
         and the extensible <code>@ResourceFiles</code>.
       </p>
 
-      <h3>Distribution <a id="dist" href="#dist" class="link-symbol">&#x1f517;</a></h3>
+      <h3>Tutorials <a id="tutorials" href="#tutorials" class="link-symbol">&#x1f517;</a></h3>
+
+      <ul>
+        <li><a href="tutorials/helloworld.html">How to Set Up, Compile and Run an AutoRes Project</a></li>
+        <li><a href="tutorials/verify.html">How to Verify Java Resource File Paths with the Compiler</a></li>
+        <li><a href="tutorials/l10n.html">How to Improve Localized String Formatting in Java with Code Generation</a></li>
+      </ul>
+
+      <h3>Binaries <a id="dist" href="#dist" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
-        Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a> 
-        for a build system import snippet for the <code>uk.autores:annotations</code> library.
+        Browse the central repository 
+        for build system import snippets for the
+        <a href="https://central.sonatype.com/artifact/uk.autores/annotations">uk.autores:annotations</a>
+        and <a href="https://central.sonatype.com/artifact/uk.autores/processing">uk.autores:processing</a>
+        libraries.
       </p>
 
       <h3>Versioning &amp; Compatibility <a id="compat" href="#compat" class="link-symbol">&#x1f517;</a></h3>
 
-      <p>Versions are split into three integers: Java version; major version; minor version.</p>
+      <p>
+        Versions are split into three integers: Java version; major version; minor version.
+        Browse the <a href="https://central.sonatype.com/artifact/uk.autores/annotations">central repository</a>
+        to see available versions.
+      </p>
 
       <p>
         Functionally identical Java 8 and Java 11 versions are published.
         <em>The Java 11 version has marginally better encapsulation when modules are in use.</em>
       </p>
 
-      <h3>Modules <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
+      <h3>Java Module System <a id="modules" href="#modules" class="link-symbol">&#x1f517;</a></h3>
 
       <p>
         Use <code>requires static uk.autores</code> in 
@@ -154,13 +190,13 @@ module example.module.name {
 &lt;dependency>
   &lt;groupId>uk.autores&lt;/groupId>
   &lt;artifactId>annotations&lt;/artifactId>
-  &lt;version>${autores.version}&lt;/version>
+  &lt;version><em>${autores.version}</em>&lt;/version>
   &lt;scope>provided&lt;/scope>
 &lt;/dependency>
       </code></pre>
 
       <p>
-        If necessary make the compiler aware of the annotation processor using
+        Make the compiler aware of the annotation processor using
         <a href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html">annotationProcessorPaths</a>.
       </p>
 
@@ -170,14 +206,14 @@ module example.module.name {
   &lt;plugins>
       &lt;plugin>
           &lt;groupId>org.apache.maven.plugins&lt;/groupId>
-          &lt;artifactId>maven-compiler-plugin&lt;/artifactId>
-          &lt;version>${maven.compiler.plugin.version}&lt;/version>
+          &lt;artifactId><a href="https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-compiler-plugin">maven-compiler-plugin</a>&lt;/artifactId>
+          &lt;version><em>${maven.compiler.plugin.version}</em>&lt;/version>
           &lt;configuration>
               &lt;annotationProcessorPaths>
                   &lt;path>
                       &lt;groupId>uk.autores&lt;/groupId>
-                      &lt;artifactId>annotations&lt;/artifactId>
-                      &lt;version>${autores.version}&lt;/version>
+                      &lt;artifactId>processing&lt;/artifactId>
+                      &lt;version><em>${autores.version}</em>&lt;/version>
                   &lt;/path>
               &lt;/annotationProcessorPaths>
           &lt;/configuration>
@@ -190,18 +226,16 @@ module example.module.name {
 
       <p>
         <a href="https://gradle.org/">Gradle</a> projects must add resource files to the classpath.
-        The library must be exposed to the
+        The processing library must be exposed to the
         <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management">annotation processor</a>.
       </p>
 
       <pre><code>
 <em>// Gradle 8; Kotlin syntax</em>
-var autores = "uk.autores:annotations:" + autoresVersion
-
 dependencies {
   compileOnly(files("src/main/resources"))
-  compileOnly(autores)
-  annotationProcessor(autores)
+  compileOnly("uk.autores:annotations:" + <em>autoresVersion</em>)
+  annotationProcessor("uk.autores:processing:" + <em>autoresVersion</em>)
 }
       </code></pre>
 

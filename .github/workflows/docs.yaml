@@ -19,7 +19,7 @@ permissions:
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -30,22 +30,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up JDK 21
+      - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '11'
           distribution: 'temurin'
           cache: 'maven'
       - name: Package with Maven
         run: mvn --file code/autores/pom.xml --batch-mode install
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Create API directory
+        run: mkdir -p docs/api
+      - name: Create IMPL directory
+        run: mkdir -p docs/impl
       - name: Move API docs
-        run: mv ./code/autores/annotations/target/apidocs ./docs
+        run: mv ./code/autores/annotations/target/reports/apidocs ./docs/api
+      - name: Move API docs
+        run: mv ./code/autores/processing/target/reports/apidocs ./docs/impl
+      - name: Write Sitemap
+        run: sh ./scripts/sitemap.sh
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: './docs'
       - name: Deploy to GitHub Pages
         id: deployment

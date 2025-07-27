@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Improve Localized String Formatting in Java</title>
+  <link rel="stylesheet" href="../styles.css" type="text/css">
+  <meta name="description" content="Tutorial demonstrating how to use uk.autores">
+  <link rel="icon" href="../icons/favicon.png">
+</head>
+
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="..">HOME</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <h1>How to Improve Localized String Formatting in Java with Code Generation</h1>
+
+    <p>
+      Java localization often involves many
+      <a href="https://www.hanselman.com/blog/stringly-typed-vs-strongly-typed">stringly typed</a>
+      things where one stray character can break an otherwise simple operation.
+      This tutorial demonstrates how to improve correctness in localized applications.
+    </p>
+
+    <h2>Steps</h2>
+
+    <ol>
+      <li>
+        <h3>Check out the base project</h3>
+        <p>Follow the steps in <a href="helloworld.html">How to Set Up, Compile and Run an AutoRes.uk Project</a></p>
+      </li>
+      <li>
+        <h3>Inspect the localized resource bundle</h3>
+        <p>
+          The files that match <code>src/main/resources/com/example/i18n*.properties</code> form a resource bundle.
+          English (root), german (de), french (fr) and italian (it) are included in the project. 
+        </p>
+      </li>
+      <li>
+        <h3>Start with a traditional resource bundle</h3>
+        <p>
+          This uses the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ResourceBundle.html">ResourceBundle</a> type.
+        </p>
+        <p>Replace the contents of <code>Hello.java</code> with:</p>
+        <pre><code>package com.example;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+public class Hello {
+  public static void main( String[] args ) {
+    Locale[] locales = {Locale.ROOT, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+    for (Locale l : locales) {
+      ResourceBundle bundle = ResourceBundle.getBundle("com.example.i18n", l);
+      String msg = bundle.getString("hello-world");
+      System.out.println(l + "=" + msg);
+    }
+  }
+}</code></pre>
+        <p>Compile and run the application:</p>
+        <pre><code>./mvnw --quiet clean compile exec:java</code></pre>
+        <p>The localized messages will be printed to the console.</p>
+      </li>
+      <li>
+        <h3>Make the bundle less stringly typed</h3>
+        <p>
+          Bundles can have a lot of properties.
+          If a property name is misspelled or the property is missing then <code>null</code> is returned.
+        </p>
+        <p>
+          Annotate the class with <code>@uk.autores.Keys("i18n.properties")</code>.
+        </p>
+        <p>
+          Replace
+          <code>ResourceBundle.getBundle("com.example.i18n", l);</code>
+          with
+          <code>ResourceBundle.getBundle(I18N.bundle(), l);</code>.
+        </p>
+        <p>
+          Replace <code>bundle.getString("hello-world");</code> with <code>bundle.getString(I18N.HELLO_WORLD);</code>.
+        </p>
+        <p>Recompile and run the application.</p>
+        <p>Keys are now verified during compilation.</p>
+      </li>
+      <li>
+        <h3>Add some string composition</h3>
+        <p>
+          A common requirement in localization is to compose strings from variables.
+          This is often done using <a href="https://docs.oracle.com/javase/8/docs/api/java/text/MessageFormat.html">MessageFormat</a>.
+          The root property is <code>iso-80000-defines=ISO 80000 defines {0} to be {1,number} bytes.</code>.
+        </p>
+        <p>Replace the contents of <code>Hello.java</code> with:</p>
+        <pre><code>package com.example;
+
+<code>import uk.autores.Keys;</code>          
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+<code>@Keys("i18n.properties")</code>
+public class Hello {
+  public static void main(String[] args) {
+    Locale[] locales = {Locale.ROOT, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+    for (Locale l : locales) {
+      printBytesPerUnit(l, "GB", 1024*1024*1024);
+    }
+  }
+ 
+  <code>private static void printBytesPerUnit(Locale l, String unit, int bytes) {
+    ResourceBundle bundle = ResourceBundle.getBundle(I18N.bundle(), l);
+    String pattern = bundle.getString(I18N.ISO_80000_DEFINES);
+    Object[] params = {unit, bytes};
+    MessageFormat mf = new MessageFormat(pattern, l);
+    String msg = mf.format(params);
+    System.out.println(l + "=" + msg);
+  }</code>
+}</code></pre>
+        <p>Compile and run the application:</p>
+        <pre><code>./mvnw --quiet clean compile exec:java</code></pre>
+        <p>The localized messages will be printed to the console.</p>
+      </li>
+      <li>
+        <h3>Generate a localized message method</h3>
+        <p>Replace the contents of <code>Hello.java</code> with:</p>
+        <pre><code>package com.example;
+
+<code>import uk.autores.Messages;</code>
+import java.util.Locale;
+
+<code>@Messages("i18n.properties")</code>
+public class Hello {
+  public static void main(String[] args) {
+    Locale[] locales = {Locale.ROOT, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+    for (Locale l : locales) {
+      String msg = <code>I18N.iso80000Defines(l, "GB", 1024*1024*1024);</code>
+      System.out.println(l + "=" + msg);
+    }
+  }
+}</code></pre>
+        <p>Compile and run the application:</p>
+        <pre><code>./mvnw --quiet clean compile exec:java</code></pre>
+        <p>The localized messages will be printed to the console.</p>
+      </li>
+      <li>
+        <h3>Add a new property</h3>
+        <p>
+          Add the following to <code>i18n.properties</code>.
+          <em>Do not edit the other properties files.</em>
+        </p>
+        <pre><code>hello=Hello {0}!</code></pre>
+        <p>Compile the application:</p>
+        <pre><code>./mvnw clean compile</code></pre>
+        <p>
+          Compilation fails because the new property is missing from the localized files.
+          This feature lets developers guard against missing translations.
+        </p>
+        <p>Alter the annotation to be:</p>
+        <pre><code>@Messages(value = "i18n.properties",
+          missingKey = Severity.WARN)</code></pre>
+        <p>Recompile the application.</p>
+        <p>
+          Compilation succeeds, with warnings.
+          This allows development to continue while waiting for translated strings from the translation vendors.
+          <code>missingKey</code> should be set to <code>ERROR</code> before release.
+        </p>
+      </li>
+    </ol>
+
+    <h2>Tradeoffs</h2>
+
+    <p>
+      The goal of the library is to provide convenience and correctness.
+      However, light testing with the
+      <a href="https://github.com/openjdk/jmh">Java Microbenchmark Harness</a>
+      suggests performance benefits.
+    </p>
+    <p>
+      The benchmark result below compares using
+      <code>ResourceBundle</code> &amp; <code>MessageFormat</code>
+      versus <code>@Messages</code> to format the <code>iso-80000-defines</code>
+      property.
+    </p>
+
+<pre>
+Benchmark      Mode  Cnt       Score      Error  Units
+Hello.bundle  thrpt   25  131580.518 ± 1640.646  ops/s
+Hello.method  thrpt   25  261516.097 ± 6170.135  ops/s
+</pre>
+
+    <p>
+      The generated method is about twice as fast based on throughput.
+    </p>
+    <p>
+      In the generated method the format template is analysed at compile time.
+      The runtime code is composed of simpler concatenation operations.
+      Buffer sizes can be estimated ahead of time to reduce resizing.
+    </p>
+    <p>
+      Potential downsides are increased compilation times and greater class file overheads.
+    </p>
+
+  </main>
+
+</body>
+
+</html>
