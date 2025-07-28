@@ -14,7 +14,7 @@ final class PropLoader {
     private PropLoader() {}
 
     static Properties load(Resource file) throws IOException {
-        Properties props = new Properties();
+        var props = new Properties();
         try (InputStream in = file.open()) {
             props.load(in);
         }

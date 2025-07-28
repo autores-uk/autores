@@ -31,7 +31,7 @@ final class ByteArraysContexts extends ContextFactory<ByteArrays, RepeatableByte
 
     @Override
     List<Config> config(ByteArrays byteArrays) {
-        List<Config> cfg = new ArrayList<>();
+        var cfg = new ArrayList<Config>();
         if (byteArrays.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }

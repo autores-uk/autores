@@ -101,8 +101,8 @@ public final class ResourceFilesProcessor extends AbstractProcessor {
   private void processResources(Name name, Element annotated, ContextFactory<?, ?> factory) {
     try {
       for (ContextFactory.Pair pair : factory.contexts(name, annotated)) {
-        Handler handler = pair.handler;
-        Context context = pair.context;
+        Handler handler = pair.handler();
+        Context context = pair.context();
 
         if (!handler.validConfig(context.config(), context::printError)) {
           return;

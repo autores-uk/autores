@@ -5,8 +5,6 @@ package uk.autores.processing.handlers;
 import uk.autores.handling.ConfigDef;
 import uk.autores.handling.Context;
 
-import javax.annotation.processing.Messager;
-import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import java.util.function.Consumer;
 
@@ -20,8 +18,8 @@ final class Reporting {
         if ("ignore".equals(action)) {
             return (m) -> {};
         }
-        Messager messager = context.env().getMessager();
-        Element annotated = context.annotated();
+        var messager = context.env().getMessager();
+        var annotated = context.annotated();
         if ("warn".equals(action)) {
             return m -> messager.printMessage(Diagnostic.Kind.WARNING, m, annotated);
         }

@@ -13,7 +13,7 @@ final class Sets {
     private Sets() {}
 
     static Set<ConfigDef> of(ConfigDef...defs) {
-        Set<ConfigDef> set = new LinkedHashSet<>();
+        var set = new LinkedHashSet<ConfigDef>();
         Collections.addAll(set, defs);
         return set;
     }

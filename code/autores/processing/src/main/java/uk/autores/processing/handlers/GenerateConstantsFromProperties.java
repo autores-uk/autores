@@ -8,13 +8,11 @@ import uk.autores.handling.Handler;
 import uk.autores.handling.Resource;
 import uk.autores.naming.Namer;
 
-import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -71,16 +69,16 @@ public final class GenerateConstantsFromProperties implements Handler {
 
         String qualified = ctxt.pkg().qualifiedClassName(className);
 
-        Filer filer = ctxt.env().getFiler();
+        var filer = ctxt.env().getFiler();
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
-             Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
+             var escaper = new UnicodeEscapeWriter(out);
+             var writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
 
             writeBundleName(ctxt, resource, writer);
 
-            SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
-            for (String key : keys) {
+            var sortedKeys = new TreeSet<>(base.stringPropertyNames());
+            for (String key : sortedKeys) {
                 writeProperty(ctxt, resource, writer, key);
             }
         }
@@ -114,7 +112,7 @@ public final class GenerateConstantsFromProperties implements Handler {
     static CharSequence bundleName(CharSequence pkg, CharSequence resource) {
         int end = resource.length() - EXTENSION.length();
         if (resource.charAt(0) == '/') {
-            StringBuilder buf = new StringBuilder(resource.length());
+            var buf = new StringBuilder(resource.length());
             for (int i = 1; i < end; i++) {
                 char ch = resource.charAt(i);
                 if (ch == '/') {
@@ -125,7 +123,7 @@ public final class GenerateConstantsFromProperties implements Handler {
             }
             return buf;
         }
-        StringBuilder buf = new StringBuilder(pkg.length() + resource.length());
+        var buf = new StringBuilder(pkg.length() + resource.length());
         buf.append(pkg).append('.').append(resource.subSequence(0, end));
         return buf;
     }

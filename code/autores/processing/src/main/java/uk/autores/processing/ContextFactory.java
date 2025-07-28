@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
@@ -137,11 +136,11 @@ abstract class ContextFactory<S extends Annotation, R extends Annotation> {
                              String[] locations,
                              Pkg annotationPackage,
                              Element annotated) {
-        List<Resource> resources = new ArrayList<>(res.length);
+        var resources = new ArrayList<Resource>(res.length);
         CharSequence pkg = "";
         CharSequence value = "";
         try {
-            Filer filer = env.getFiler();
+            var filer = env.getFiler();
 
             for (String resource : res) {
                 if (nullOrEmpty(resource)) {
@@ -172,9 +171,9 @@ abstract class ContextFactory<S extends Annotation, R extends Annotation> {
     }
 
     private FileObject getResource(Filer filer, String[] locations, CharSequence pkg, CharSequence value) throws IOException {
-        Set<String> errors = new LinkedHashSet<>();
+        var errors = new LinkedHashSet<String>();
         for (String location : locations) {
-            JavaFileManager.Location jfml = StandardLocation.locationFor(location);
+            var jfml = StandardLocation.locationFor(location);
             try {
                 FileObject fo = filer.getResource(jfml, pkg, value);
                 try (InputStream is = fo.openInputStream()) {
@@ -193,16 +192,9 @@ abstract class ContextFactory<S extends Annotation, R extends Annotation> {
     private List<JavaFileManager.Location> locationList(String[] locations) {
         return Stream.of(locations)
                 .map(StandardLocation::locationFor)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    static final class Pair {
-        final Context context;
-        final Handler handler;
-
-        Pair(Context context, Handler handler) {
-            this.context = context;
-            this.handler = handler;
-        }
+    record Pair(Context context, Handler handler) {
     }
 }

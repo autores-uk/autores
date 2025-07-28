@@ -29,7 +29,7 @@ final class KeysContexts extends ContextFactory<Keys, RepeatableKeys> {
 
     @Override
     List<Config> config(Keys m) {
-        List<Config> cfg = new ArrayList<>();
+        var cfg = new ArrayList<Config>();
         if (m.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }

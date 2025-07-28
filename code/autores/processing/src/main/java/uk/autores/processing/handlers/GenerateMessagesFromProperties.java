@@ -124,9 +124,9 @@ public final class GenerateMessagesFromProperties implements Handler {
     public void handle(Context context) throws IOException {
         List<Resource> resources = context.resources();
 
-        boolean localize = !context.option(CfgLocalize.DEF)
+        boolean localize = context.option(CfgLocalize.DEF)
                 .filter("false"::equals)
-                .isPresent();
+                .isEmpty();
 
         for (Resource res : resources) {
             if (!res.toString().endsWith(EXTENSION)) {
@@ -217,9 +217,9 @@ public final class GenerateMessagesFromProperties implements Handler {
                                  Properties base,
                                  List<Localization> localizations) throws IOException {
         Pkg pkg = ctxt.pkg();
-        Filer filer = ctxt.env().getFiler();
+        var filer = ctxt.env().getFiler();
 
-        SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
+        var sortedKeys = new TreeSet<>(base.stringPropertyNames());
 
         String className = Naming.type(ctxt, resource);
         if (!Namer.isIdentifier(className)) {
@@ -233,16 +233,16 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
-             Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
+             var escaper = new UnicodeEscapeWriter(out);
+             var writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
 
-            Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
+            var msgs = new Msgs(resource, lookupName, localizations, writer);
 
             if (!localizations.isEmpty()) {
                 writeCache(writer, className, lookupName, localizations);
             }
 
-            for (String key : keys) {
+            for (String key : sortedKeys) {
                 writeProperty(ctxt, msgs, key, base.getProperty(key));
             }
         }
@@ -355,7 +355,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        FormatExpression expression = FormatExpression.parse(baseValue);
+        var expression = FormatExpression.parse(baseValue);
         if (expression.argCount() != 0) {
             writeFormat(ctxt, msgs, writer, key, expression, method);
         }
@@ -409,7 +409,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private String[] args(Context ctxt, FormatExpression expression) {
         Class<?>[] args = expression.argTypes();
-        String[] result = new String[args.length];
+        var result = new String[args.length];
         for (int i = 0; i < args.length; i++) {
             String name = args[i].getName();
             switch (name) {
@@ -481,28 +481,9 @@ public final class GenerateMessagesFromProperties implements Handler {
         return false;
     }
 
-    private static final class Localization {
-
-        final String pattern;
-        final Properties properties;
-
-        Localization(String pattern, Properties properties) {
-            this.pattern = pattern;
-            this.properties = properties;
-        }
+    private record Localization(String pattern, Properties properties) {
     }
 
-    private static class Msgs {
-        private final Resource resource;
-        private final String lookupName;
-        private final List<Localization> localizations;
-        private final JavaWriter writer;
-
-        private Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
-            this.resource = resource;
-            this.lookupName = lookupName;
-            this.localizations = localizations;
-            this.writer = writer;
-        }
+    private record Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
     }
 }

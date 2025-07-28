@@ -8,7 +8,6 @@ import uk.autores.handling.Handler;
 import uk.autores.handling.Resource;
 import uk.autores.naming.Namer;
 
-import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
@@ -60,11 +59,11 @@ public final class GenerateInputStreamsFromFiles implements Handler {
         }
 
         String qualifiedName = context.pkg().qualifiedClassName(className);
-        Filer filer = context.env().getFiler();
+        var filer = context.env().getFiler();
         JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
         try (Writer out = javaFile.openWriter();
-             Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
+             var escaper = new UnicodeEscapeWriter(out);
+             var writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
                 writeOpenMethod(context, resource, writer);

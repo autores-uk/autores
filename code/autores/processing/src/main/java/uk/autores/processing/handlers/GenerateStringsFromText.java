@@ -6,7 +6,6 @@ import uk.autores.handling.Handler;
 import uk.autores.handling.Resource;
 import uk.autores.naming.Namer;
 
-import javax.annotation.processing.Filer;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.nio.charset.Charset;
@@ -63,17 +62,17 @@ public class GenerateStringsFromText implements Handler {
         CharsetDecoder decoder = decoder(encoding);
         String strategy = context.option(CfgStrategy.DEF).orElse(CfgStrategy.AUTO);
 
-        GenerationState gs = new GenerationState(decoder, className);
+        var gs = new GenerationState(decoder, className);
 
         String qualifiedName = context.pkg().qualifiedClassName(className);
 
-        ModifiedUtf8Buffer buf = new ModifiedUtf8Buffer();
+        var buf = new ModifiedUtf8Buffer();
 
-        Filer filer = context.env().getFiler();
+        var filer = context.env().getFiler();
         JavaFileObject javaFile = filer.createSourceFile(qualifiedName, context.annotated());
         try (Writer out = javaFile.openWriter();
-             Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, context, escaper, className, "")) {
+             var escaper = new UnicodeEscapeWriter(out);
+             var writer = new JavaWriter(this, context, escaper, className, "")) {
 
             for (Resource resource : context.resources()) {
                 String name = Naming.member(context, resource);
@@ -127,8 +126,8 @@ public class GenerateStringsFromText implements Handler {
         writeMethodDeclaration(writer, stats.name);
 
         try (InputStream in = stats.resource.open();
-             Reader reader = new InputStreamReader(in, gs.decoder);
-             Reader bufReader = new BufferedReader(reader)) {
+             var reader = new InputStreamReader(in, gs.decoder);
+             var bufReader = new BufferedReader(reader)) {
 
             writer.indent().append("char[] arr = new char[").append(len).append("];").nl();
             writer.indent().append("int offset = 0;").nl();
@@ -149,8 +148,8 @@ public class GenerateStringsFromText implements Handler {
         writeMethodDeclaration(writer, stats.name);
 
         try (InputStream in = stats.resource.open();
-             Reader reader = new InputStreamReader(in, generationState.decoder);
-             Reader bufReader = new BufferedReader(reader, generationState.buffer.maxBuffer())) {
+             var reader = new InputStreamReader(in, generationState.decoder);
+             var bufReader = new BufferedReader(reader, generationState.buffer.maxBuffer())) {
 
             generationState.buffer.receive(bufReader);
             writer.indent().append("return");
@@ -251,7 +250,7 @@ public class GenerateStringsFromText implements Handler {
     }
 
     private CharsetDecoder decoder(String encoding) {
-        Charset c = Charset.forName(encoding);
+        var c = Charset.forName(encoding);
         return c.newDecoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT);
@@ -261,8 +260,8 @@ public class GenerateStringsFromText implements Handler {
         long utf16Size = 0L;
         long utf8Size = 0L;
         try (InputStream in = resource.open();
-             Reader reader = new InputStreamReader(in, decoder);
-             Reader bufReader = new BufferedReader(reader)) {
+             var reader = new InputStreamReader(in, decoder);
+             var bufReader = new BufferedReader(reader)) {
             while (buf.receive(bufReader)) {
                 utf16Size += buf.length();
                 utf8Size += buf.utf8Length();
@@ -277,18 +276,7 @@ public class GenerateStringsFromText implements Handler {
         return new Stats(resource, name, utf16Size, utf8Size);
     }
 
-    private static final class Stats {
-        private final Resource resource;
-        private final String name;
-        private final long utf16Size;
-        private final long utf8Size;
-
-        private Stats(Resource resource, String name, long utf16Size, long utf8Size) {
-            this.resource = resource;
-            this.name = name;
-            this.utf16Size = utf16Size;
-            this.utf8Size = utf8Size;
-        }
+    private record Stats(Resource resource, String name, long utf16Size, long utf8Size) {
     }
 
     private static final class GenerationState {

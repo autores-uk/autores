@@ -27,7 +27,7 @@ public final class Pkg implements CharSequence {
      * @return instance
      */
     public static Pkg named(CharSequence name) {
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             return UNNAMED;
         }
         if (!Namer.isPackage(name)) {
@@ -54,7 +54,7 @@ public final class Pkg implements CharSequence {
      * @return true if this is the unnamed package
      */
     public boolean isUnnamed() {
-        return name.length() == 0;
+        return name.isEmpty();
     }
 
     @Override

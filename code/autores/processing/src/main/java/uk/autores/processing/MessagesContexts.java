@@ -28,7 +28,7 @@ final class MessagesContexts extends ContextFactory<Messages, RepeatableMessages
 
     @Override
     List<Config> config(Messages m) {
-        List<Config> cfg = new ArrayList<>();
+        var cfg = new ArrayList<Config>();
         if (m.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }

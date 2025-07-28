@@ -34,7 +34,7 @@ final class JavaWriter extends Writer {
             w.append("package ").append(pkg).append(";").append(NL).append(NL);
         }
 
-        if (comment.length() != 0) {
+        if (!comment.isEmpty()) {
             w.append("/** \"");
             StringLiterals.write(comment, w);
             w.append("\" */").append(NL);
@@ -153,13 +153,13 @@ final class JavaWriter extends Writer {
         append(className);
         append(".class.getResourceAsStream(");
         if (literal) {
-            string(resource);
+            this.string(resource);
         } else {
             append(resource);
         }
         append("), ");
         if (literal) {
-            string(resource);
+            this.string(resource);
         } else {
             append(resource);
         }

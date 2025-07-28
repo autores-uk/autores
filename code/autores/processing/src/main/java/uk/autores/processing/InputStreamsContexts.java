@@ -30,7 +30,7 @@ final class InputStreamsContexts extends ContextFactory<InputStreams, Repeatable
 
     @Override
     List<Config> config(InputStreams r) {
-        List<Config> cfg = new ArrayList<>();
+        var cfg = new ArrayList<Config>();
         if (r.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }

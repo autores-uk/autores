@@ -19,8 +19,7 @@ final class GenerateMessages {
         int est = estLength ? expression.estimateLen(l) : 16;
         w.indent().append("java.lang.StringBuffer buf = new java.lang.StringBuffer(").append(est).append(");").nl();
         for (Formatter segment : expression) {
-            if (segment instanceof FormatLiteral) {
-                FormatLiteral lit = (FormatLiteral) segment;
+            if (segment instanceof FormatLiteral lit) {
                 w.indent().append("buf.append(").string(lit.processed()).append(");").nl();
             } else {
                 add(w, argCount, (FormatVariable) segment);
@@ -147,18 +146,11 @@ final class GenerateMessages {
 
     private static void list(JavaWriter w, FormatVariable v) throws IOException {
         int i = v.index();
-        String type;
-        switch (v.style()) {
-            case OR:
-                type = "OR";
-                break;
-            case UNIT:
-                type = "UNIT";
-                break;
-            default:
-                type = "STANDARD";
-                break;
-        }
+        String type = switch (v.style()) {
+            case OR -> "OR";
+            case UNIT -> "UNIT";
+            default -> "STANDARD";
+        };
 
         String lf = "java.text.ListFormat";
         w.indent().append(lf)

@@ -364,15 +364,7 @@ public class GenerateByteArraysFromFiles implements Handler {
         return new FileStats(resource, size, name);
     }
 
-    private static final class FileStats {
-        private final Resource resource;
-        private final long size;
-        private final String name;
-        private FileStats(Resource resource, long size, String name) {
-            this.resource = resource;
-            this.size = size;
-            this.name = name;
-        }
+    private record FileStats(Resource resource, long size, String name) {
     }
 
     private static class GenerationState {
