@@ -26,8 +26,8 @@ public class PrintResources {
 
     private static String load(String resource) throws IOException {
         try (InputStream in = requireNonNull(PrintResources.class.getResourceAsStream(resource), resource);
-             Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-             BufferedReader buf = new BufferedReader(reader)) {
+             var reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+             var buf = new BufferedReader(reader)) {
             return buf.readLine();
         }
     }

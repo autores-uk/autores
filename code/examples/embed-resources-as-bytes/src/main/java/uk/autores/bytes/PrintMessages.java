@@ -39,7 +39,7 @@ public class PrintMessages {
     }
 
     private static void parseAndPrint(byte[] raw) throws XPathExpressionException {
-        InputSource src = new InputSource();
+        var src = new InputSource();
         src.setByteStream(new ByteArrayInputStream(raw));
         String msg = XPathFactory.newInstance()
                 .newXPath()
