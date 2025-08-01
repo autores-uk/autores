@@ -12,17 +12,19 @@
  *     See the {@link uk.autores} package for core functionality.
  * </p>
  *
- * <h3>Modules</h3>
+ * <h3>Java Platform Module System</h3>
  * <p>
  *     <a href="https://dev.java/learn/modules/intro/">Modules</a>
  *     that only use the <code>uk.autores</code> package should generally use
- *     the <code>requires static {@link uk.autores};</code> directive.
+ *     the <code>requires static uk.autores;</code> directive.
  *     This package is intended to be compile-time only.
  * </p>
  * <p>
- *     Modules that extend the API via the <code>{@link uk.autores.handling}</code> package
- *     should generally use the <code>requires {@link uk.autores};</code> directive.
+ *     Modules that extend the API via the <code>{@link uk.autores.handling}</code>
+ *     or <code>{@link uk.autores.naming}</code> packages
+ *     should generally use the <code>requires uk.autores;</code> directive.
  *  </p>
+ *
  *  <h3>Processing Annotations</h3>
  *  <p>
  *      A separate module, <code>uk.autores.processing</code>,
