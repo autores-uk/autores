@@ -61,7 +61,7 @@ public class GenerateByteArraysFromFiles implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgStrategy.DEF, CfgName.DEF);
+        return Set.of(CfgVisibility.DEF, CfgStrategy.DEF, CfgName.DEF);
     }
 
     @Override

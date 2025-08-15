@@ -43,7 +43,7 @@ public class GenerateStringsFromText implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgEncoding.DEF, CfgStrategy.DEF, CfgName.DEF);
+        return Set.of(CfgVisibility.DEF, CfgEncoding.DEF, CfgStrategy.DEF, CfgName.DEF);
     }
 
     @Override

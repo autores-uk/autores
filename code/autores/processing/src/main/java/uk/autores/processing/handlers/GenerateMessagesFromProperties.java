@@ -116,7 +116,7 @@ public final class GenerateMessagesFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF,
+        return Set.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF,
                 CfgMessageTypes.DEF_NONE, CfgMessageTypes.DEF_NUMBER, CfgMessageTypes.DEF_DATE_TIME);
     }
 

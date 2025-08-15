@@ -38,7 +38,7 @@ public final class GenerateConstantsFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF);
+        return Set.of(CfgVisibility.DEF);
     }
 
     /** Ctor */
