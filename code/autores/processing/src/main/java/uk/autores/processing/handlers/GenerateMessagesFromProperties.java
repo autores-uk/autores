@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processing.handlers;
 
+import uk.autores.format.FmtType;
 import uk.autores.format.FormatExpression;
+import uk.autores.format.FormatVariable;
 import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 
@@ -17,7 +19,6 @@ import java.text.MessageFormat;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>
@@ -380,7 +381,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              String method) throws IOException {
 
         String[] args = args(ctxt, expression);
-        boolean needsLocaleForFormat = expression.needsLocale();
+        boolean needsLocaleForFormat = needsLocale(expression);
         boolean hasLocalizedMsg = hasTranslations(msgs, key);
 
         writer.nl().comment(key);
@@ -405,6 +406,15 @@ public final class GenerateMessagesFromProperties implements Handler {
         }
 
         writer.closeBrace().nl();
+    }
+
+    private boolean needsLocale(FormatExpression expression) {
+        for (var f : expression) {
+            if (f instanceof FormatVariable v && v.type() != FmtType.NONE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String[] args(Context ctxt, FormatExpression expression) {
@@ -442,23 +452,24 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
 
-        Class<?>[] args = expression.argTypes();
-
         for (Localization l : msgs.localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
             }
             FormatExpression lExpression = FormatExpression.parse(localizedValue);
-            Class<?>[] locVars = lExpression.argTypes();
-            if (!Arrays.equals(locVars, args)) {
-                String have = Stream.of(locVars).map(Class::getSimpleName).collect(Collectors.joining(", "));
-                String need = Stream.of(args).map(Class::getSimpleName).collect(Collectors.joining(", "));
-                String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
-                msg += "key=" + key + " have {" + have + "} need {" + need + "}";
+            Set<FormatExpression.Incompatibility> incompatibilities = FormatExpression.incompatibilities(expression, lExpression);
+            if (!incompatibilities.isEmpty()) {
+                var msg = "Incompatible localized string in "
+                        + msgs.resource
+                        + ": "
+                        + l.pattern
+                        + ": "
+                        + incompatibilities.stream().map(Object::toString).collect(Collectors.joining("; "));
                 Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
                 continue;
             }
+
             String pattern = l.pattern.substring(1);
             writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
             GenerateMessages.write(writer, locales.locale(l.pattern), lExpression);
