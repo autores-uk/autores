@@ -36,7 +36,7 @@
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <jacoco.maven.plugin.version>0.8.13</jacoco.maven.plugin.version>
         <spotbugs.maven.plugin.version>4.9.4.2</spotbugs.maven.plugin.version>
-        <spotbugs.version>4.9.4</spotbugs.version>
+        <spotbugs.version>4.9.5</spotbugs.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <maven.pmd.plugin.version>3.27.0</maven.pmd.plugin.version>
         <maven.enforcer.plugin.version>3.6.1</maven.enforcer.plugin.version>
