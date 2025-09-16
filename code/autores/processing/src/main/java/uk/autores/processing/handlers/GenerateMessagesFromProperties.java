@@ -458,7 +458,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
             FormatExpression lExpression = FormatExpression.parse(localizedValue);
-            Set<FormatExpression.Incompatibility> incompatibilities = FormatExpression.incompatibilities(expression, lExpression);
+            Set<FormatExpression.Incompatibility> incompatibilities = expression.incompatibilities(lExpression);
             if (!incompatibilities.isEmpty()) {
                 var msg = "Incompatible localized string in "
                         + msgs.resource
