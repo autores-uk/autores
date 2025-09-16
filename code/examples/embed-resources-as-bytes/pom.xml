@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>examples</artifactId>
-        <version>17.1.2</version>
+        <version>17.1.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>embed-resources-as-bytes</artifactId>
