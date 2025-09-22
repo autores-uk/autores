@@ -22,7 +22,7 @@
 
         <spotbugs.maven.plugin.version>4.9.4.2</spotbugs.maven.plugin.version>
         <spotbugs.version>4.9.5</spotbugs.version>
-        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
     </properties>
 
     <modules>
@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
