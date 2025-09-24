@@ -20,7 +20,7 @@
         <!-- unit test dependency versions -->
         <junit.version>5.13.4</junit.version>
 
-        <spotbugs.maven.plugin.version>4.9.4.2</spotbugs.maven.plugin.version>
+        <spotbugs.maven.plugin.version>4.9.6.0</spotbugs.maven.plugin.version>
         <spotbugs.version>4.9.6</spotbugs.version>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     </properties>
