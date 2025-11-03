@@ -28,7 +28,7 @@
         <format.version>17.3.1</format.version>
 
         <joor.version>0.9.15</joor.version>
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
 
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
