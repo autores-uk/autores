@@ -66,7 +66,7 @@ public @interface ResourceFiles {
      *
      * @return processing instructions
      */
-    Processing processing() default @Processing(namer = Namer.class);
+    Processing processing() default @Processing();
 
     /**
      * Some implementations of {@link Handler} support configuration.
