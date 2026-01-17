@@ -152,11 +152,11 @@ public final class GenerateMessagesFromProperties implements Handler {
         CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
         CharSequence name = ResourceFiling.relativeName(resource);
 
-        List<Localization> localized = new ArrayList<>();
+        var localized = new ArrayList<Localization>();
 
         int end = name.length() - EXTENSION.length();
         CharSequence base = name.subSequence(0, end);
-        StringBuilder props = new StringBuilder(base.length() + EXTENSION.length() + 6);
+        var props = new StringBuilder(base.length() + EXTENSION.length() + 6);
         props.append(base);
 
         for (String pattern : locales.patterns()) {
@@ -171,8 +171,8 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
 
-            Resource res = new Resource(file::openInputStream, props.toString());
-            Properties properties = PropLoader.load(res);
+            var res = new Resource(file::openInputStream, props.toString());
+            var properties = PropLoader.load(res);
             localized.add(new Localization(pattern, properties));
         }
 
@@ -182,7 +182,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private FileObject getResource(Filer filer, List<JavaFileManager.Location> locations, CharSequence pkg, CharSequence value) throws IOException {
         IOException first = null;
         FileObject fo = null;
-        for (JavaFileManager.Location location : locations) {
+        for (var location : locations) {
             try {
                 fo = getResource(filer, location, pkg, value);
                 try (InputStream is = fo.openInputStream()) {
@@ -276,7 +276,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
         writer.indent().append("java.lang.String pattern = ctrl.toBundleName(\"\", candidate).substring(1);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
-        for (Localization l : localizations) {
+        for (var l : localizations) {
             String p = l.pattern.substring(1);
             writer.indent().append("case \"")
                     .append(p)
@@ -364,7 +364,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private String substituteMissingValue(Msgs msgs, String pattern, String key, String baseValue) {
         List<Localization> candidates = locales.findCandidatesFor(pattern, l18n -> l18n.pattern, msgs.localizations);
-        for (Localization candidate : candidates) {
+        for (var candidate : candidates) {
             String result = candidate.properties.getProperty(key);
             if (result != null) {
                 return result;
@@ -452,7 +452,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
 
-        for (Localization l : msgs.localizations) {
+        for (var l : msgs.localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
@@ -484,7 +484,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private boolean hasTranslations(Msgs msgs, String key) {
-        for (Localization l : msgs.localizations) {
+        for (var l : msgs.localizations) {
             if (l.properties.getProperty(key) != null) {
                 return true;
             }
