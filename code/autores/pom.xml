@@ -47,7 +47,7 @@
         <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
         <javadoc.bottom><![CDATA[
-                        Copyright 2023-2025<br>
+                        Copyright 2023-2026<br>
                         <a target="_blank" href="https://github.com/autores-uk/autores/blob/main/LICENSE.txt">https://github.com/autores-uk/autores/blob/main/LICENSE.txt</a>
                         <script>
                         (() => {
