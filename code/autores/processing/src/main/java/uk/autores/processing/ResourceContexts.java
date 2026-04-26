@@ -24,7 +24,7 @@ final class ResourceContexts extends ContextFactory<ResourceFiles, RepeatableRes
 
     @Override
     List<Config> config(ResourceFiles resourceFiles) {
-        List<Config> configs = new ArrayList<>();
+        var configs = new ArrayList<Config>();
         for (ResourceFiles.Cfg c : resourceFiles.config()) {
             configs.add(new Config(c.key(), c.value()));
         }

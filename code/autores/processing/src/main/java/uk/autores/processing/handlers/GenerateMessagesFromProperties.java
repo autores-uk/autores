@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package uk.autores.processing.handlers;
 
+import uk.autores.format.FmtType;
 import uk.autores.format.FormatExpression;
+import uk.autores.format.FormatVariable;
 import uk.autores.handling.*;
 import uk.autores.naming.Namer;
 
@@ -17,7 +19,6 @@ import java.text.MessageFormat;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>
@@ -116,7 +117,7 @@ public final class GenerateMessagesFromProperties implements Handler {
      */
     @Override
     public Set<ConfigDef> config() {
-        return Sets.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF,
+        return Set.of(CfgVisibility.DEF, CfgLocalize.DEF, CfgMissingKey.DEF, CfgFormat.DEF, CfgIncompatibleFormat.DEF,
                 CfgMessageTypes.DEF_NONE, CfgMessageTypes.DEF_NUMBER, CfgMessageTypes.DEF_DATE_TIME);
     }
 
@@ -124,9 +125,9 @@ public final class GenerateMessagesFromProperties implements Handler {
     public void handle(Context context) throws IOException {
         List<Resource> resources = context.resources();
 
-        boolean localize = !context.option(CfgLocalize.DEF)
+        boolean localize = context.option(CfgLocalize.DEF)
                 .filter("false"::equals)
-                .isPresent();
+                .isEmpty();
 
         for (Resource res : resources) {
             if (!res.toString().endsWith(EXTENSION)) {
@@ -151,11 +152,11 @@ public final class GenerateMessagesFromProperties implements Handler {
         CharSequence resourcePackage = ResourceFiling.pkg(context.pkg(), resource);
         CharSequence name = ResourceFiling.relativeName(resource);
 
-        List<Localization> localized = new ArrayList<>();
+        var localized = new ArrayList<Localization>();
 
         int end = name.length() - EXTENSION.length();
         CharSequence base = name.subSequence(0, end);
-        StringBuilder props = new StringBuilder(base.length() + EXTENSION.length() + 6);
+        var props = new StringBuilder(base.length() + EXTENSION.length() + 6);
         props.append(base);
 
         for (String pattern : locales.patterns()) {
@@ -170,8 +171,8 @@ public final class GenerateMessagesFromProperties implements Handler {
                 continue;
             }
 
-            Resource res = new Resource(file::openInputStream, props.toString());
-            Properties properties = PropLoader.load(res);
+            var res = new Resource(file::openInputStream, props.toString());
+            var properties = PropLoader.load(res);
             localized.add(new Localization(pattern, properties));
         }
 
@@ -181,7 +182,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     private FileObject getResource(Filer filer, List<JavaFileManager.Location> locations, CharSequence pkg, CharSequence value) throws IOException {
         IOException first = null;
         FileObject fo = null;
-        for (JavaFileManager.Location location : locations) {
+        for (var location : locations) {
             try {
                 fo = getResource(filer, location, pkg, value);
                 try (InputStream is = fo.openInputStream()) {
@@ -217,9 +218,9 @@ public final class GenerateMessagesFromProperties implements Handler {
                                  Properties base,
                                  List<Localization> localizations) throws IOException {
         Pkg pkg = ctxt.pkg();
-        Filer filer = ctxt.env().getFiler();
+        var filer = ctxt.env().getFiler();
 
-        SortedSet<String> keys = new TreeSet<>(base.stringPropertyNames());
+        var sortedKeys = new TreeSet<>(base.stringPropertyNames());
 
         String className = Naming.type(ctxt, resource);
         if (!Namer.isIdentifier(className)) {
@@ -233,16 +234,16 @@ public final class GenerateMessagesFromProperties implements Handler {
 
         JavaFileObject jfo = filer.createSourceFile(qualified, ctxt.annotated());
         try (Writer out = jfo.openWriter();
-             Writer escaper = new UnicodeEscapeWriter(out);
-             JavaWriter writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
+             var escaper = new UnicodeEscapeWriter(out);
+             var writer = new JavaWriter(this, ctxt, escaper, className, resource)) {
 
-            Msgs msgs = new Msgs(resource, lookupName, localizations, writer);
+            var msgs = new Msgs(resource, lookupName, localizations, writer);
 
             if (!localizations.isEmpty()) {
                 writeCache(writer, className, lookupName, localizations);
             }
 
-            for (String key : keys) {
+            for (String key : sortedKeys) {
                 writeProperty(ctxt, msgs, key, base.getProperty(key));
             }
         }
@@ -275,7 +276,7 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
         writer.indent().append("java.lang.String pattern = ctrl.toBundleName(\"\", candidate).substring(1);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
-        for (Localization l : localizations) {
+        for (var l : localizations) {
             String p = l.pattern.substring(1);
             writer.indent().append("case \"")
                     .append(p)
@@ -355,7 +356,7 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        FormatExpression expression = FormatExpression.parse(baseValue);
+        var expression = FormatExpression.parse(baseValue);
         if (expression.argCount() != 0) {
             writeFormat(ctxt, msgs, writer, key, expression, method);
         }
@@ -363,7 +364,7 @@ public final class GenerateMessagesFromProperties implements Handler {
 
     private String substituteMissingValue(Msgs msgs, String pattern, String key, String baseValue) {
         List<Localization> candidates = locales.findCandidatesFor(pattern, l18n -> l18n.pattern, msgs.localizations);
-        for (Localization candidate : candidates) {
+        for (var candidate : candidates) {
             String result = candidate.properties.getProperty(key);
             if (result != null) {
                 return result;
@@ -380,7 +381,7 @@ public final class GenerateMessagesFromProperties implements Handler {
                              String method) throws IOException {
 
         String[] args = args(ctxt, expression);
-        boolean needsLocaleForFormat = expression.needsLocale();
+        boolean needsLocaleForFormat = needsLocale(expression);
         boolean hasLocalizedMsg = hasTranslations(msgs, key);
 
         writer.nl().comment(key);
@@ -407,9 +408,18 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.closeBrace().nl();
     }
 
+    private boolean needsLocale(FormatExpression expression) {
+        for (var f : expression) {
+            if (f instanceof FormatVariable v && v.type() != FmtType.NONE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String[] args(Context ctxt, FormatExpression expression) {
         Class<?>[] args = expression.argTypes();
-        String[] result = new String[args.length];
+        var result = new String[args.length];
         for (int i = 0; i < args.length; i++) {
             String name = args[i].getName();
             switch (name) {
@@ -442,23 +452,24 @@ public final class GenerateMessagesFromProperties implements Handler {
         writer.indent().append("java.lang.String pattern = ").append(lookupName).append("(l);").nl();
         writer.indent().append("switch (pattern) ").openBrace().nl();
 
-        Class<?>[] args = expression.argTypes();
-
-        for (Localization l : msgs.localizations) {
+        for (var l : msgs.localizations) {
             String localizedValue = l.properties.getProperty(key);
             if (localizedValue == null) {
                 continue;
             }
             FormatExpression lExpression = FormatExpression.parse(localizedValue);
-            Class<?>[] locVars = lExpression.argTypes();
-            if (!Arrays.equals(locVars, args)) {
-                String have = Stream.of(locVars).map(Class::getSimpleName).collect(Collectors.joining(", "));
-                String need = Stream.of(args).map(Class::getSimpleName).collect(Collectors.joining(", "));
-                String msg = "Differing message variables in localization " + msgs.resource + ": " + l.pattern + ": ";
-                msg += "key=" + key + " have {" + have + "} need {" + need + "}";
+            Set<FormatExpression.Incompatibility> incompatibilities = expression.incompatibilities(lExpression);
+            if (!incompatibilities.isEmpty()) {
+                var msg = "Incompatible localized string in "
+                        + msgs.resource
+                        + ": "
+                        + l.pattern
+                        + ": "
+                        + incompatibilities.stream().map(Object::toString).collect(Collectors.joining("; "));
                 Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
                 continue;
             }
+
             String pattern = l.pattern.substring(1);
             writer.indent().append("case ").string(pattern).append(": ").openBrace().nl();
             GenerateMessages.write(writer, locales.locale(l.pattern), lExpression);
@@ -473,7 +484,7 @@ public final class GenerateMessagesFromProperties implements Handler {
     }
 
     private boolean hasTranslations(Msgs msgs, String key) {
-        for (Localization l : msgs.localizations) {
+        for (var l : msgs.localizations) {
             if (l.properties.getProperty(key) != null) {
                 return true;
             }
@@ -481,28 +492,9 @@ public final class GenerateMessagesFromProperties implements Handler {
         return false;
     }
 
-    private static final class Localization {
-
-        final String pattern;
-        final Properties properties;
-
-        Localization(String pattern, Properties properties) {
-            this.pattern = pattern;
-            this.properties = properties;
-        }
+    private record Localization(String pattern, Properties properties) {
     }
 
-    private static class Msgs {
-        private final Resource resource;
-        private final String lookupName;
-        private final List<Localization> localizations;
-        private final JavaWriter writer;
-
-        private Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
-            this.resource = resource;
-            this.lookupName = lookupName;
-            this.localizations = localizations;
-            this.writer = writer;
-        }
+    private record Msgs(Resource resource, String lookupName, List<Localization> localizations, JavaWriter writer) {
     }
 }

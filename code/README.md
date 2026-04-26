@@ -2,7 +2,7 @@
 
 ## TOOLS
 
-Building from source requires [JDK17+](https://whichjdk.com/).
+Building from source requires [JDK17+](https://adoptium.net).
 
 The required version is defined by the `maven.compiler.target` property in
 [autores/pom.xml](autores/pom.xml).

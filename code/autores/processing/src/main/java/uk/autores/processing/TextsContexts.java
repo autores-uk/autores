@@ -28,7 +28,7 @@ final class TextsContexts extends ContextFactory<Texts, RepeatableTexts> {
 
     @Override
     List<Config> config(Texts byteArrayResources) {
-        List<Config> cfg = new ArrayList<>();
+        var cfg = new ArrayList<Config>();
         if (byteArrayResources.visibility() == Visibility.PUBLIC) {
             cfg.add(new Config(CfgVisibility.VISIBILITY, CfgVisibility.PUBLIC));
         }

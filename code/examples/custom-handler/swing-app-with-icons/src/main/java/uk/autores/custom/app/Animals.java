@@ -15,9 +15,9 @@ public class Animals {
     }
 
     public static JFrame create() {
-        JFrame frame = new JFrame();
+        var frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Container panel = frame.getContentPane();
+        var panel = frame.getContentPane();
         panel.setLayout(new FlowLayout());
         panel.add(new JLabel("Click a button:"));
         panel.add(button(Icons.meow(), "Cat", "Meow!"));

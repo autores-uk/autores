@@ -25,6 +25,6 @@ final class Compare {
     }
 
     static boolean nullOrEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
+        return cs == null || cs.isEmpty();
     }
 }

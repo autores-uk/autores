@@ -4,7 +4,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>custom-handler</artifactId>
-        <version>17.1.1</version>
+        <version>17.1.3</version>
     </parent>
 
     <artifactId>file-to-icon-handler</artifactId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.samskivert</groupId>
             <artifactId>jmustache</artifactId>
-            <version>1.15</version>
+            <version>1.16</version>
         </dependency>
 
         <dependency>

@@ -12,7 +12,7 @@ import java.util.Map;
 public class MainPrintProperties {
 
     public static void main(String...args)  {
-        Map<Locale, ZoneId> places = new LinkedHashMap<>();
+        var places = new LinkedHashMap<Locale, ZoneId>();
         places.put(Locale.getDefault(), ZoneId.systemDefault());
         places.put(Locale.US, ZoneId.of("America/New_York"));
         places.put(Locale.FRANCE, ZoneId.of("Europe/Paris"));
@@ -28,11 +28,11 @@ public class MainPrintProperties {
 
         Instant now = Instant.now();
 
-        for (Map.Entry<Locale, ZoneId> place : places.entrySet()) {
+        for (var place : places.entrySet()) {
             Locale l = place.getKey();
             ZoneId zone = place.getValue();
 
-            ZonedDateTime time = ZonedDateTime.ofInstant(now, zone);
+            var time = ZonedDateTime.ofInstant(now, zone);
 
             System.out.println();
             System.out.println(l.getDisplayName() + " " + zone);

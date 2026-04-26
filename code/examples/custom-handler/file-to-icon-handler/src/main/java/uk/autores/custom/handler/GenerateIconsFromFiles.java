@@ -46,7 +46,7 @@ public class GenerateIconsFromFiles implements Handler {
         Namer namer = context.namer();
         Pkg pkg = context.pkg();
         String className = context.option(CfgName.DEF).orElse("");
-        if ("".equals(className)) {
+        if (className.isEmpty()) {
             // derive from package
             String segment = pkg.lastSegment();
             className = namer.nameType(segment);
@@ -58,7 +58,7 @@ public class GenerateIconsFromFiles implements Handler {
         String qualifiedName = pkg.qualifiedClassName(className);
 
         // Reuse another handler to embed the bytes
-        Namer nameDecorator = new InternalNamer(context.namer());
+        var nameDecorator = new InternalNamer(context.namer());
         Context delegate = context.rebuild()
                 .setNamer(nameDecorator)
                 .setConfig(emptyList())
@@ -70,7 +70,7 @@ public class GenerateIconsFromFiles implements Handler {
         Filer filer = context.env().getFiler();
         Element annotatedElement = context.annotated();
 
-        List<String> methods = new ArrayList<>();
+        var methods = new ArrayList<String>();
         for (Resource resource : resources) {
             String simple = namer.simplifyResourceName(resource.toString());
             String method = namer.nameMember(simple);
@@ -86,11 +86,11 @@ public class GenerateIconsFromFiles implements Handler {
         // Init template engine
         Template engine = Mustache.compiler().compile(template);
         // Template context
-        Object itc = new ImageTemplateContext(pkg.toString(), className, visibility, methods);
+        var itc = new ImageTemplateContext(pkg.toString(), className, visibility, methods);
 
         // Generate code
         JavaFileObject jfo = filer.createSourceFile(qualifiedName, annotatedElement);
-        try (Writer writer = jfo.openWriter()) {
+        try (var writer = jfo.openWriter()) {
             engine.execute(itc, writer);
         }
     }

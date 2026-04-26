@@ -6,7 +6,7 @@
     <parent>
         <groupId>uk.autores</groupId>
         <artifactId>autores</artifactId>
-        <version>17.1.1</version>
+        <version>17.1.3</version>
     </parent>
 
     <artifactId>annotations</artifactId>
@@ -136,6 +136,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs.maven.plugin.version}</version>
                 <configuration>
+                    <fork>true</fork>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>

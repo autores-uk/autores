@@ -4,7 +4,7 @@ package uk.autores.handling;
 
 import uk.autores.ResourceFiles;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Config item derived from {@link ResourceFiles#config()}.
@@ -21,8 +21,8 @@ public final class Config {
      * @param value configuration value
      */
     public Config(String key, String value) {
-        this.key = Objects.requireNonNull(key);
-        this.value = Objects.requireNonNull(value);
+        this.key = requireNonNull(key);
+        this.value = requireNonNull(value);
     }
 
     /**

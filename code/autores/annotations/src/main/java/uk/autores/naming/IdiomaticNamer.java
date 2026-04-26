@@ -52,7 +52,7 @@ public final class IdiomaticNamer extends Namer {
     }
 
     private String transform(String src, Function<String, String> transform, String delim) {
-        StringBuilder buf = new StringBuilder(src.length());
+        var buf = new StringBuilder(src.length());
         char last = '!';
         int offset = 0;
         for (int i = 0; i < src.length(); i++) {
@@ -74,7 +74,7 @@ public final class IdiomaticNamer extends Namer {
         if (start != end) {
             String segment = src.substring(start, end);
             segment = transform.apply(segment);
-            if (buf.length() != 0) {
+            if (!buf.isEmpty()) {
                 buf.append(delim);
             }
             buf.append(segment);

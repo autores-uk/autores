@@ -49,8 +49,8 @@ public class Untranslated implements MessagePrinter {
     }
 
     public void printTimeInTokyo(PrintStream out, Locale l, ZonedDateTime time) {
-        ZoneId tokyo = ZoneId.of("Asia/Tokyo");
-        ZonedDateTime timeInTokyo = time.withZoneSameInstant(tokyo);
+        var tokyo = ZoneId.of("Asia/Tokyo");
+        var timeInTokyo = time.withZoneSameInstant(tokyo);
         String msg = NonNls.timeInTokyo(l, timeInTokyo, time, time.getZone().getDisplayName(TextStyle.FULL, l));
         out.println(msg);
     }
