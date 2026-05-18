@@ -18,7 +18,7 @@ final class Naming {
     }
 
     static String member(Context ctxt, Resource resource) {
-        Namer namer = ctxt.namer();
+        var namer = ctxt.namer();
         String simple = namer.simplifyResourceName(resource.toString());
         return namer.nameMember(simple);
     }

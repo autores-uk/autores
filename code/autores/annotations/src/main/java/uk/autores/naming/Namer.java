@@ -151,7 +151,7 @@ public class Namer {
         if (isIdentifier(s)) {
             return s;
         }
-        StringBuilder buf = new StringBuilder(s.length());
+        var buf = new StringBuilder(s.length());
         for (int offset = 0; offset < s.length(); ) {
             final int codepoint = s.codePointAt(offset);
             add(buf, offset, codepoint);

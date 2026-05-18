@@ -34,8 +34,8 @@ public class PrintCincoLobitos {
 
     public static void print(Locale[] locales, String[] lines, PrintStream out) {
         for (int i = 0; i < lines.length; i++) {
-            for (Locale locale : locales) {
-                ResourceBundle bundle = ResourceBundle.getBundle("uk.autores.consts.CincoLobitos", locale);
+            for (var locale : locales) {
+                var bundle = ResourceBundle.getBundle("uk.autores.consts.CincoLobitos", locale);
                 String line = bundle.getString(lines[i]);
                 out.println(i + ": " + line);
             }

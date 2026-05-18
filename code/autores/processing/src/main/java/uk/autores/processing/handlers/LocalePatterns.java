@@ -14,9 +14,9 @@ final class LocalePatterns {
 
     private Map<String, String[]> relationships() {
         if (relationships == null) {
-            ResourceBundle.Control ctrl = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
+            var ctrl = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
             relationships = new TreeMap<>();
-            for (Locale l : Locale.getAvailableLocales()) {
+            for (var l : Locale.getAvailableLocales()) {
                 if (l.getLanguage().isEmpty()) {
                     continue;
                 }
@@ -42,7 +42,7 @@ final class LocalePatterns {
         if (matchers.length == 0) {
             return Collections.emptyList();
         }
-        List<T> candidates = new ArrayList<>(matchers.length);
+        var candidates = new ArrayList<T>(matchers.length);
         outer: for (String matcher : matchers) {
             for (T candidate : localizations) {
                 String p = getter.apply(candidate);
@@ -57,7 +57,7 @@ final class LocalePatterns {
 
     private String[] candidates(ResourceBundle.Control ctrl, Locale l, String pattern) {
         List<Locale> cl = ctrl.getCandidateLocales("", l);
-        List<String> list = new ArrayList<>(cl.size());
+        var list = new ArrayList<String>(cl.size());
         for (Locale candidate : cl) {
             if (candidate.getLanguage().isEmpty()) {
                 continue;
