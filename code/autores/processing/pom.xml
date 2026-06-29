@@ -15,6 +15,7 @@
     <description>
         Annotation driven library for handling embedded resources.
     </description>
+    <url>https://autores.uk</url>
 
     <dependencies>
         <dependency>

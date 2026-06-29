@@ -16,6 +16,7 @@
         Annotation driven library for handling embedded resources.
         Requires processing library at compile time.
     </description>
+    <url>https://autores.uk</url>
 
     <build>
         <plugins>
