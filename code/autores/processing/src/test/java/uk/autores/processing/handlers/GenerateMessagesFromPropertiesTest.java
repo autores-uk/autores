@@ -215,4 +215,19 @@ class GenerateMessagesFromPropertiesTest {
                 .test();
         hr.assertErrorMessagesReported();
     }
+
+    @Test
+    void handlesMalformedExpressions() throws Exception {
+        var base = "format-choice=There {0,choice,0#are no files|1#is one file|1<are {0,number,integer} files}.";
+        var malformed = "format-choice={0,choice,0#Il n'y a pas de fichiers|1#Il y a un fichier|1<Il y a {0,number,integer} fichiers}.";
+        var de = "format-choice={0,choice,0#Es gibt keine Dateien|1#Es gibt eine Datei|1<Es gibt {0,number,integer} Dateien}.";
+
+        var hr = tester()
+                .withResource("m.properties", base.getBytes(StandardCharsets.ISO_8859_1))
+                .withUnspecifiedFile("m_de.properties", de.getBytes(StandardCharsets.ISO_8859_1))
+                .withUnspecifiedFile("m_fr.properties", malformed.getBytes(StandardCharsets.ISO_8859_1))
+                .test();
+        hr.assertAllGeneratedFilesCompile(1);
+        hr.assertErrorMessagesReported();
+    }
 }

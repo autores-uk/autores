@@ -356,7 +356,17 @@ public final class GenerateMessagesFromProperties implements Handler {
             return;
         }
 
-        var expression = FormatExpression.parse(baseValue);
+        FormatExpression expression;
+        try {
+            expression = FormatExpression.parse(baseValue);
+        } catch (IllegalArgumentException e) {
+            var msg = "Malformed expression for "
+                    + key
+                    + " in "
+                    + msgs.resource;
+            Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
+            return;
+        }
         if (expression.argCount() != 0) {
             writeFormat(ctxt, msgs, writer, key, expression, method);
         }
@@ -457,10 +467,24 @@ public final class GenerateMessagesFromProperties implements Handler {
             if (localizedValue == null) {
                 continue;
             }
-            FormatExpression lExpression = FormatExpression.parse(localizedValue);
+            FormatExpression lExpression;
+            try {
+                lExpression = FormatExpression.parse(localizedValue);
+            } catch (IllegalArgumentException e) {
+                var msg = "Malformed expression for "
+                        + key
+                        + " in "
+                        + msgs.resource
+                        + ": "
+                        + l.pattern;
+                Reporting.reporter(ctxt, CfgIncompatibleFormat.DEF).accept(msg);
+                continue;
+            }
             Set<FormatExpression.Incompatibility> incompatibilities = expression.incompatibilities(lExpression);
             if (!incompatibilities.isEmpty()) {
-                var msg = "Incompatible localized string in "
+                var msg = "Incompatible localized string for"
+                        + key
+                        + " in "
                         + msgs.resource
                         + ": "
                         + l.pattern
