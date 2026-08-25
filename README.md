@@ -1,5 +1,12 @@
 # AutoRes.uk
 
+[![Build](https://github.com/autores-uk/autores/actions/workflows/ci.yaml/badge.svg)](https://github.com/autores-uk/autores/actions/workflows/ci.yaml)
+[![Document](https://github.com/autores-uk/autores/actions/workflows/docs.yaml/badge.svg)](https://github.com/autores-uk/autores/actions/workflows/docs.yaml)
+| [![MvnRepository](https://badges.mvnrepository.com/badge/uk.autores/format/badge.svg?label=MvnRepository)](https://mvnrepository.com/artifact/uk.autores/annotations)
+[![javadoc](https://javadoc.io/badge2/uk.autores/annotations/javadoc.svg)](https://javadoc.io/doc/uk.autores/annotations)
+| [![MvnRepository](https://badges.mvnrepository.com/badge/uk.autores/processing/badge.svg?label=MvnRepository)](https://mvnrepository.com/artifact/uk.autores/processing)
+[![javadoc](https://javadoc.io/badge2/uk.autores/processing/javadoc.svg)](https://javadoc.io/doc/uk.autores/processing)
+
 Annotation driven Java code generation library for working with embedded resources.
 
 ```java
