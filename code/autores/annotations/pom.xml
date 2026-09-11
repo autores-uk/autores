@@ -166,6 +166,7 @@
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <parallel>all</parallel>
+                    <useUnlimitedThreads>true</useUnlimitedThreads>
                 </configuration>
             </plugin>
             <plugin>
