@@ -1,17 +1,16 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores.exist.test;
+package uk.autores.strong;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.exist.PrintResources;
+import uk.autores.strong.DumpFillerTextToStdout;
 
 import java.io.IOException;
 
-class PrintResourcesTest {
+class DumpFillerTextToStdoutTest {
 
     @Test
-    void main() throws IOException {
-        PrintResources.main();
+    void run() throws IOException {
+        DumpFillerTextToStdout.main();
     }
-
 }

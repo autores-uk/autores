@@ -1,4 +1,4 @@
-package uk.autores.custom.handler.test;
+package uk.autores.custom.handler;
 
 import org.junit.jupiter.api.Test;
 import uk.autores.custom.handler.GenerateIconsFromFiles;

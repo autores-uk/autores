@@ -1,14 +1,13 @@
 // Copyright 2023 https://github.com/autores-uk/autores/blob/main/LICENSE.txt
 // SPDX-License-Identifier: Apache-2.0
-package uk.autores.messages.test;
+package uk.autores.messages;
 
 import org.junit.jupiter.api.Test;
-import uk.autores.messages.PartlyTranslated;
 
 import java.util.Locale;
 
 import static java.util.Locale.*;
-import static uk.autores.messages.test.PrintPropertiesTester.assertOutput;
+import static uk.autores.messages.PrintPropertiesTester.assertOutput;
 
 class PartlyTranslatedTest {
 

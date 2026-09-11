@@ -18,17 +18,17 @@ public class Translated implements MessagePrinter {
         printTodayIs(out, l, time);
     }
 
-    public void printHelloWorld(PrintStream out, Locale l) {
+    void printHelloWorld(PrintStream out, Locale l) {
         String hello = Msgs.helloWorld(l);
         out.println(hello);
     }
 
-    public void printHelloX(PrintStream out, Locale l) {
+    void printHelloX(PrintStream out, Locale l) {
         String hello = Msgs.hello(l, "Pollux");
         out.println(hello);
     }
 
-    public void printTodayIs(PrintStream out, Locale l, ZonedDateTime time) {
+    void printTodayIs(PrintStream out, Locale l, ZonedDateTime time) {
         // needs a time zone because the format string includes DateFormat {N,date}
         String msg = Msgs.todayIs(l, time);
         out.println(msg);

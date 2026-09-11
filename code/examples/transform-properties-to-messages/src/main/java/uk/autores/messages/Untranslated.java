@@ -23,13 +23,13 @@ public class Untranslated implements MessagePrinter {
         printRFC1123DateTime(out, l, time);
     }
 
-    public void printAppName(PrintStream out) {
+    void printAppName(PrintStream out) {
         // no formatting, so no need for locale
         String name = NonNls.applicationName();
         out.println(name);
     }
 
-    public void printFileCounts(PrintStream out, Locale l) {
+    void printFileCounts(PrintStream out, Locale l) {
         int[] counts = {0, 1, 1_000_000};
         for (int i : counts) {
             // needs locale because it affects number formats
@@ -38,24 +38,24 @@ public class Untranslated implements MessagePrinter {
         }
     }
 
-    public void printPlanetEvent(PrintStream out, Locale l, ZonedDateTime time) {
+    void printPlanetEvent(PrintStream out, Locale l, ZonedDateTime time) {
         String event = NonNls.planetEvent(l, 4, time, "an attack");
         out.println(event);
     }
 
-    public void printYouSay(PrintStream out) {
+    void printYouSay(PrintStream out) {
         String saying = NonNls.youSay("tomato");
         out.println(saying);
     }
 
-    public void printTimeInTokyo(PrintStream out, Locale l, ZonedDateTime time) {
+    void printTimeInTokyo(PrintStream out, Locale l, ZonedDateTime time) {
         var tokyo = ZoneId.of("Asia/Tokyo");
         var timeInTokyo = time.withZoneSameInstant(tokyo);
         String msg = NonNls.timeInTokyo(l, timeInTokyo, time, time.getZone().getDisplayName(TextStyle.FULL, l));
         out.println(msg);
     }
 
-    public void printRFC1123DateTime(PrintStream out, Locale l, ZonedDateTime time) {
+    void printRFC1123DateTime(PrintStream out, Locale l, ZonedDateTime time) {
         String s = NonNls.rfc1123DateTime(l, time);
         out.println(s);
     }
