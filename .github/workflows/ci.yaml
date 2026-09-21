@@ -20,6 +20,26 @@ jobs:
         run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/autores/pom.xml --batch-mode --update-snapshots install
       - name: Package examples with Maven
         run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/pom.xml --batch-mode --update-snapshots install
+      - name: Assert Resources Exist Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/assert-resources-exist/pom.xml --batch-mode exec:exec
+      - name: Assert Resources Exist Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/assert-resources-exist/pom.xml --batch-mode exec:exec
+      - name: Assert Resources Exist Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/assert-resources-exist/pom.xml --batch-mode exec:exec
+      - name: Assert Resources Exist Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/assert-resources-exist/pom.xml --batch-mode exec:exec
+      - name: Assert Resources Exist Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/assert-resources-exist/pom.xml --batch-mode exec:exec
+      - name: Create Checked Resource Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/create-checked-resource/pom.xml --batch-mode exec:exec
+      - name: Embed Resources as Bytes Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/embed-resources-as-bytes/pom.xml --batch-mode exec:exec
+      - name: Embed Resources as Strings Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/embed-resources-as-strings/pom.xml --batch-mode exec:exec
+      - name: Transform Properties to Constants Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/transform-properties-to-constants/pom.xml --batch-mode exec:exec
+      - name: Transform Properties to Messages Example
+        run: MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1" mvn -V -T 1C --file code/examples/transform-properties-to-messages/pom.xml --batch-mode exec:exec
 
 # CI docs:
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
