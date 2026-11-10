@@ -43,13 +43,14 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <annotationProcessorPaths>
+                    <!-- <annotationProcessorPaths>
                         <path>
                             <groupId>uk.autores</groupId>
                             <artifactId>processing</artifactId>
                             <version>${project.version}</version>
                         </path>
-                    </annotationProcessorPaths>
+                    </annotationProcessorPaths> -->
+                         <proc>full</proc>
                 </configuration>
             </plugin>
         </plugins>
